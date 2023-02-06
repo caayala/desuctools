@@ -19,9 +19,9 @@ Description: Funciones y datos útiles en el trabajo de limpieza,
 URL: https://desuc.github.io/desuctools, https://github.com/desuc/desuctools
 License: MIT + file LICENSE
 Depends:
-    R (>= 3.5)
+    R (>= 4.2)
 Imports:
-    dplyr (>= 1.0.0),
+    dplyr (>= 1.1.0),
     forcats,
     ggplot2,
     haven,
