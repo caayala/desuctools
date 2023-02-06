@@ -19,7 +19,7 @@
 #'
 #' @import dplyr
 #' @importFrom rlang %||% .data enquo
-#' @importFrom forcats as_factor fct_explicit_na
+#' @importFrom forcats as_factor fct_na_value_to_level
 #' @importFrom sjmisc to_label
 #' @importFrom tidyselect vars_select
 #' @importFrom purrr map_chr
@@ -29,108 +29,110 @@
 tabla_categorias <- function(.data,
                              ...,
                              .wt = NULL) {
-    # Tabla con número de casos y proporción de respuestas por distintas categorías.
-    wt_quo <- enquo(.wt)
+  # Tabla con número de casos y proporción de respuestas por distintas categorías.
+  wt_quo <- enquo(.wt)
 
-    preguntas <- tidyselect::vars_select(names(.data), ...)
+  preguntas <- tidyselect::vars_select(names(.data), ...)
 
-    # Vector de etiqueta de variables.
-    seg_labels <- map_chr(preguntas, ~attr(.data[[.]], 'label') %||% '')
-    names(seg_labels) <- preguntas
+  # Vector de etiqueta de variables.
+  seg_labels <- map_chr(preguntas, ~attr(.data[[.]], 'label') %||% '')
+  names(seg_labels) <- preguntas
 
-    tabla <- .data %>%
-        transmute(across(c(any_of(preguntas), !!wt_quo)), list(sjmisc::to_label)) %>%
-        group_by(across(any_of(preguntas))) %>%
-        summarise(n = sum(!!wt_quo %||% n())) %>%
-        tidyr::pivot_longer(cols = -n,
-                            names_to = 'pregunta_var',
-                            values_to = 'pregunta_cat') %>%
-        mutate(pregunta_var = forcats::as_factor(.data$pregunta_var),
-               pregunta_cat = forcats::as_factor(.data$pregunta_cat),
-               pregunta_cat = forcats::fct_explicit_na(.data$pregunta_cat,
-                                                       na_level = 'NA'))
+  tabla <- .data %>%
+    mutate(across(c(any_of(preguntas)),
+                  \(x) forcats::as_factor(x))) %>%
+    summarise(n = sum(!!wt_quo %||% n()),
+              .by = any_of(unname(preguntas))) %>%
+    tidyr::pivot_longer(cols = -n,
+                        names_to = 'pregunta_var',
+                        values_to = 'pregunta_cat') %>%
+    mutate(pregunta_var = forcats::as_factor(.data[["pregunta_var"]]),
+           pregunta_cat = forcats::as_factor(.data[["pregunta_cat"]]),
+           pregunta_cat = forcats::fct_na_value_to_level(.data[["pregunta_cat"]],
+                                                         level = 'NA'))
 
-    tabla <- tabla %>%
-        count(.data$pregunta_var, .data$pregunta_cat, wt = .data$n) %>%
-        group_by(.data$pregunta_var) %>%
-        mutate(prop = n/sum(n)) %>%
-        rename(casos = n) %>%
-        ungroup()
+  tabla <- tabla |>
+    count(across(c('pregunta_var', 'pregunta_cat')),
+          wt = .data[['n']],
+          name = 'casos') |>
+    mutate(prop = casos/sum(casos),
+           .by = 'pregunta_var')
 
-    tabla %>%
-        mutate(pregunta_lab = forcats::as_factor(seg_labels[.data$pregunta_var])) %>%
-        select(starts_with('pregunta'), everything())
+  tabla |>
+    mutate(pregunta_lab = forcats::as_factor(seg_labels[.data[["pregunta_var"]]])) %>%
+    select(starts_with('pregunta'), everything())
 }
 
 tabla_orden <- function(.data, .var, .segmento = NULL) {
-    # Orden de variables y categorias para la presentación de tablas.
+  # Orden de variables y categorias para la presentación de tablas.
 
-    var_quo <- rlang::enquo(.var)
-    segmento_quo <- rlang::enquo(.segmento)
+  var_quo <- rlang::enquo(.var)
+  segmento_quo <- rlang::enquo(.segmento)
 
-    var_seg_exprs <- rlang::exprs(!!segmento_quo, starts_with(!!rlang::as_label(var_quo)))
+  var_seg_exprs <- rlang::exprs(!!segmento_quo, starts_with(!!rlang::as_label(var_quo)))
 
-    .data %>%
-        select_at(vars(!!!var_seg_exprs, everything())) %>%
-        arrange_at(vars(!!!var_seg_exprs))
+  .data %>%
+    select_at(vars(!!!var_seg_exprs, everything())) %>%
+    arrange_at(vars(!!!var_seg_exprs))
 }
 
-tabla_prop <- function(.data, .segmento) {
-    # Cálculo de porcetaje de respuestas en tabla con numero de casos.
+tabla_prop <- function(.df,
+                       .segmento) {
+  # Cálculo de porcetaje de respuestas en tabla con numero de casos.
 
-    segmento_quo <- rlang::enquo(.segmento)
+  segmento_quo <- rlang::enquo(.segmento)
 
-    .data %>%
-        group_by_at(vars(!!segmento_quo)) %>%
-        mutate(prop = .data$casos / sum(.data$casos)) %>%
-        ungroup()
+  .df %>%
+    group_by(across(!!segmento_quo)) %>%
+    mutate(prop = .data[['casos']] / sum(.data[['casos']])) %>%
+    ungroup()
 }
 
 
 tabla_prop_val <- function(.data, .var, .segmento, miss) {
-    # Cálculo de porcetaje de respuestas válidas en tabla con numero de casos.
+  # Cálculo de porcetaje de respuestas válidas en tabla con numero de casos.
 
-    # Pasar de quosure con texto a string y luego simbolo.
-    var_quo <- rlang::sym(rlang::as_name(.var))
-    segmento_quo <- enquo(.segmento)
+  # Pasar de quosure con texto a string y luego simbolo.
+  var_quo <- rlang::sym(rlang::as_name(.var))
+  segmento_quo <- enquo(.segmento)
 
-    .data %>%
-        group_by_at(vars(!!segmento_quo)) %>%
-        mutate(casos_val = replace(.data$casos, (!!var_quo %in% miss), NA_real_),
-               prop_val = .data$casos_val / sum(.data$casos_val, na.rm = TRUE)) %>%
-        select(-.data$casos_val) %>%
-        ungroup()
+  .data %>%
+    group_by_at(vars(!!segmento_quo)) %>%
+    mutate(casos_val = replace(.data[['casos']], (!!var_quo %in% miss), NA_real_),
+           prop_val = .data[['casos_val']] / sum(.data[['casos_val']], na.rm = TRUE)) %>%
+    select(!'casos_val') %>%
+    ungroup()
 }
 
 tabla_total <- function(.data,
                         .var,
                         .segmento,
                         miss = NULL) {
-    # Cálculo de porcetaje para el total de segmento
+  # Cálculo de porcetaje para el total de segmento
 
-    tab_total <- .data %>%
-        group_by(across({{ .var }})) %>%
-        summarise(across(.data$casos, sum)) %>%
-        mutate({{ .segmento }} := "Total") %>%
-        ungroup()
+  tab_total <- .data %>%
+    group_by(across({{ .var }})) %>%
+    summarise(across('casos', sum)) %>%
+    mutate({{ .segmento }} := "Total") %>%
+    ungroup()
 
-    tab_total <- tabla_prop(tab_total, .segmento = NULL)
+  tab_total <- tabla_prop(tab_total, .segmento = NULL)
 
-    # Agrega el porcentaje válido si es que se señalan categorias perdidas.
-    tab <- bind_rows(.data %>%
-                         mutate({{ .segmento }} := as.character({{ .segmento }})),
-                     tab_total)
+  # Agrega el porcentaje válido si es que se señalan categorias perdidas.
+  tab <- bind_rows(.data %>%
+                     mutate({{ .segmento }} := as.character({{ .segmento }})),
+                   tab_total)
 
-    tab <- tab %>%
-        mutate({{ .segmento }} := forcats::as_factor({{ .segmento }}))
+  tab <- tab %>%
+    mutate({{ .segmento }} := forcats::as_factor({{ .segmento }}))
 
-    if (!is.null(miss)) {
-        tab <- tabla_prop_val(tab,
-                              .var = enquo(.var),
-                              .segmento = {{ .segmento }},
-                              miss = miss)
-    }
-    return(tab)
+  if (!is.null(miss)) {
+    tab <- tabla_prop_val(tab,
+                          .var = enquo(.var),
+                          .segmento = {{ .segmento }},
+                          miss = miss)
+  }
+  return(tab)
 }
 
 tabla_var_segmento <- function(.data,
@@ -139,43 +141,45 @@ tabla_var_segmento <- function(.data,
                                .wt = NULL,
                                total = FALSE,
                                miss = NULL) {
-    # Tabla con número de casos y proporción de variable
-    # Se agrega una variable de de segmentación llamada 'segmento' con valor 'Total'.
+  # Tabla con número de casos y proporción de variable
+  # Se agrega una variable de de segmentación llamada 'segmento' con valor 'Total'.
 
-    var_quo <- enquo(.var)
-    segmento_quo <- enquo(.segmento)
-    wt_quo <- enquo(.wt)
+  var_quo <- enquo(.var)
+  segmento_quo <- enquo(.segmento)
+  wt_quo <- enquo(.wt)
 
-    tab <- .data %>%
-        transmute(across(c(!!segmento_quo, !!var_quo, !!wt_quo),
-                         sjmisc::to_label, add.non.labelled = TRUE)) %>%
-        group_by(across(c(!!segmento_quo, !!var_quo))) %>%
-        summarise(casos = sum(!!wt_quo %||% n())) %>%
-        ungroup()
+  tab <- .data %>%
+    mutate(across(c(!!segmento_quo, !!var_quo, !!wt_quo),
+                  \(x) sjmisc::to_label(x, add.non.labelled = TRUE)),
+           .keep = 'none') |>
+    # group_by(across(c(!!segmento_quo, !!var_quo))) %>%
+    summarise(casos = sum(!!wt_quo %||% n()),
+              .by = c(!!segmento_quo, !!var_quo))
+  # ungroup()
 
-    # Agrega el porcentaje de respuesta.
-    tab <- tabla_prop(tab,
-                      .segmento = !!segmento_quo)
+  # Agrega el porcentaje de respuesta.
+  tab <- tabla_prop(tab,
+                    .segmento = !!segmento_quo)
 
-    # Agrega el porcentaje válido si es que se señalan categorias perdidas.
-    if (!is.null(miss)) {
-        tab <- tabla_prop_val(tab,
-                              .var = var_quo,
-                              .segmento = !!segmento_quo,
-                              miss = miss)
-    }
+  # Agrega el porcentaje válido si es que se señalan categorias perdidas.
+  if (!is.null(miss)) {
+    tab <- tabla_prop_val(tab,
+                          .var = var_quo,
+                          .segmento = !!segmento_quo,
+                          miss = miss)
+  }
 
-    # Agrega el porcentaje total a los segmentos.
-    if (total) {
-        tab <- tabla_total(tab,
-                           .var = !!var_quo,
-                           .segmento = !!segmento_quo,
-                           miss = miss)
-    }
+  # Agrega el porcentaje total a los segmentos.
+  if (total) {
+    tab <- tabla_total(tab,
+                       .var = !!var_quo,
+                       .segmento = !!segmento_quo,
+                       miss = miss)
+  }
 
-    tabla_orden(tab,
-                .var = !!var_quo,
-                .segmento = !!segmento_quo)
+  tabla_orden(tab,
+              .var = !!var_quo,
+              .segmento = !!segmento_quo)
 }
 
 
@@ -185,40 +189,56 @@ tabla_var_segmentos <- function(.data,
                                 .wt = NULL,
                                 total = FALSE,
                                 miss = NULL) {
-    # Resultados de una pregunta `.var` para varios segmentos `.segmentos`
+  # Resultados de una pregunta `.var` para varios segmentos `.segmentos`
 
-    tabla_var_seg <- function(.data, .seg) {
+  tabla_var_seg <- function(.data, .seg) {
 
-        tabla_var_segmento(.data,
-                           .var = {{ .var }},
-                           .segmento = {{ .seg }},
-                           total = total,
-                           .wt = {{ .wt }},
-                           miss = miss) %>%
-            mutate(segmento_var = !!rlang::as_label(enquo(.seg))) %>%
-            rename(segmento_cat = !!rlang::as_label(enquo(.seg))) %>%
-            mutate_at(vars(.data$segmento_var, .data$segmento_cat), as.character)
+    seg_quo <- enquo(.seg)
+
+    df <- tabla_var_segmento(.data,
+                             .var = {{ .var }},
+                             .segmento = {{ .seg }},
+                             total = total,
+                             .wt = {{ .wt }},
+                             miss = miss)
+
+    # print(seg_quo)
+    # print(rlang::quo_is_null(seg_quo))
+
+    df <- df |>
+      mutate(segmento_var = !!rlang::as_label(seg_quo))
+
+    if(rlang::quo_is_null(seg_quo)){
+      df$segmento_cat <- 'NULL'
+    } else {
+      df <- df |>
+        rename(segmento_cat = !!rlang::as_label(seg_quo))
     }
 
-    tab <- map(.segmentos, ~tabla_var_seg(.data, .seg = !!.))
+    df |>
+      mutate(across(any_of(c('segmento_var', 'segmento_cat')), as.character))
+  }
 
-    tab <- reduce(tab, bind_rows) %>%
-        mutate(across(.data$segmento_cat, forcats::as_factor))
+  tab <- map(.segmentos, ~tabla_var_seg(.data, .seg = !!.))
 
-    # Copia label y labels a variable "var" recién creada.
-    # No utilizo esto para no pegar las etiquetas de
-    # tab <- sjlabelled::copy_labels(df_new = tab,
-    #                                df_origin = .data)
+  tab <- reduce(tab, bind_rows) |>
+    mutate(across(any_of('segmento_cat'), forcats::as_factor))
 
-    # Dejar solo el 'label' de la variable recién creada
-    var_filtro <- rlang::as_name(enquo(.var))
+  # Copia label y labels a variable "var" recién creada.
+  # No utilizo esto para no pegar las etiquetas de
+  # tab <- sjlabelled::copy_labels(df_new = tab,
+  #                                df_origin = .data)
 
-    tab[[var_filtro]] <- structure(tab[[var_filtro]],
-                                   label = attr(.data[[var_filtro]], 'label', exact = TRUE))
+  # Dejar solo el 'label' de la variable recién creada
+  var_filtro <- rlang::as_name(enquo(.var))
 
-    tab %>%
-        select(.data$segmento_var,
-               .data$segmento_cat, everything())
+  tab[[var_filtro]] <- structure(tab[[var_filtro]],
+                                 label = attr(.data[[var_filtro]], 'label', exact = TRUE))
+
+  tab %>%
+    relocate(any_of(c('segmento_var',
+                      'segmento_cat')),
+             .before = 1)
 }
 
 #' @title Tabla de porcentajes de variables según segmentos.
@@ -249,36 +269,37 @@ tabla_vars_segmentos <- function(.data,
                                  total = FALSE,
                                  miss = NULL) {
 
-    variables <- tidyselect::vars_select(names(.data), !!!.vars)
+  variables <- tidyselect::vars_select(names(.data), !!!.vars)
 
-    tab <- purrr::map(variables, ~tabla_var_segmentos(.data,
-                                                      .var = !!.,
-                                                      .segmentos = .segmentos,
-                                                      .wt = {{ .wt }},
-                                                      total = total,
-                                                      miss = miss))
+  tab <- purrr::map(variables, ~tabla_var_segmentos(.data,
+                                                    .var = !!.,
+                                                    .segmentos = .segmentos,
+                                                    .wt = {{ .wt }},
+                                                    total = total,
+                                                    miss = miss))
 
-    tabla_variables <- function(.data, .var) {
+  tabla_variables <- function(.data, .var) {
 
-        # Captura la etiqueta de la variable. Si no tiene, lo deja en blanco
-        var_label <- attr(.data[[.var]], 'label') %||% "-"
+    # Captura la etiqueta de la variable. Si no tiene, lo deja en blanco
+    var_label <- attr(.data[[.var]], 'label') %||% "-"
 
-        .data %>%
-            mutate(pregunta_var = .var,
-                   pregunta_lab = var_label) %>%
-            rename(pregunta_cat = .var) %>%
-            mutate(across(.data$pregunta_var, as.character))
-    }
+    .data %>%
+      mutate(pregunta_var = .var,
+             pregunta_lab = var_label) %>%
+      rename(pregunta_cat = all_of(.var)) %>%
+      mutate(across('pregunta_var', as.character))
+  }
 
-    purrr::map2(tab, variables, ~tabla_variables(.x, .y)) %>%
-        purrr::reduce(bind_rows) %>%
-        select(starts_with("segmento"),
-               .data$pregunta_var,
-               .data$pregunta_lab,
-               .data$pregunta_cat,
-               everything()) %>%
-        mutate(across(c(.data$segmento_var,
-                        .data$pregunta_var,
-                        .data$pregunta_lab),
-                  forcats::as_factor))
+  purrr::map2(tab, variables, ~tabla_variables(.x, .y)) %>%
+    purrr::reduce(bind_rows) %>%
+    select(starts_with("segmento"),
+           'pregunta_var',
+           'pregunta_lab',
+           'pregunta_cat',
+           everything()) %>%
+    mutate(across(c('segmento_var',
+                    'pregunta_var',
+                    'pregunta_lab'),
+                  forcats::as_factor)
+    )
 }
