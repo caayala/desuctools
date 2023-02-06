@@ -11,12 +11,12 @@ df_test <- tibble::tibble(sexo = haven::labelled(c(1, 2, 2, 2),
 
 # tabla_categoria ---------------------------------------------------------
 
-test_that("tabla_categoria proporcion de categoría labelled", {
+test_that("tabla_categorias proporcion de categoría labelled", {
   expect_identical(tabla_categorias(df_test, sexo)[['prop']],
                    c(0.25, 0.75))
 })
 
-test_that("tabla_categoria proporcion de dos variables labelled", {
+test_that("tabla_categorias proporcion de dos variables labelled", {
   expect_identical(tabla_categorias(df_test, sexo, edad)[['prop']],
                    c(0.25, 0.75, 0.50, 0.50))
 })
@@ -50,6 +50,15 @@ test_that("tabla_categoria proporcion de categoría numerica con missing con pes
 
 # tabla_vars_segmentos ----------------------------------------------------
 
+test_that("tabla_var_segmento proporcion de categoría y total", {
+  expect_equal(desuctools:::tabla_var_segmento(df_test,
+                                               .var = 'sexo',
+                                               .segmento = 'cat',
+                                               total = TRUE)[['prop']],
+               c(0.5, 0.5, 1, 0.25, 0.75))
+})
+
+
 test_that("tabla_vars_segmentos proporcion de categoría y total", {
   expect_equal(tabla_vars_segmentos(df_test,
                                     .vars = vars(sexo),
@@ -68,7 +77,7 @@ test_that("tabla_categoria proporcion de categoría y total y missing factor", {
 })
 
 test_that("tabla_categoria proporcion de categoría y total y missing numérico", {
-  expect_equal(tabla_vars_segmentos(df_test,
+expect_equal(tabla_vars_segmentos(df_test,
                                     .vars = vars(cat_na),
                                     .segmentos = vars(sexo),
                                     miss = c(2, NA),
@@ -80,9 +89,9 @@ test_that("tabla_categoria proporcion de categoría con segmento constante", {
   expect_equal(tabla_vars_segmentos(df_test,
                                     .vars = vars(cat_na),
                                     .segmentos = vars(NULL),
-                                    miss = c(2, NA),
+                                    miss = c(NA),
                                     total = FALSE)[['prop_val']],
-               c(1, 1, NA, NA))
+               c(2/3, 1/3, NA))
 })
 
 #  rec_cat_5a3 ------------------------------------------------------------
