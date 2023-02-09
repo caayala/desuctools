@@ -32,4 +32,3 @@ edad_rut <- function(.rut){
 
   return(age)
 }
-
