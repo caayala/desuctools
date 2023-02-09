@@ -63,6 +63,98 @@ tabla_categorias <- function(.data,
     select(starts_with('pregunta'), everything())
 }
 
+tabla_categoria2 <- function(.df,
+                             .var,
+                             .wt = NULL,
+                             miss = NULL) {
+
+  v_pregunta <- .df[[.var]]
+
+  # Si no hay pesos, se construye un vector de 1.
+  if(is.null(.wt)){
+    v_wgt    <- rep(1L, length(v_pregunta))
+  } else {
+    v_wgt    <- .df[[.wt]]
+  }
+
+  df_agg <- data.frame(casos        = v_wgt,
+                       pregunta_cat = to_factor(v_pregunta))
+
+  # Declarar explícitamente NA que pudiesen estar en la categoría de respuestas
+  # de la pregunta.
+  # Solo si hay casos NA en el factor
+  if(is.na(df_agg$pregunta_cat) |> any()) {
+    df_agg$pregunta_cat <- forcats::fct_na_value_to_level(df_agg$pregunta_cat)
+  }
+
+  tab <- aggregate(casos ~ pregunta_cat,
+                   df_agg,
+                   FUN = \(x) sum(x, na.rm = FALSE),
+                   na.action = na.pass,
+                   drop = FALSE)
+
+  # Agregar 0 si es que hay combinación de pregunta y segmento sin casos.
+  tab$casos <- replace(tab$casos, is.na(tab$casos), 0)
+
+  # Variable y etiqueta de pregunta
+  tab$pregunta_var <- .var
+  tab$pregunta_lab <- attr(.df[[.var]], 'label', exact = TRUE) %||% '-'
+
+  # Agrega el porcentaje de respuesta.
+  tab <- tabla_prop2(tab,
+                     .segmento = 'pregunta_var')
+
+  # Agrega el porcentaje válido si es que se señalan categorias perdidas.
+  if (!is.null(miss)) {
+    tab <- tabla_prop_val2(tab,
+                           miss = c(NA, miss))
+  }
+
+  # Orden de variables de salida
+  col_orden <- c('pregunta_var', 'pregunta_lab', 'pregunta_cat')
+
+  col_adicionales <- setdiff(names(tab), col_orden)
+
+  tab <- tab[c(col_orden, col_adicionales)]
+
+  # Orden de casos
+  tab |>
+    arrange(pregunta_cat)
+}
+
+
+tabla_categorias2 <- function(.df,
+                              ...,
+                              .wt = NULL,
+                              miss = NULL) {
+
+  # Transformar variable en NSE a un chr para poder ser input de función
+  # tabla_cateroria2
+  wt_quo <- enquo(.wt)
+
+  if(!rlang::quo_is_null(wt_quo)){
+    .wt <- wt_quo |> as_label()
+  }
+
+  vars <- tidyselect::eval_select(expr = expr(c(...)),
+                                  data = .df)
+  vars <- names(vars)
+
+  tab <- map(
+    vars,
+    \(x) tabla_categoria2(.df = .df,
+                          .var = x,
+                          .wt = .wt,
+                          miss = miss)
+  )
+
+  tab |>
+    list_flatten() |>
+    list_rbind()
+}
+
+
+
 tabla_orden <- function(.data, .var, .segmento = NULL) {
   # Orden de variables y categorias para la presentación de tablas.
 
@@ -89,20 +181,50 @@ tabla_prop <- function(.df,
 }
 
 
+tabla_prop2 <- function(.df,
+                        .segmento) {
+  # Cálculo de porcetaje de respuestas en tabla con numero de casos.
+
+  .df |>
+    mutate(prop = .data[['casos']] / sum(.data[['casos']], na.rm = TRUE),
+           .by = all_of(.segmento))
+}
+
 tabla_prop_val <- function(.data, .var, .segmento, miss) {
   # Cálculo de porcetaje de respuestas válidas en tabla con numero de casos.
 
   # Pasar de quosure con texto a string y luego simbolo.
   var_quo <- rlang::sym(rlang::as_name(.var))
-  segmento_quo <- enquo(.segmento)
 
   .data %>%
-    group_by_at(vars(!!segmento_quo)) %>%
     mutate(casos_val = replace(.data[['casos']], (!!var_quo %in% miss), NA_real_),
-           prop_val = .data[['casos_val']] / sum(.data[['casos_val']], na.rm = TRUE)) %>%
-    select(!'casos_val') %>%
-    ungroup()
+           prop_val = .data[['casos_val']] / sum(.data[['casos_val']], na.rm = TRUE),
+           .by = {{ .segmento }}) %>%
+    select(!'casos_val')
 }
+
+
+tabla_prop_val2 <- function(.df,
+                            by = NULL,
+                            miss) {
+  # Cálculo de porcetaje de respuestas válidas en tabla con numero de casos.
+
+  # Pasar de quosure con texto a string y luego simbolo.
+  .df$casos_val <- replace(.df$casos,
+                           .df$pregunta_cat %in% miss,
+                           NA)
+
+  df <- .df |>
+    mutate(prop_val = casos_val / sum(casos_val, na.rm = TRUE),
+           .by = all_of(by))
+
+  # Eliminar variable auxiliar.
+  df$casos_val <- NULL
+
+  return(df)
+}
+
+
 
 tabla_total <- function(.data,
                         .var,
@@ -134,6 +256,31 @@ tabla_total <- function(.data,
   }
   return(tab)
 }
+
+tabla_total2 <- function(.df) {
+
+  tab_tot <- aggregate(casos ~ pregunta_cat,
+                       data = .df,
+                       FUN = \(x) sum(x, na.rm = FALSE),
+                       na.action = na.pass,
+                       drop = FALSE)
+
+  tab_tot$segmento_var <- unique(.df$segmento_var)
+  tab_tot$segmento_lab <- unique(.df$segmento_lab)
+
+  tab_tot$segmento_cat <- 'Total'
+
+  tab_tot$pregunta_var <- unique(.df$pregunta_var)
+  tab_tot$pregunta_lab <- unique(.df$pregunta_lab)
+
+  tab <- bind_rows(.df,
+                   tab_tot)
+
+  tab$segmento_cat <- forcats::as_factor(tab$segmento_cat)
+
+  return(tab)
+}
+
 
 tabla_var_segmento <- function(.data,
                                .var,
@@ -181,6 +328,92 @@ tabla_var_segmento <- function(.data,
               .var = !!var_quo,
               .segmento = !!segmento_quo)
 }
+
+tabla_var_segmento2 <- function(.df,
+                                .var,
+                                .segmento = NULL,
+                                .wt = NULL,
+                                miss = NULL,
+                                total = FALSE) {
+
+  v_pregunta <- .df[[.var]]
+
+
+  # Si no hay pesos, se construye un vector de 1.
+  if(is.null(.wt)){
+    v_wgt    <- rep(1L, length(v_pregunta))
+  } else {
+    v_wgt    <- .df[[.wt]]
+  }
+
+  if(is.null(.segmento)){
+    # Si no hay segmentos sobre los que dividir la variable de interés.
+    v_segmento <- rep(1L, length(v_pregunta))
+    segmento_var <- 'Total'
+    segmento_lab <- 'Total'
+  } else {
+    v_segmento   <- .df[[.segmento]]
+    segmento_var <- .segmento
+    segmento_lab <- attr(.df[[.segmento]], 'label', exact = TRUE) %||% '-'
+  }
+
+  df_agg <- data.frame(casos        = v_wgt,
+                       segmento_cat = forcats::as_factor(v_segmento),
+                       pregunta_cat = forcats::as_factor(v_pregunta))
+
+  # Declarar explícitamente NA que pudiesen estar en la categoría de respuestas
+  # de la pregunta.
+  # Solo si hay casos NA en el factor
+  if(is.na(df_agg$pregunta_cat) |> any()) {
+    df_agg$pregunta_cat <- forcats::fct_na_value_to_level(df_agg$pregunta_cat)
+  }
+
+  tab <- aggregate(casos ~ segmento_cat + pregunta_cat,
+                   df_agg,
+                   FUN = \(x) sum(x, na.rm = FALSE),
+                   na.action = na.pass,
+                   drop = FALSE)
+
+  # Agregar 0 si es que hay combinación de pregunta y segmento sin casos.
+  tab$casos <- replace(tab$casos, is.na(tab$casos), 0)
+
+  # Variable y etiqueta de pregunta
+  tab$pregunta_var <- .var
+  tab$pregunta_lab <- attr(.df[[.var]], 'label', exact = TRUE) %||% '-'
+
+  # Variable y etiqueta de segmentos
+  tab$segmento_var <- segmento_var
+  tab$segmento_lab <- segmento_lab
+
+  # Agrega el porcentaje total a los segmentos.
+  if (total) {
+    tab <- tabla_total2(tab)
+  }
+
+  # Agrega el porcentaje de respuesta.
+  tab <- tabla_prop2(tab,
+                     .segmento = 'segmento_cat')
+
+  # Agrega el porcentaje válido si es que se señalan categorias perdidas.
+  if (!is.null(miss)) {
+    tab <- tabla_prop_val2(tab,
+                           miss = c(NA, miss),
+                           by = 'segmento_cat')
+  }
+
+  # Orden de variables de salida
+  col_orden <- c('segmento_var', 'segmento_lab', 'segmento_cat',
+                 'pregunta_var', 'pregunta_lab', 'pregunta_cat')
+
+  col_adicionales <- setdiff(names(tab), col_orden)
+
+  tab <- tab[c(col_orden, col_adicionales)]
+
+  # Orden de casos
+  tab |>
+    arrange(segmento_cat, pregunta_cat)
+}
+
 
 
 tabla_var_segmentos <- function(.data,
@@ -302,4 +535,48 @@ tabla_vars_segmentos <- function(.data,
                     'pregunta_lab'),
                   forcats::as_factor)
     )
+}
+
+
+tabla_vars_segmentos2 <- function(.df,
+                                  .vars,
+                                  .segmentos = NULL,
+                                  .wt = NULL,
+                                  total = FALSE,
+                                  miss = NULL) {
+
+  vars <- tidyselect::eval_select(expr = enquo(.vars),
+                                  data = .df)
+  vars <- names(vars)
+
+  segmentos_quo <- enquo(.segmentos)
+
+  if(quo_is_null(segmentos_quo)){
+    segmentos <- list(NULL)
+  } else {
+    segmentos <- tidyselect::eval_select(expr = segmentos_quo,
+                                         data = .df)
+    segmentos <- names(segmentos)
+  }
+
+  segmentos <- c(segmentos, NULL)
+
+  # print(segmentos)
+
+  tab <- map(
+    vars,
+    \(x) map(
+      segmentos,
+      \(y) tabla_var_segmento2(.df = .df,
+                               .var = x,
+                               .segmento = y,
+                               .wt = .wt,
+                               total = total,
+                               miss = miss)
+    )
+  )
+
+  tab |>
+    list_flatten() |>
+    list_rbind()
 }
