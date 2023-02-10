@@ -22,9 +22,9 @@ test_that("tabla_categorias proporcion de dos variables labelled", {
 })
 
 test_that("tabla_categoria agrega en pregunta_lab la etiqueta de categoria", {
-  expect_equal(tabla_categorias(df_test, sexo)[['pregunta_lab']] %>%
+  expect_equal(tabla_categorias(df_test, sexo, edad)[['pregunta_lab']] %>%
                  as.character(),
-               c('Sex', 'Sex'))
+               c('Sex', 'Sex', 'Age', 'Age'))
 })
 
 test_that("tabla_categoria proporcion de categoría numerica", {
@@ -55,40 +55,48 @@ test_that("tabla_var_segmento proporcion de categoría y total", {
                                                .var = 'sexo',
                                                .segmento = 'cat',
                                                total = TRUE)[['prop']],
-               c(0.5, 0.5, 1, 0.25, 0.75))
+               c(0.5, 0.5, 0, 1, 0.25, 0.75))
 })
 
 
 test_that("tabla_vars_segmentos proporcion de categoría y total", {
   expect_equal(tabla_vars_segmentos(df_test,
-                                    .vars = vars(sexo),
-                                    .segmentos = vars(cat),
+                                    .vars = sexo,
+                                    .segmentos = cat,
                                     total = TRUE)[['prop']],
-               c(0.5, 0.5, 1, 0.25, 0.75))
+               c(0.5, 0.5, 0, 1, 0.25, 0.75))
 })
 
 test_that("tabla_categoria proporcion de categoría y total y missing factor", {
   expect_equal(tabla_vars_segmentos(df_test,
-                                    .vars = vars(sexo),
-                                    .segmentos = vars(cat),
+                                    .vars = sexo,
+                                    .segmentos = cat,
                                     miss = 'M',
                                     total = TRUE)[['prop_val']],
-               c(NA, 1, 1, NA, 1))
+               c(NA, 1, NA, 1, NA, 1))
 })
 
 test_that("tabla_categoria proporcion de categoría y total y missing numérico", {
-expect_equal(tabla_vars_segmentos(df_test,
-                                    .vars = vars(cat_na),
-                                    .segmentos = vars(sexo),
+  expect_equal(tabla_vars_segmentos(df_test,
+                                    .vars = cat_na,
+                                    .segmentos = sexo,
                                     miss = c(2, NA),
                                     total = FALSE)[['prop_val']],
-               c(1, 1, NA, NA))
+               c(1, NA, NA, 1, NA, NA))
+})
+
+test_that("tabla_categoria proporcion de varias categorías", {
+  expect_equal(tabla_vars_segmentos(df_test,
+                                    .vars = cat,
+                                    .segmentos = c(sexo, edad),
+                                    total = FALSE)[['casos']],
+               c(1, 0, 1, 2, 2, 0, 0, 2))
 })
 
 test_that("tabla_categoria proporcion de categoría con segmento constante", {
   expect_equal(tabla_vars_segmentos(df_test,
-                                    .vars = vars(cat_na),
-                                    .segmentos = vars(NULL),
+                                    .vars = cat_na,
+                                    .segmentos = NULL,
                                     miss = c(NA),
                                     total = FALSE)[['prop_val']],
                c(2/3, 1/3, NA))
