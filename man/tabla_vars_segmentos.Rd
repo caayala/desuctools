@@ -2,25 +2,23 @@
 % Please edit documentation in R/tablas_output.R
 \name{tabla_vars_segmentos}
 \alias{tabla_vars_segmentos}
-\title{Tabla de porcentajes de variables según segmentos.
-
- Obtiene porcentajes de respuestas de múltiples variables según multiples segmentos.}
+\title{Tabla de porcentajes de variables según segmentos.}
 \usage{
 tabla_vars_segmentos(
-  .data,
+  .df,
   .vars,
-  .segmentos,
+  .segmentos = NULL,
   .wt = NULL,
   total = FALSE,
   miss = NULL
 )
 }
 \arguments{
-\item{.data}{tibble}
+\item{.df}{tibble}
 
-\item{.vars}{vars(), lista de nombres de variables de las que se quiere saber su proporción de respuestas}
+\item{.vars}{tidyselect, lista de nombres de variables de las que se quiere saber su proporción de respuestas}
 
-\item{.segmentos}{vars(), lista de nombres de variables de segmentación de las preguntas de `.vars`}
+\item{.segmentos}{tidyselect, lista de nombres de variables de segmentación de las preguntas de `.vars`}
 
 \item{.wt}{name, nombre de la variable de ponderación}
 
@@ -32,7 +30,5 @@ tabla_vars_segmentos(
 tibble
 }
 \description{
-Tabla de porcentajes de variables según segmentos.
-
- Obtiene porcentajes de respuestas de múltiples variables según multiples segmentos.
+Obtiene porcentajes de respuestas de múltiples variables según múltiples segmentos.
 }
