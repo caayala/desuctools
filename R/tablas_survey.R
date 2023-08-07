@@ -1,5 +1,4 @@
 # Funciones para análisis de datos de encuestas
-# 181228
 
 #' @title Tabla con intervalos de confianza
 #'
@@ -20,129 +19,108 @@
 #' @importFrom rlang %||% .data
 #' @importFrom srvyr survey_mean
 #'
-#' @return data.frame
+#' @return tibble
 #'
-#' @export
-svy_tabla_var_segmento <- function(.data,
+svy_tabla_var_segmento <- function(.df,
                                    .var,
                                    .segmento = NULL,
-                                   na.rm = TRUE,
+                                   miss = NULL,
+                                   vartype = c('ci', 'se'),
                                    level = 0.95){
 
-  if(!any(class(.data) %in% 'tbl_svy')) stop('Se necesita un data.frame con diseno complejo')
-
-  segmento_quo <- enquo(.segmento)
-  var_quo <- enquo(.var)
-
-  to_factor <- function(x){
-    if(haven::is.labelled(x)){
-      haven::as_factor(x)
-    } else {
-      x
-    }
-  }
-
-  # Strinf de la variable de interés. Se usa luego para extraer esta columna.
-  var_str <- rlang::as_label(enquo(.var))
-
-  # Construcción de tabla de segmentos y variable de interés
-  # Esto era truncate antes de dplyr 1.0.
-  tab <- .data %>%
-    mutate(segmento_var = rlang::as_label(segmento_quo)       %||% 'Total',
-           segmento_lab = labelled::var_label(!!segmento_quo) %||% '-',
-           segmento_cat = haven::as_factor(!!segmento_quo     %||% '-') %>%
-             forcats::fct_na_value_to_level(level = 'seg_miss'),
-           pregunta_var = var_str,
-           pregunta_lab = labelled::var_label(!!var_quo)      %||% '-',
-           pregunta_cat = to_factor(!!var_quo)
-    ) %>%
-    select('segmento_var':'pregunta_cat')
-
-  # print(head(tab$variables))
-  var_labels_length <- length(attr(.data$variables[[var_str]], 'labels'))
-  var_class <- class(.data$variables[[var_str]])
-
-  # Construir la variable de interés según si es una variable escalar o categórica
-  if (var_labels_length == 0 & all(var_class != 'factor')) {
-
-    # Variable escalar
-    tab <- tab %>%
-      group_by(across('segmento_var':'pregunta_lab')) %>%
-      summarise(mean = srvyr::survey_mean(.data$pregunta_cat,
-                                          na.rm = na.rm,
-                                          vartype = c('ci', 'se'), level = level))
+  if(is.null(.segmento)){
+    .df[['variables']][['total']] <- forcats::as_factor('Total')
+    .segmento <- 'total'
   } else {
-    # Variable categórica
-    # print('categorica')
-    tab <- tab %>%
-      mutate(pregunta_cat = forcats::fct_na_value_to_level(.data$pregunta_cat,
-                                                           level = 'cat_miss')) %>%
-      group_by(across(c('segmento_var':'pregunta_lab',
-                        'pregunta_cat')),
-               .drop = FALSE) %>%
-      summarise(prop = srvyr::survey_mean(na.rm = na.rm,
-                                          vartype = c('ci', 'se'),
-                                          level = level)) %>%
-      identity()
+    .df[['variables']][[.segmento]] <- forcats::as_factor(.df[['variables']][[.segmento]])
   }
+
+  if(inherits(.df[['variables']][[.var]], "haven_labelled")){
+    .df[['variables']][[.var]] <- forcats::as_factor(.df[['variables']][[.var]])
+  }
+
+  # Declarar explícitamente NA que pudiesen estar en la categoría de respuestas
+  # de la pregunta.
+  # Solo si hay casos NA en el factor
+  if(is.na(.df[['variables']][[.var]]) |> any()) {
+    .df[['variables']][[.var]] <- forcats::fct_na_value_to_level(.df[['variables']][[.var]])
+  }
+
+  # Agrupar la tabla para calculo de indicador por grupo.
+  df_group <- .df |>
+    dplyr::group_by(pick(any_of(c(.segmento, .var))),
+                    # Mantiene niveles de factor (.segmento y .var) que sin casos en los datos.
+                    .drop = FALSE)
+
+  # Agrega el porcentaje válido si es que se señalan categorias perdidas.
+  if (!is.null(miss)) {
+    # Caso de proporciones con necesidad de cálculo de prop_val.
+
+    # Categorías de respuesta en miss a NA.
+    val_is_miss <- is.na(.df[['variables']][[.var]]) |
+      .df[['variables']][[.var]] %in% c(miss, NA)
+
+    tab <- .df |>
+      dplyr::group_by(dplyr::pick(any_of(c(.segmento, .var))),
+                      # Mantiene niveles de factor (.segmento y .var) que sin casos en los datos.
+                      .drop = FALSE) |>
+      dplyr::summarise(casos_unwt = srvyr::unweighted(n()),
+                       casos = srvyr::survey_total(),
+                       prop = srvyr::survey_prop(vartype = NULL),
+                       .groups = 'drop')
+
+    tab_miss <- .df |>
+      dplyr::filter(!val_is_miss) |>
+      dplyr::group_by(dplyr::pick(tidyselect::any_of(c(.segmento, .var))),
+                      # Elimina los niveles de factor (.var) que sin casos en los datos.
+                      .drop = TRUE) |>
+      dplyr::summarise(prop_val = srvyr::survey_prop(vartype = vartype),
+                       .groups = 'drop')
+
+    tab <- dplyr::left_join(tab,
+                            tab_miss,
+                            by = c(.segmento, .var))
+
+  } else {
+    # Caso de proporciones sin necesidad de cálculo de prop_val.
+    tab <- .df |>
+      dplyr::group_by(dplyr::pick(tidyselect::any_of(c(.segmento, .var))),
+                      # Mantiene niveles de factor (.segmento y .var) que sin casos en los datos.
+                      .drop = FALSE) |>
+      dplyr::summarise(casos_unwt = srvyr::unweighted(n()),
+                       casos = srvyr::survey_total(),
+                       prop = srvyr::survey_prop(vartype = vartype,
+                                                 level = level),
+                       .groups = 'drop')
+  }
+
+  # Variable y etiqueta de pregunta
+  tab$pregunta_var <- .var
+  tab$pregunta_lab <- attr(.df[['variables']][[.var]], 'label', exact = TRUE) %||% '-'
+  names(tab)[names(tab) == .var] <- "pregunta_cat"
+
+  # Variable y etiqueta de segmentos
+  tab$segmento_var <- .segmento
+  tab$segmento_lab <- attr(.df[['variables']][[.segmento]], 'label', exact = TRUE) %||% '-'
+  names(tab)[names(tab) == .segmento] <- "segmento_cat"
 
   # Determinar si hay diferencias significativas
-  tab <- tab %>%
-    group_by(.data$segmento_cat) %>%
-    svy_diff_sig() %>%
-    ungroup()
+  tab <- tab |>
+    # Aplicar la función para cada grupo.
+    tidyr::nest(.by = ('segmento_cat')) |>
+    dplyr::mutate(data = map(data, svy_diff_sig)) |>
+    tidyr::unnest(data)
 
-  if(rlang::quo_is_null(enquo(.segmento))){
-    tab %>%
-      select(-starts_with('segmento'))
-  } else {
-    tab
-  }
-}
+  # Orden de variables de salida
+  col_orden <- c('segmento_var', 'segmento_lab', 'segmento_cat',
+                 'pregunta_var', 'pregunta_lab', 'pregunta_cat')
 
+  col_adicionales <- setdiff(names(tab), col_orden)
 
-#' @title Tabla con intervalos de confianza
-#'
-#' @description
-#' Devuelve tabla de frecuencias con intervalos de confianza para un nivel
-#' `level`de significancia entre las categorías de respuesta de la
-#' variable `.var`.
-#'
-#' @name svy_tabla_var_segmentos
-#'
-#' @param .data `tbl_svy` data.frame con diseño de encuesta.
-#' @param .var Variable de interés respecto.
-#' @param .segmentos vars(). Lista de variables por las que se quiere segmentar `.var`.
-#' @param ... atributos que se pasan a funcion `svy_tabla_var_segmento`.
-#'
-#' @importFrom rlang !! syms
-#' @importFrom tidyselect vars_select
-#' @importFrom purrr map reduce
-#'
-#' @return data.frame
-#'
-#' @export
-svy_tabla_var_segmentos <- function(.data,
-                                    .var,
-                                    .segmentos = NULL,
-                                    ...) {
+  tab <- tab[c(col_orden, col_adicionales)]
 
-  segmentos <- tidyselect::vars_select(colnames(.data), !!!.segmentos)
-  # Transforma string a expresiones para ser evaluadas luego.
-  segmentos <- rlang::syms(segmentos)
-
-  # Funcion para poder pasar ... de la funcion dentro de map.
-  # No funcionó agregar ... dentro de una función anónima dentro de map.
-  svy_tabla <- function(.seg) {
-    svy_tabla_var_segmento(.data,
-                           .var = {{ .var }},
-                           .segmento = !!.seg,
-                           ...)
-  }
-
-  purrr::map(segmentos, svy_tabla) %>%
-    purrr::map(~mutate(., segmento_cat = as.character(segmento_cat))) %>%
-    purrr::reduce(dplyr::bind_rows)
+  # Orden de casos
+  tab[order(tab$segmento_cat, tab$pregunta_cat), ]
 }
 
 
@@ -168,70 +146,52 @@ svy_tabla_var_segmentos <- function(.data,
 #' @importFrom tidyselect eval_select
 #' @importFrom purrr map2
 #'
-#' @return data.frame
+#' @return tibble
 #'
 #' @export
-#'
-svy_tabla_vars_segmentos <- function(.data,
+svy_tabla_vars_segmentos <- function(.df,
                                      .vars,
                                      .segmentos = NULL,
-                                     ...) {
+                                     miss = NULL,
+                                     vartype = c('ci', 'se'),
+                                     level = 0.95) {
 
-  enquo_var <- rlang::enquo(.vars)
-  enquo_seg <- rlang::enquo(.segmentos)
+  if(!inherits(s, 'tbl_svy')) {
+    stop('Se necesita un data.frame con diseno complejo')
+  }
 
-  # Posiciones de variables en la df .data
-  .var_select <- tidyselect::eval_select(expr = enquo_var,
-                                         data = .data[['variables']])
+  vars <- tidyselect::eval_select(expr = enquo(.vars),
+                                  data = .df[['variables']])
+  vars <- names(vars)
 
-  .seg_select <- tidyselect::eval_select(expr = enquo_seg,
-                                         data = .data[['variables']])
+  # Revisar que se entreguen segmentos
+  segmentos_quo <- enquo(.segmentos)
 
-  # Nombres de las variables de interés a partir de sus posiciones.
-  var_sel_name <- colnames(.data)[.var_select]
-
-  # Nombres de segmentos si hay variables de segmentos.
-  if(length(.seg_select) == 0){
-    var_seg_name <- NA
+  if(rlang::quo_is_null(segmentos_quo)){
+    segmentos <- list(NULL)
   } else {
-    var_seg_name <- colnames(.data)[.seg_select]
+    segmentos <- tidyselect::eval_select(expr = segmentos_quo,
+                                         data = .df[['variables']])
+    segmentos <- names(segmentos)
   }
 
-  # Elaboración de base con todas las combinaciones entre variables y segmentos.
-  tab <- tidyr::expand_grid(var = var_sel_name,
-                            seg = var_seg_name)
+  tab <- purrr::map(
+    vars,
+    \(x) purrr::map(
+      segmentos,
+      \(y) svy_tabla_var_segmento(.df = .df,
+                                  .var = x,
+                                  .segmento = y,
+                                  miss = miss,
+                                  vartype = vartype,
+                                  level = level)
+    )
+  )
 
-  # print(tab)
-
-  svy_tabla_var_segmento_int <- function(.var, .seg) {
-    # Funcion auxiliar para manejar casos en los que .seg == NULL.
-
-    var <- rlang::sym(.var)
-
-    if(is.na(.seg)) {
-      seg <- NULL
-    } else {
-      seg <- rlang::sym(.seg)
-    }
-
-    svy_tabla_var_segmento(.data,
-                           .var = !!var,
-                           .segmento = !!seg,
-                           ...)
-  }
-
-  # Cálculo de cada combinación de variable y segmento
-  l_result <- purrr::map2(tab[['var']], tab[['seg']],
-                          ~ svy_tabla_var_segmento_int(.x, .y))
-
-  # Agregar la lista de resultados a tab para poder desarmarla usando unnest.
-  df_result <- tab %>%
-    mutate(l_result = l_result)
-
-  # Resultado final sin las columnas auxiliares.
-  df_result %>%
-    tidyr::unnest(l_result) %>%
-    select(!c('var', 'seg'))
+  tab |>
+    purrr::list_flatten() |>
+    purrr::list_rbind() |>
+    tibble::as_tibble()
 }
 
 
@@ -243,20 +203,37 @@ svy_tabla_vars_segmentos <- function(.data,
 #'
 #' @name svy_diff_sig
 #'
-#' @param .data data.frame con variables `\\*_upp` y `\\*_low`
+#' @param .df data.frame con variables `\\*_upp` y `\\*_low`
+#'
+#' @importFrom stringr str_detect str_which
 #'
 #' @return data.frame
 #'
 #' @export
-svy_diff_sig <- function(.data){
+svy_diff_sig <- function(.df){
 
-  var_data <- colnames(.data)
+  var_name <- colnames(.df)
 
-  if(sum(stringr::str_detect(var_data, '_upp$|_low$')) != 2) stop('Se necesita el intervalo de confianza')
+  if(sum(stringr::str_detect(var_name, "_upp$|_low$")) != 2) {
+    stop("Se necesita el intervalo de confianza con variables '_upp' y '_low'")
+  }
 
-  var_low <- rlang::sym(var_data[stringr::str_which(var_data, '_low$')])
-  var_upp <- rlang::sym(var_data[stringr::str_which(var_data, '_upp$')])
+  var_low <- var_name[stringr::str_which(var_name, '_low$')]
+  var_upp <- var_name[stringr::str_which(var_name, '_upp$')]
 
-  tab <- .data %>%
-    mutate(diff_sig = min(!!var_upp) < !!var_low | max(!!var_low) > !!var_upp)
+  # 1 si no hay columna "casos".
+  val_count <- .df[['casos']] %||% 1
+
+  # Eliminar del cálculo de diferencias niveles en los que no hayan respuestas.
+  val_low   <- ifelse(val_count == 0, NA, .df[[var_low]])
+  val_upp   <- ifelse(val_count == 0, NA, .df[[var_upp]])
+
+  suppressWarnings(
+    # Aparece warnings por grupos en donde no hay valores válidos.
+    .df$diff_sig <-
+      min(val_upp, na.rm = TRUE) < val_low |
+      max(val_low, na.rm = TRUE) > val_upp
+  )
+
+  .df
 }

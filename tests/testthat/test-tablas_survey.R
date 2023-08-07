@@ -21,53 +21,55 @@ s <- srvyr::as_survey_design(d, weights = wgt)
 # Resultados sin segmentos
 
 test_that("svy_tabla_var_segmento proporcion de categoría factor", {
-  expect_identical(svy_tabla_var_segmento(s, .var = fct)$pregunta_cat,
+  expect_identical(svy_tabla_var_segmento(s, .var = 'fct')$pregunta_cat,
                    factor(c('No', 'Si')))
 })
 
 test_that("svy_tabla_var_segmento proporcion de categoría labelled", {
-  expect_identical(svy_tabla_var_segmento(s, .var = lab)$pregunta_cat,
+  expect_identical(svy_tabla_var_segmento(s, .var = 'lab')$pregunta_cat,
                    factor(c('No', 'Si')))
 })
 
 test_that("svy_tabla_var_segmento mismos resultados entre factor y labelled", {
-  expect_identical(svy_tabla_var_segmento(s, .var = fct)$prop,
-                   svy_tabla_var_segmento(s, .var = lab)$prop)
+  expect_identical(svy_tabla_var_segmento(s, .var = 'fct')$prop,
+                   svy_tabla_var_segmento(s, .var = 'lab')$prop)
 })
 
-test_that("svy_tabla_var_segmento media de escalar labelled", {
-  expect_s3_class(svy_tabla_var_segmento(s, .var = esc), 'tbl_df')
+test_that("svy_tabla_var_segmento media de escalar", {
+  expect_s3_class(svy_tabla_var_segmento(s, .var = 'esc'), 'tbl_df')
 })
 
 test_that("svy_tabla_var_segmento proporcion de categoría labelled", {
-  expect_s3_class(svy_tabla_var_segmento(s, .var = lab_na), 'tbl_df')
+  expect_s3_class(svy_tabla_var_segmento(s, .var = 'lab_na'), 'tbl_df')
 })
 
 # Resultados con segmentos
 
 test_that("svy_tabla_var_segmento proporcion de categoría factor con segmento", {
-  expect_s3_class(svy_tabla_var_segmento(s, .var = fct, .segmento = x), 'tbl_df')
+  expect_identical(svy_tabla_var_segmento(s, .var = 'fct', .segmento = 'x')$casos,
+                   c(4.5, 2, 4.5, 3, 3, 3, 0, 0))
 })
 
 test_that("svy_tabla_var_segmento proporcion de categoría labelled con segmento", {
-  expect_s3_class(svy_tabla_var_segmento(s, .var = lab, .segmento = x), 'tbl_df')
+  expect_identical(svy_tabla_var_segmento(s, .var = 'lab', .segmento = 'x')$casos,
+                   c(4.5, 2, 4.5, 3, 3, 3, 0, 0))
 })
 
 test_that("svy_tabla_var_segmento mismos resultados entre factor y labelled", {
-  expect_identical(svy_tabla_var_segmento(s, .var = fct, .segmento = x)$prop,
-                   svy_tabla_var_segmento(s, .var = lab, .segmento = x)$prop)
+  expect_identical(svy_tabla_var_segmento(s, .var = 'fct', .segmento = 'x')$prop,
+                   svy_tabla_var_segmento(s, .var = 'lab', .segmento = 'x')$prop)
 })
 
 test_that("svy_tabla_var_segmento proporcion labelled con segmento", {
-  expect_s3_class(svy_tabla_var_segmento(s, .var = esc, .segmento = x), 'tbl_df')
+  expect_s3_class(svy_tabla_var_segmento(s, .var = 'esc', .segmento = 'x'), 'tbl_df')
 })
 
 test_that("svy_tabla_var_segmento media escalar con segmento", {
-  expect_s3_class(svy_tabla_var_segmento(s, .var = esc, .segmento = lab_na), 'tbl_df')
+  expect_s3_class(svy_tabla_var_segmento(s, .var = 'esc', .segmento = 'lab_na'), 'tbl_df')
 })
 
 test_that("svy_tabla_var_segmento proporcion de categoría labelled", {
-  expect_s3_class(svy_tabla_var_segmento(s, .var = lab_na, .segmento = x), 'tbl_df')
+  expect_s3_class(svy_tabla_var_segmento(s, .var = 'lab_na', .segmento = 'x'), 'tbl_df')
 })
 
 # svy_tabla_vars_segmentos ---------------------------------------------------------
@@ -85,6 +87,6 @@ test_that("svy_tabla_vars_segmentos proporcion labelled con segmento", {
 })
 
 test_that("svy_tabla_vars_segmentos proporcion labelled con segmento", {
-  expect_s3_class(svy_tabla_vars_segmentos(s, .vars = esc, .segmentos = c(x, fct))$segmento_cat,
+  expect_s3_class(svy_tabla_vars_segmentos(s, .vars = fct, .segmentos = c(x, lab))$segmento_cat,
                   'factor')
 })

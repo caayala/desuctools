@@ -4,10 +4,10 @@
 \alias{svy_diff_sig}
 \title{Comparación entre intervalos de confianza}
 \usage{
-svy_diff_sig(.data)
+svy_diff_sig(.df)
 }
 \arguments{
-\item{.data}{data.frame con variables `\\*_upp` y `\\*_low`}
+\item{.df}{data.frame con variables `\\*_upp` y `\\*_low`}
 }
 \value{
 data.frame

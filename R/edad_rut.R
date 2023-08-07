@@ -4,7 +4,7 @@
 #'
 #' @return integer. Edad estimada de la persona.
 #'
-#' @importfrom lubridate date_decimal
+#' @importFrom lubridate date_decimal
 #' @examples
 #' edad_rut(13456789)
 #'

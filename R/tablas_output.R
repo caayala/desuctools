@@ -200,7 +200,7 @@ tabla_prop_val <- function(.df,
 #'
 #' @return tibble
 #'
-tabla_total <- function(.df) {
+tabla_total_prop <- function(.df) {
 
   tab_tot <- aggregate(casos ~ pregunta_cat,
                        data = .df,
@@ -269,24 +269,59 @@ tabla_var_segmento <- function(.df,
   }
 
   df_agg <- data.frame(casos        = v_wgt,
-                       segmento_cat = forcats::as_factor(v_segmento),
-                       pregunta_cat = forcats::as_factor(v_pregunta))
+                       segmento_cat = forcats::as_factor(v_segmento))
 
-  # Declarar explícitamente NA que pudiesen estar en la categoría de respuestas
-  # de la pregunta.
-  # Solo si hay casos NA en el factor
-  if(is.na(df_agg$pregunta_cat) |> any()) {
-    df_agg$pregunta_cat <- forcats::fct_na_value_to_level(df_agg$pregunta_cat)
+  if(inherits(v_pregunta, c('haven_labelled', 'factor', 'character'))){
+    # Caso en que pregunta es labelled, factor o string: se calcula proporción.
+    df_agg$pregunta_cat <- forcats::as_factor(v_pregunta)
+
+    # Declarar explícitamente NA que pudiesen estar en la categoría de respuestas
+    # de la pregunta.
+    # Solo si hay casos NA en el factor
+    if(is.na(df_agg$pregunta_cat) |> any()) {
+      df_agg$pregunta_cat <- forcats::fct_na_value_to_level(df_agg$pregunta_cat)
+    }
+
+    tab <- aggregate(casos ~ segmento_cat + pregunta_cat,
+                     df_agg,
+                     FUN = \(x) sum(x, na.rm = FALSE),
+                     na.action = na.pass,
+                     drop = FALSE)
+
+    # Agregar 0 si es que hay combinación de pregunta y segmento sin casos.
+    tab$casos <- replace(tab$casos, is.na(tab$casos), 0)
+
+    # Agrega el porcentaje total a los segmentos.
+    if (total) {
+      tab <- tabla_total_prop(tab)
+    }
+
+    # Agrega el porcentaje de respuesta.
+    tab <- tabla_prop(tab,
+                      .segmento = 'segmento_cat')
+
+    # Agrega el porcentaje válido si es que se señalan categorias perdidas.
+    if (!is.null(miss)) {
+      tab <- tabla_prop_val(tab,
+                            miss = c(NA, miss),
+                            by = 'segmento_cat')
+    }
+
+  } else {
+    # Caso en que pregunta sea numérica: se calcula promedio.
+    df_agg$pregunta_cat <- v_pregunta
+
+    tab <- aggregate(x = df_agg[['pregunta_cat']],
+                     by = list('segmento_cat' = df_agg[['segmento_cat']]),
+                     FUN = function(x) c(casos = sum(             df_agg$casos[match(x, df_agg$pregunta_cat)]),
+                                         mean  = weighted.mean(x, df_agg$casos[match(x, df_agg$pregunta_cat)])),
+                     drop = FALSE)
+
+    tab <- cbind(tab[1],
+                 tab$x)
+
+    tab$pregunta_cat <- 'mean'
   }
-
-  tab <- aggregate(casos ~ segmento_cat + pregunta_cat,
-                   df_agg,
-                   FUN = \(x) sum(x, na.rm = FALSE),
-                   na.action = na.pass,
-                   drop = FALSE)
-
-  # Agregar 0 si es que hay combinación de pregunta y segmento sin casos.
-  tab$casos <- replace(tab$casos, is.na(tab$casos), 0)
 
   # Variable y etiqueta de pregunta
   tab$pregunta_var <- .var
@@ -296,21 +331,6 @@ tabla_var_segmento <- function(.df,
   tab$segmento_var <- segmento_var
   tab$segmento_lab <- segmento_lab
 
-  # Agrega el porcentaje total a los segmentos.
-  if (total) {
-    tab <- tabla_total(tab)
-  }
-
-  # Agrega el porcentaje de respuesta.
-  tab <- tabla_prop(tab,
-                    .segmento = 'segmento_cat')
-
-  # Agrega el porcentaje válido si es que se señalan categorias perdidas.
-  if (!is.null(miss)) {
-    tab <- tabla_prop_val(tab,
-                          miss = c(NA, miss),
-                          by = 'segmento_cat')
-  }
 
   # Orden de variables de salida
   col_orden <- c('segmento_var', 'segmento_lab', 'segmento_cat',
@@ -321,8 +341,7 @@ tabla_var_segmento <- function(.df,
   tab <- tab[c(col_orden, col_adicionales)]
 
   # Orden de casos
-  tab |>
-    dplyr::arrange(segmento_cat, pregunta_cat)
+  tab[order(tab$segmento_cat, tab$pregunta_cat), ]
 }
 
 
@@ -336,8 +355,8 @@ tabla_var_segmento <- function(.df,
 #' @param .vars tidyselect, lista de nombres de variables de las que se quiere saber su proporción de respuestas
 #' @param .segmentos tidyselect, lista de nombres de variables de segmentación de las preguntas de `.vars`
 #' @param .wt name, nombre de la variable de ponderación
-#' @param total logical, Si total = TRUE, se agrega el total para cada segmento.
 #' @param miss integers, Vector de valores que deben coniderarse como missings.
+#' @param total logical, Si total = TRUE, se agrega el total para cada segmento.
 #'
 #' @return tibble
 #'
@@ -350,16 +369,26 @@ tabla_vars_segmentos <- function(.df,
                                  .vars,
                                  .segmentos = NULL,
                                  .wt = NULL,
-                                 total = FALSE,
-                                 miss = NULL) {
+                                 miss = NULL,
+                                 total = FALSE) {
 
   vars <- tidyselect::eval_select(expr = enquo(.vars),
                                   data = .df)
   vars <- names(vars)
 
-  segmentos_quo <- enquo(.segmentos)
+  # Revisar si se entrega un ponderador
+  wt_quo <- rlang::enquo(.wt)
 
-  if(quo_is_null(segmentos_quo)){
+  if(rlang::quo_is_null(wt_quo)){
+    wt_chr <- NULL
+  } else {
+    wt_chr <- rlang::as_label(wt_quo)
+  }
+
+  # Revisar que se entreguen segmentos
+  segmentos_quo <- rlang::enquo(.segmentos)
+
+  if(rlang::quo_is_null(segmentos_quo)){
     segmentos <- list(NULL)
   } else {
     segmentos <- tidyselect::eval_select(expr = segmentos_quo,
@@ -367,18 +396,14 @@ tabla_vars_segmentos <- function(.df,
     segmentos <- names(segmentos)
   }
 
-  segmentos <- c(segmentos, NULL)
-
-  # print(segmentos)
-
-  tab <- map(
+  tab <- purrr::map(
     vars,
-    \(x) map(
+    \(x) purrr::map(
       segmentos,
       \(y) tabla_var_segmento(.df = .df,
                               .var = x,
                               .segmento = y,
-                              .wt = .wt,
+                              .wt = wt_chr,
                               total = total,
                               miss = miss)
     )
@@ -386,5 +411,6 @@ tabla_vars_segmentos <- function(.df,
 
   tab |>
     purrr::list_flatten() |>
-    purrr::list_rbind()
+    purrr::list_rbind() |>
+    tibble::as_tibble()
 }

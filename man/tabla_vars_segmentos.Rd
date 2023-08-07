@@ -9,8 +9,8 @@ tabla_vars_segmentos(
   .vars,
   .segmentos = NULL,
   .wt = NULL,
-  total = FALSE,
-  miss = NULL
+  miss = NULL,
+  total = FALSE
 )
 }
 \arguments{
@@ -22,9 +22,9 @@ tabla_vars_segmentos(
 
 \item{.wt}{name, nombre de la variable de ponderación}
 
-\item{total}{logical, Si total = TRUE, se agrega el total para cada segmento.}
-
 \item{miss}{integers, Vector de valores que deben coniderarse como missings.}
+
+\item{total}{logical, Si total = TRUE, se agrega el total para cada segmento.}
 }
 \value{
 tibble

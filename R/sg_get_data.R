@@ -15,7 +15,6 @@
 #' @return data.frame
 #' @export
 #'
-#' @examples
 sg_get_data <- function(api_operation = c('SimpleExport',
                                           'OperationData'),
                         interview_ids,
