@@ -76,6 +76,7 @@ tabla_categoria <- function(.df,
 #' @title Tabla de categorías
 #'
 #' @description
+#' @description
 #' Porcentaje de respuesta de categorías de varias variables.
 #' Principalmente para mostrar la distribución de casos de variables de segmentación posteriores.
 #'

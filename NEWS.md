@@ -1,3 +1,32 @@
+# desuctools 0.1.5.9008
+
+* Se agrega la función `edad_rut` para calcular la edad utilizando el rut.
+
+# desuctools 0.1.5.9007
+
+* Se agrega la función `rec_labelled` para facilitar la recodificación de variables en formato labelled.
+* Función para bajar y leer bases spss desde Alchemer.
+
+# desuctools 0.1.5.9006
+
+* Aumentar la cantidad de encuestas que descarga la función `sg_get`.
+
+# desuctools 0.1.5.9005
+
+* Actualizar función `sg_get` para lidiar con errores.
+
+# desuctools 0.1.5.9004
+
+* Actualizar función `sg_get` con el paquete `httr2`. 
+Tiene sencillas maneras de controlar la cantidad de request por segundo y re--intentos.
+* Remover dependencia de `httr`.
+* Actualización de funciones para eliminar advertencias y errores.
+
+# desuctools 0.1.5.9003
+
+* Agregar pausa a llamados a API de SurveyToGo `sg_get`.
+* Subir requerimientos de paquetes.
+
 # desuctools 0.1.5.9002
 
 * Cambio de caracteres en el nombre de regiones en función `region_orden`.
@@ -13,7 +42,7 @@
 * Función `is_email` para validar sintaxis de correos electrónicos.
 * Función `svy_tabla_vars_segmentos` para obtener estadísticos de multiples variables y segmentos.
 * Función `fct_case_when` a partir de @pewmethods.
-* funcion `rec_ortografia` para corregir ortografía de palabras.
+* función `rec_ortografia` para corregir ortografía de palabras.
 * función `format_num` para impresión de número con separador de miles.
 * función `region_orden` para pasar de regiones como números a factor ordenadoh de norte a sur.
 * función `sg_get` para rescatar información de SurveyToGo desde su 

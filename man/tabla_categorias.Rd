@@ -22,3 +22,9 @@ tibble
 Porcentaje de respuesta de categorías de varias variables.
 Principalmente para mostrar la distribución de casos de variables de segmentación posteriores.
 }
+\details{
+Tablas de resultados ----------------------------------------------------
+
+Generación de una data.frame con el número de casos y proporción de las distintas
+variables de segmentos que se agregen en `...`.
+}
