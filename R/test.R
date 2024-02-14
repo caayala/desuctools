@@ -40,14 +40,16 @@ tabla_var_segmento(d,
 
 tabla_vars_segmentos(d,
                      .vars = lab,
+                     miss = NULL,
                      .segmentos = c(x, edad),
                      .wt = NULL)
 
 svy_tabla_vars_segmentos(s,
                          .vars = lab,
+                         miss = 'No',
                          .segmentos = c(x, edad))
 
-## numerico
+## numérico
 
 tabla_var_segmento(d,
                    .var = 'esc',
@@ -64,7 +66,6 @@ tabla_vars_segmentos(d,
 svy_tabla_vars_segmentos(s,
                          .vars = esc,
                          .segmentos = c(x, edad))
-
 
 
 
@@ -85,18 +86,18 @@ aggregate(wgt ~ var,
           na.action = na.pass,
           drop = FALSE)
 
+
+df_gpt <- data.frame(group=c("A", "A", "B", "B", "B"),
+                     value=c(1, 2, 3, 4, 5),
+                     weight=c(0.1, 0.2, 0.3, 0.4, 0.5))
+
 aggregate(value * weight ~ group,
-          df,
+          df_gpt,
           # FUN = \(x) identity(x),
           FUN = \(x) sum(x, na.rm = FALSE),
           na.action = na.pass,
           drop = FALSE)
 
-
-
-df_gpt <- data.frame(group=c("A", "A", "B", "B", "B"),
-                     value=c(1, 2, 3, 4, 5),
-                     weight=c(0.1, 0.2, 0.3, 0.4, 0.5))
 
 
 weighted_mean_agg <- function(.df, .group1, .weight) {

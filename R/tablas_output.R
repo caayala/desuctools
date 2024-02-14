@@ -146,10 +146,14 @@ tabla_categorias <- function(.df,
 tabla_prop <- function(.df,
                        .segmento) {
   # Cálculo de porcentaje de respuestas en tabla con numero de casos.
+  # Proporción de "casos" en cada grupo ".segmento" y luego reemplazar NaN por 0.
 
-  .df |>
-    mutate(prop = .data[['casos']] / sum(.data[['casos']], na.rm = TRUE),
-           .by = all_of(.segmento))
+  .df$prop <- ave(.df[["casos"]],
+                  .df[[.segmento]],
+                  FUN = \(x) x / sum(x, na.rm = TRUE))
+  .df$prop <- ifelse(is.nan(.df$prop), 0, .df$prop)
+
+  return(.df)
 }
 
 
@@ -279,7 +283,7 @@ tabla_var_segmento <- function(.df,
     # Declarar explícitamente NA que pudiesen estar en la categoría de respuestas
     # de la pregunta.
     # Solo si hay casos NA en el factor
-    if(is.na(df_agg$pregunta_cat) |> any()) {
+    if(any(is.na(df_agg$pregunta_cat))) {
       df_agg$pregunta_cat <- forcats::fct_na_value_to_level(df_agg$pregunta_cat)
     }
 
@@ -399,15 +403,19 @@ tabla_vars_segmentos <- function(.df,
 
   tab <- purrr::map(
     vars,
-    \(x) purrr::map(
-      segmentos,
-      \(y) tabla_var_segmento(.df = .df,
-                              .var = x,
-                              .segmento = y,
-                              .wt = wt_chr,
-                              total = total,
-                              miss = miss)
-    )
+    \(x_v) {
+      purrr::map(
+        segmentos,
+        \(y_s) {
+          tabla_var_segmento(.df = .df,
+                             .var = x_v,
+                             .segmento = y_s,
+                             .wt = wt_chr,
+                             total = total,
+                             miss = miss)
+        }
+      )
+    }
   )
 
   tab |>

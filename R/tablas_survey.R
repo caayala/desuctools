@@ -52,29 +52,38 @@ svy_tabla_var_segmento <- function(.df,
                     # Mantiene niveles de factor (.segmento y .var) que sin casos en los datos.
                     .drop = FALSE)
 
-  # Agrega el porcentaje válido si es que se señalan categorias perdidas.
+  f_group_prop <- function(.df_g,
+                           vartype = NULL){
+    .df_g |>
+      dplyr::summarise(casos_unwt = srvyr::unweighted(n()),
+                       casos = srvyr::survey_total(),
+                       prop = srvyr::survey_prop(vartype = vartype,
+                                                 level = level,
+                                                 proportion = TRUE,
+      # This appears to be the method used by SUDAAN and SPSS COMPLEX SAMPLES
+                                                 prop_method = 'xlogit'),
+                       .groups = 'drop')
+  }
+
+  # Agrega el porcentaje válido si es que se señalan categorías perdidas.
   if (!is.null(miss)) {
     # Caso de proporciones con necesidad de cálculo de prop_val.
 
     # Categorías de respuesta en miss a NA.
     val_is_miss <- is.na(.df[['variables']][[.var]]) |
       .df[['variables']][[.var]] %in% c(miss, NA)
+    val_is_miss <- c(miss, NA)
 
-    tab <- .df |>
-      dplyr::group_by(dplyr::pick(any_of(c(.segmento, .var))),
-                      # Mantiene niveles de factor (.segmento y .var) que sin casos en los datos.
-                      .drop = FALSE) |>
-      dplyr::summarise(casos_unwt = srvyr::unweighted(n()),
-                       casos = srvyr::survey_total(),
-                       prop = srvyr::survey_prop(vartype = NULL),
-                       .groups = 'drop')
+    tab <- df_group |>
+      f_group_prop(vartype = NULL)
 
-    tab_miss <- .df |>
-      dplyr::filter(!val_is_miss) |>
-      dplyr::group_by(dplyr::pick(tidyselect::any_of(c(.segmento, .var))),
-                      # Elimina los niveles de factor (.var) que sin casos en los datos.
-                      .drop = TRUE) |>
-      dplyr::summarise(prop_val = srvyr::survey_prop(vartype = vartype),
+    tab_miss <- df_group |>
+      dplyr::slice(!val_is_miss)
+      dplyr::filter(!val_is_miss, .preserve = FALSE) |>
+      dplyr::summarise(prop_val = srvyr::survey_prop(vartype = vartype,
+                                                     level = level,
+                                                     proportion = TRUE,
+                                                     prop_method = 'xlogit'),
                        .groups = 'drop')
 
     tab <- dplyr::left_join(tab,
@@ -83,32 +92,29 @@ svy_tabla_var_segmento <- function(.df,
 
   } else {
     # Caso de proporciones sin necesidad de cálculo de prop_val.
-    tab <- .df |>
-      dplyr::group_by(dplyr::pick(tidyselect::any_of(c(.segmento, .var))),
-                      # Mantiene niveles de factor (.segmento y .var) que sin casos en los datos.
-                      .drop = FALSE) |>
-      dplyr::summarise(casos_unwt = srvyr::unweighted(n()),
-                       casos = srvyr::survey_total(),
-                       prop = srvyr::survey_prop(vartype = vartype,
-                                                 level = level),
-                       .groups = 'drop')
+    tab <- df_group |>
+      f_group_prop(vartype = vartype)
   }
 
   # Variable y etiqueta de pregunta
   tab$pregunta_var <- .var
-  tab$pregunta_lab <- attr(.df[['variables']][[.var]], 'label', exact = TRUE) %||% '-'
+  tab$pregunta_lab <- attr(.df[['variables']][[.var]],
+                           'label',
+                           exact = TRUE) %||% '-'
   names(tab)[names(tab) == .var] <- "pregunta_cat"
 
   # Variable y etiqueta de segmentos
   tab$segmento_var <- .segmento
-  tab$segmento_lab <- attr(.df[['variables']][[.segmento]], 'label', exact = TRUE) %||% '-'
+  tab$segmento_lab <- attr(.df[['variables']][[.segmento]],
+                           'label',
+                           exact = TRUE) %||% '-'
   names(tab)[names(tab) == .segmento] <- "segmento_cat"
 
   # Determinar si hay diferencias significativas
   tab <- tab |>
     # Aplicar la función para cada grupo.
     tidyr::nest(.by = ('segmento_cat')) |>
-    dplyr::mutate(data = map(data, svy_diff_sig)) |>
+    dplyr::mutate(data = purrr::map(data, svy_diff_sig)) |>
     tidyr::unnest(data)
 
   # Orden de variables de salida
@@ -177,15 +183,19 @@ svy_tabla_vars_segmentos <- function(.df,
 
   tab <- purrr::map(
     vars,
-    \(x) purrr::map(
-      segmentos,
-      \(y) svy_tabla_var_segmento(.df = .df,
-                                  .var = x,
-                                  .segmento = y,
-                                  miss = miss,
-                                  vartype = vartype,
-                                  level = level)
-    )
+    \(x_v) {
+      purrr::map(
+        segmentos,
+        \(y_s) {
+          svy_tabla_var_segmento(.df = .df,
+                                 .var = x_v,
+                                 .segmento = y_s,
+                                 miss = miss,
+                                 vartype = vartype,
+                                 level = level)
+        }
+      )
+    }
   )
 
   tab |>
