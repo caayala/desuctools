@@ -72,14 +72,15 @@ svy_tabla_var_segmento <- function(.df,
     # Categorías de respuesta en miss a NA.
     val_is_miss <- is.na(.df[['variables']][[.var]]) |
       .df[['variables']][[.var]] %in% c(miss, NA)
+
     val_is_miss <- c(miss, NA)
 
     tab <- df_group |>
       f_group_prop(vartype = NULL)
 
-    tab_miss <- df_group |>
-      dplyr::slice(!val_is_miss)
-      dplyr::filter(!val_is_miss, .preserve = FALSE) |>
+    tab_miss <- df_group$variables |>
+      # dplyr::slice(!val_is_miss) |> # Por qué está esta linea? Genera problemas.
+      dplyr::filter(!any_of(val_is_miss), .preserve = FALSE) |>
       dplyr::summarise(prop_val = srvyr::survey_prop(vartype = vartype,
                                                      level = level,
                                                      proportion = TRUE,

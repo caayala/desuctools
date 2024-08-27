@@ -44,6 +44,12 @@ tabla_vars_segmentos(d,
                      .segmentos = c(x, edad),
                      .wt = NULL)
 
+tabla_vars_segmentos(d,
+                     .vars = lab,
+                     miss = 'No',
+                     .segmentos = c(x, edad),
+                     .wt = NULL)
+
 svy_tabla_vars_segmentos(s,
                          .vars = lab,
                          miss = 'No',
