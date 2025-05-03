@@ -43,12 +43,14 @@ fct_case_when <- function(..., label = NULL)
                               function(a) {
                                 out <- f_rhs(a) %>% eval_tidy(env = default_env)
                                 return(levels(out) %||% out)
-                              }) %>%
+                              }) |>
     purrr::list_c()
+
   for (i in 1:arg_len) {
-    f_rhs(arguments[[i]]) <- as.character(f_rhs(arguments[[i]]) %>%
+    f_rhs(arguments[[i]]) <- as.character(f_rhs(arguments[[i]]) |>
                                             eval_tidy(env = default_env))
   }
+
   cw <- do.call(case_when, arguments)
   cw <- factor(cw, levels = unique(output_levels))
 
