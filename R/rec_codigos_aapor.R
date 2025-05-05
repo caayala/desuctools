@@ -1,4 +1,3 @@
-
 #' @title Codigos de disposición final según AAPOR
 #'
 #' @description
@@ -37,24 +36,29 @@
 #' @export
 #'
 #' @examples rec_cdf(c(110, 213))
-rec_cdf <- function(codigo){
-  cdf <- dplyr::case_when(codigo %/% 10  == 11 ~ 11L,
-                          codigo %/% 10  == 12 ~ 12L,
-                          codigo %/% 10  == 21 ~ 21L,
-                          codigo %/% 10  == 22 ~ 22L,
-                          codigo %/% 10  == 23 ~ 23L,
-                          codigo %/% 10  == 31 ~ 31L,
-                          codigo %/% 10  == 39 ~ 39L,
-                          codigo %/% 100 ==  4 ~ 40L)
+rec_cdf <- function(codigo) {
+  cdf <- dplyr::case_when(
+    codigo %/% 10 == 11 ~ 11L,
+    codigo %/% 10 == 12 ~ 12L,
+    codigo %/% 10 == 21 ~ 21L,
+    codigo %/% 10 == 22 ~ 22L,
+    codigo %/% 10 == 23 ~ 23L,
+    codigo %/% 10 == 31 ~ 31L,
+    codigo %/% 10 == 39 ~ 39L,
+    codigo %/% 100 == 4 ~ 40L
+  )
 
-
-  haven::labelled(cdf,
-                  labels = c("I - Entrevistas Completas"            = 11L,
-                             "P - Entrevistas Parciales"            = 12L,
-                             "R - Rechazos"                         = 21L,
-                             "NC - No Contacto"                     = 22L,
-                             "O - Otros, No Responde"               = 23L,
-                             "UH - Elegibilidad Desconocida"        = 31L,
-                             "OH - Elegibilidad Desconocida, Otros" = 39L,
-                             "NE - No Elegible"                     = 40L))
+  haven::labelled(
+    cdf,
+    labels = c(
+      "I - Entrevistas Completas" = 11L,
+      "P - Entrevistas Parciales" = 12L,
+      "R - Rechazos" = 21L,
+      "NC - No Contacto" = 22L,
+      "O - Otros, No Responde" = 23L,
+      "UH - Elegibilidad Desconocida" = 31L,
+      "OH - Elegibilidad Desconocida, Otros" = 39L,
+      "NE - No Elegible" = 40L
+    )
+  )
 }

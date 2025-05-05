@@ -26,9 +26,7 @@
 #'          fecha_referencia = fecha)
 #'
 #' @export
-edad_rut <- function(.rut,
-                     fecha_referencia){
-
+edad_rut <- function(.rut, fecha_referencia) {
   slope <- 3.3363697569700348e-06
   intercept <- 1932.2573852507373
 
@@ -37,8 +35,7 @@ edad_rut <- function(.rut,
   birth_date_year <- floor(birth_date)
   birth_date_month <- ceiling((birth_date - birth_date_year) * 12)
 
-  age <- difftime(fecha_referencia,
-                  lubridate::date_decimal(birth_date))
+  age <- difftime(fecha_referencia, lubridate::date_decimal(birth_date))
 
   floor(age / 365.25) |>
     as.integer()

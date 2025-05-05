@@ -28,11 +28,10 @@ rev_niveles.default <- function(x, ...) {
 #' @rdname rev_niveles
 #' @export
 rev_niveles.factor <- function(x, niveles_inv = NULL, ...) {
-
   # Niveles del vector
   lev <- levels(x)
 
-  if(is.null(niveles_inv)){
+  if (is.null(niveles_inv)) {
     lev_new <- rev(lev)
   } else {
     # Posiciones de interés de los niveles que se quieren invertir.
@@ -46,27 +45,24 @@ rev_niveles.factor <- function(x, niveles_inv = NULL, ...) {
   x_new <- factor(x, levels = lev_new)
 
   # Agregar etiqueta label si es que estaba presente en vector original.
-  structure(x_new,
-            label = attr(x, 'label', exact = TRUE))
+  structure(x_new, label = attr(x, "label", exact = TRUE))
 }
 
 
 #' @rdname rev_niveles
 #' @export
-rev_niveles.haven_labelled <- function(x,
-                                       rango_inv = NULL,
-                                       ...){
-
+rev_niveles.haven_labelled <- function(x, rango_inv = NULL, ...) {
   # Función para invertir valores según rango_inv
-  valores_inv <- function(val, index_inf, index_sup){
+  valores_inv <- function(val, index_inf, index_sup) {
     limits <- sort(unique(val))
 
-    val <- ifelse(val >= limits[index_inf] & val <= limits[index_sup],
-                  limits[index_sup] + 1 - val,
-                  val)
+    val <- ifelse(
+      val >= limits[index_inf] & val <= limits[index_sup],
+      limits[index_sup] + 1 - val,
+      val
+    )
 
-    structure(val,
-              names = names(val))
+    structure(val, names = names(val))
   }
 
   # Por defecto (NULL), se invierte todo el rango de números.
@@ -79,17 +75,15 @@ rev_niveles.haven_labelled <- function(x,
   # para poder voltear también las etiquetas.
   value_pos <- which(sort(unique(x)) %in% rango_inv)
 
-  x_new <- valores_inv(x,
-                       index_inf = value_pos[1],
-                       index_sup = value_pos[2])
+  x_new <- valores_inv(x, index_inf = value_pos[1], index_sup = value_pos[2])
 
   # Indice de etiquetas.
   # Solo entre los valores buscados si es que se especifican.
   # Todo el rango si es que no está disponible.
 
-  labels_x <- attr(x, 'labels', exact = TRUE)
+  labels_x <- attr(x, "labels", exact = TRUE)
 
-  if(!is.null(labels_x)) {
+  if (!is.null(labels_x)) {
     # Posiciones de las etiquetas de los valores a invertir
     labels_pos <- which(labels_x %in% rango_inv)
 
@@ -97,27 +91,23 @@ rev_niveles.haven_labelled <- function(x,
     labels_new <- valores_inv(labels_x, labels_pos[1], labels_pos[2])
 
     # Agregar las etiquetas nuevas al nuevo vector, también invertido.
-    x_new <- structure(x_new,
-                       labels = labels_new)
+    x_new <- structure(x_new, labels = labels_new)
   }
 
   # Devuelve nuevo vector invertido con etiqueta de variable y
   # etiqueta de niveles si las hubo.
-  structure(x_new,
-            label = attr(x, 'label', exact = TRUE),
-            class = 'haven_labelled')
+  structure(
+    x_new,
+    label = attr(x, "label", exact = TRUE),
+    class = "haven_labelled"
+  )
 }
 
 
 #' @rdname rev_niveles
 #' @export
-rev_niveles.numeric <- function(x,
-                                rango_inv = NULL,
-                                ...){
-
-  x_new <- rev_niveles.haven_labelled(x,
-                                      rango_inv = rango_inv,
-                                      ...)
+rev_niveles.numeric <- function(x, rango_inv = NULL, ...) {
+  x_new <- rev_niveles.haven_labelled(x, rango_inv = rango_inv, ...)
 
   # Cambio clase de haven_labelled a numeric por consistencia.
   unclass(x_new)

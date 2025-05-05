@@ -18,7 +18,7 @@
 #' @param path String. Path to a figure to be included. Can be either
 #'   an URL or a local path.
 #' @param alt_path String. An alternative figure path for \code{path}
-#'   with invalid extensions. In the case of PDF ('LaTeX') output,
+#'   with invalid extensions. In the case of PDF ("LaTeX") output,
 #'   invalid extensions are \code{.gif}, \code{.svg}.
 #' @param handler Function. A function with a single argument \code{path}.
 #'   Used to insert alternative contents, such as a piece of text,
@@ -27,16 +27,21 @@
 #'   \code{\link[knitr]{include_graphics}}.
 #'
 #' @examples
-#' png_url <- 'https://commonmark.org/images/markdown-mark.png'
-#' gif_url <- 'https://media.giphy.com/media/k3dcUPvxuNpK/giphy.gif'
+#' png_url <- "https://commonmark.org/images/markdown-mark.png"
+#' gif_url <- "https://media.giphy.com/media/k3dcUPvxuNpK/giphy.gif"
 #'
 #' \dontrun{
 #' include_graphics2(gif_url, alt_path = png_url)
 #' }
 #'
 #' @export
-include_graphics2 <- function(path, alt_path = NULL,
-                              handler = function(path) knitr::asis_output(paste('View', tools::file_ext(path), 'at', path)), ...) {
+include_graphics2 <- function(
+  path,
+  alt_path = NULL,
+  handler = function(path)
+    knitr::asis_output(paste("View", tools::file_ext(path), "at", path)),
+  ...
+) {
   if (knitr::is_latex_output()) {
     return(include_graphics_latex(path, alt_path, handler, ...))
   } else {
@@ -57,30 +62,42 @@ include_graphics2 <- function(path, alt_path = NULL,
 #' @importFrom utils download.file
 #' @importFrom knitr current_input
 #' @keywords internal
-include_graphics_latex <- function(path, alt_path = NULL,
-                                   handler = function(path) knitr::asis_output(paste('View', tools::file_ext(path), 'at', path)), ...) {
+include_graphics_latex <- function(
+  path,
+  alt_path = NULL,
+  handler = function(path)
+    knitr::asis_output(paste("View", tools::file_ext(path), "at", path)),
+  ...
+) {
   # URL
-  if (grepl('^https?://', path)) {
-    ifelse(use_alt_path(path, alt_path),
-           path <- alt_path,
-           return(handler(path)))
+  if (grepl("^https?://", path)) {
+    ifelse(
+      use_alt_path(path, alt_path),
+      path <- alt_path,
+      return(handler(path))
+    )
 
     ## Download Figure
-    dir_path <- paste0('downloadFigs4latex_',
-                       file_path_sans_ext(current_input()))
+    dir_path <- paste0(
+      "downloadFigs4latex_",
+      file_path_sans_ext(current_input())
+    )
     if (!dir.exists(dir_path)) dir.create(dir_path)
-    file_path <- paste0(dir_path, '/',
-                        knitr::opts_current$get()$label, '.',
-                        file_ext(path))
+    file_path <- paste0(
+      dir_path,
+      "/",
+      knitr::opts_current$get()$label,
+      ".",
+      file_ext(path)
+    )
     download.file(path, destfile = file_path)
     path <- file_path
-  }
-
-  # Local files
-  else {
-    ifelse(use_alt_path(path, alt_path),
-           path <- alt_path,
-           return(handler(path)))
+  } else { # Local files
+    ifelse(
+      use_alt_path(path, alt_path),
+      path <- alt_path,
+      return(handler(path))
+    )
   }
 
   # Insert Figure
@@ -99,6 +116,6 @@ use_alt_path <- function(path, alt_path) {
 }
 
 inval_latex_img <- function(path) {
-  invalid_ext <- c('svg', 'SVG', 'GIF', 'gif')
+  invalid_ext <- c("svg", "SVG", "GIF", "gif")
   return(tools::file_ext(path) %in% invalid_ext)
 }

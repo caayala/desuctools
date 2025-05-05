@@ -24,16 +24,14 @@
 #'
 #' @export
 #'
-alch_read_spss <- function(url){
+alch_read_spss <- function(url) {
   temp_zip <- tempfile(fileext = ".zip") # Descargo archivo zip
 
-  download.file(url,
-                destfile = temp_zip)
+  download.file(url, destfile = temp_zip)
 
   temp_dir <- tempdir() # Descomprimo archivo descargado
 
-  unzip(temp_zip,
-        exdir = temp_dir)
+  unzip(temp_zip, exdir = temp_dir)
 
   haven::read_sav(file.path(temp_dir, "spss.sav"))
 }
