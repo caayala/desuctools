@@ -40,7 +40,7 @@ tabla_categorias <- function(.data,
     names(seg_labels) <- preguntas
 
     tabla <- .data %>%
-        transmute(across(c(any_of(preguntas), !!wt_quo)), list(sjmisc::to_label)) %>%
+        transmute(across(c(any_of(preguntas), !!wt_quo), sjmisc::to_label)) %>%
         group_by(across(any_of(preguntas))) %>%
         summarise(n = sum(!!wt_quo %||% n())) %>%
         tidyr::pivot_longer(cols = -n,
