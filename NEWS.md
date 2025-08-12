@@ -1,3 +1,9 @@
+# desuctools 0.2.0.9001
+
+* Implementación de tidyselect para la selección de variables y segmentos en tabla_vars_segmentos.
+* Creación de métodos en tabla_vars_segmentos para data.frames y tbl_svy.
+* Nueva función para obtener información a partir de un rut: `rut_información`.
+
 # desuctools 0.1.5.9009
 
 * Se agrega la función `sg_date` para formatear fechas según los requerimientos de la 
