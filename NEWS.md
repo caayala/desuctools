@@ -1,3 +1,10 @@
+# desuctools 0.1.5.9009
+
+* Se agrega la función `sg_date` para formatear fechas según los requerimientos de la 
+API de SurveyToGo.
+* Se agregan funciones para codificar a factores variables habituales en bases de 
+datos del [Ministerio de Educación](https://centroestudios.mineduc.cl/datos-abiertos/)
+
 # desuctools 0.1.5.9008
 
 * Se agrega la función `edad_rut` para calcular la edad utilizando el rut.
@@ -30,7 +37,6 @@ Tiene sencillas maneras de controlar la cantidad de request por segundo y re--in
 # desuctools 0.1.5.9002
 
 * Cambio de caracteres en el nombre de regiones en función `region_orden`.
-
 
 # desuctools 0.1.5.9001
 
