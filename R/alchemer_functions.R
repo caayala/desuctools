@@ -38,19 +38,46 @@ alch_read_spss <- function(url) {
 
 
 #' @title Obtener respuestas de una encuesta de Alchemer
-#'
 #' @description
-#' Esta función recupera las respuestas de una encuesta específica de Alchemer.
-#' Permite descargar todas las respuestas o una página específica de resultados.
+#' Recupera las respuestas de una encuesta en Alchemer. Permite descargar una
+#' página concreta de resultados o todas las páginas (combinadas) cuando
+#' \code{page = "all"}. La función valida parámetros y devuelve el objeto
+#' parseado por la API (lista con metadatos y elemento \code{data} con las
+#' respuestas).
 #'
-#' @param api_token `chr` Clave de API de Alchemer. Se recomienda usar variables de entorno: Sys.getenv("XYZ")
-#' @param api_token_secret `chr` Secreto de API de Alchemer. Se recomienda usar variables de entorno: Sys.getenv("XYZ")
-#' @param survey_id `int` ID de la encuesta de la que deseas obtener las respuestas.
-#' @param results_per_page `int` Cantidad de respuestas por página. El máximo y valor por defecto es 500.
-#' @param page `int` o `chr`. El número de la página a descargar. Usar "all" (valor por defecto) para descargar todas las páginas.
+#' @param api_token `chr` Clave pública de API de Alchemer. Por defecto toma
+#'   \code{Sys.getenv("ALCH_API")}.
+#' @param api_token_secret `chr` Clave secreta de API. Por defecto toma
+#'   \code{Sys.getenv("ALCH_API_SECRET_KEY")}.
+#' @param survey_id `int` ID de la encuesta de la que se desean obtener las respuestas.
+#' @param results_per_page `int` Número de respuestas por página (1..500). Valor por
+#'   defecto: 500.
+#' @param page `int` o \code{"all"}. Número de página a descargar, o
+#'   \code{"all"} para recuperar y combinar todas las páginas.
 #'
-#' @return Una `list` que contiene la respuesta parseada de la API. Si `page = "all"`,
-#' el elemento `data` de la lista contendrá las respuestas de todas las páginas.
+#' @return `list`. Objeto devuelto por la API (parseado a lista). Si
+#'   \code{page = "all"} el elemento \code{data} contendrá las respuestas de
+#'   todas las páginas combinadas.
+#'
+#' @details
+#' - Valida que las credenciales y parámetros sean correctos antes de llamar a la API.
+#' - Cuando \code{page = "all"} hace múltiples llamadas (si procede) y concatena
+#'   todos los elementos \code{data} en la respuesta retornada.
+#'
+#' @examples
+#' \dontrun{
+#' # definir credenciales (mejor usar variables de entorno en tu sistema)
+#' Sys.setenv(ALCH_API = "tu_api_token")
+#' Sys.setenv(ALCH_API_SECRET_KEY = "tu_api_secret")
+#'
+#' # obtener la primera página
+#' resp_page1 <- alch_get_survey_responses(survey_id = 123456, page = 1)
+#' str(resp_page1)
+#'
+#' # obtener todas las páginas combinadas
+#' resp_all <- alch_get_survey_responses(survey_id = 123456, page = "all")
+#' length(resp_all$data)    # número total de respuestas descargadas
+#' }
 #'
 #' @importFrom httr2 request req_url_path_append req_url_query req_perform resp_body_json
 #' @importFrom purrr map
@@ -165,41 +192,146 @@ alch_get_survey_responses <- function(
   }
 }
 
-# Ejemplo para obtener solo el primer caso de la primera página:
-test <- alch_get_survey_responses(
-  survey_id = 8487186,
-  results_per_page = 4,
-  page = 1
-)
 
-test$result_ok
-test$page
+#' @title Construye tibble de respuestas desde la lista de Alchemer
+#' @description
+#' Construye una tabla (tibble) a partir de la salida de la API de Alchemer
+#' (objeto devuelto por \code{alch_get_survey_responses}). Extrae para cada
+#' pregunta los campos \code{id}, \code{question} y \code{answer}, pivotea las
+#' respuestas a formato ancho (una fila por respuesta) creando columnas
+#' \code{var<id>} y asigna la etiqueta de variable (atributo \code{"label"})
+#' con el texto de la pregunta (etiquetas HTML son limpiadas).
+#'
+#' @param ls_alchemer List. Objeto parseado de la API de Alchemer; debe contener
+#'   el elemento \code{data} con las respuestas (lista de respuestas).
+#'
+#' @return Tibble. Una fila por respuesta de encuesta con las columnas de
+#'   metadatos originales y columnas de respuesta llamadas \code{var<id>}.
+#'   Cada columna de respuesta recibe el atributo \code{"label"} con la
+#'   pregunta correspondiente (texto limpio).
+#'
+#' @details
+#' - Si una pregunta no tiene \code{answer}, el valor resultante será \code{NA}.
+#' - Respuestas múltiples por misma pregunta se colapsan en una cadena
+#'   separada por \code{"; "}.
+#' - La función asume que \code{ls_alchemer[["data"]]} es una lista con la
+#'   estructura estándar de la API (cada elemento contiene sublistas con
+#'   elementos \code{id}, \code{question}, \code{answer} entre otros).
+#'
+#' @examples
+#' \dontrun{
+#' resp <- alch_get_survey_responses(survey_id = 8487186)
+#' df <- alch_create_df(resp)
+#' head(df)
+#' # ver label de la columna var3
+#' attr(df$var3, "label")
+#' }
+#'
+#' @importFrom purrr map
+#' @importFrom tibble enframe
+#' @importFrom tidyr unnest_wider pivot_wider
+#' @importFrom dplyr bind_rows bind_cols select distinct mutate across starts_with
+#' @export
+alch_create_df <- function(ls_alchemer) {
+  # Funcion interna para extraer y construir la base de datos de
+  # respuestas de Alchemer
+  .procesar_encuestas <- function(lista_encuestas) {
+    # Itera sobre cada respuesta de encuesta y combina los resultados en un tibble
+    # El argumento .id = "resp_id" crea una columna con el índice de cada respuesta
+    ls_resp <- purrr::map(lista_encuestas, function(x) {
+      # Convierte la lista de preguntas de una respuesta en un tibble
+      tibble::enframe(x, name = "pregunta_original_id", value = "data") |>
+        # Modifica la columna de lista para quedarse solo con los elementos deseados
+        dplyr::mutate(
+          data = map(data, ~ .x[c("id", "question", "answer")])
+        ) |>
+        # Expande la columna de lista "data" en múltiples columnas
+        tidyr::unnest_wider(col = data, names_sep = "_")
+    })
 
+    # Función para eliminar etiquetas HTML y normalizar espacios en una cadena
+    .simple_strip_html_vec <- function(x) {
+      x_chr <- as.character(x)
+      entities <- c(
+        "&nbsp;" = " ",
+        "&amp;" = "&",
+        "&lt;" = "<",
+        "&gt;" = ">",
+        "&quot;" = "\"",
+        "&#39;" = "'"
+      )
+      vapply(
+        x_chr,
+        FUN.VALUE = character(1),
+        FUN = function(txt) {
+          if (is.na(txt)) {
+            return(NA_character_)
+          }
+          # quitar tags
+          s <- gsub("<[^>]+>", "", txt, perl = TRUE)
+          # reemplazar entidades comunes
+          for (k in names(entities)) {
+            s <- gsub(k, entities[k], s, fixed = TRUE)
+          }
+          # normalizar espacios y recortar
+          s <- gsub("\\s+", " ", s, perl = TRUE)
+          trimws(s)
+        },
+        USE.NAMES = FALSE
+      )
+    }
 
-tibble::tibble(data = test$data) |>
-  unnest_wider(data) |>
-  select(survey_data) |>
-  mutate(
-    survey_data =
-  )
-print(n = Inf)
+    # Creo un diccionario con las preguntas y sus etiquetas limpias
+    labels <- dplyr::bind_rows(ls_resp, .id = "resp_id") |>
+      dplyr::distinct(data_id, data_question) |>
+      dplyr::mutate(
+        data_id = paste0("var", data_id),
+        data_question = .simple_strip_html_vec(data_question)
+      )
 
-tibble::tibble(responses = test$data) %>%
-  tidyr::unnest_wider(responses) %>% # crea columna survey_data
-  #select(survey_data) %>%
-  mutate(respondent = row_number()) %>%
-  mutate(
-    variable = purrr::map_chr(
-      survey_data,
-      ~ if (is.null(.x$id)) NA_character_ else as.character(.x$id)
-    ),
-    etiqueta = purrr::map_chr(
-      survey_data,
-      ~ if (is.null(.x$question)) NA_character_ else as.character(.x$question)
-    ),
-    respuesta = purrr::map_chr(
-      survey_data,
-      ~ if (is.null(.x$answer)) NA_character_ else as.character(.x$answer)
+    # Creo un vector nombrado para renombrar las columnas
+    labels_vec <- setNames(
+      as.character(labels[["data_question"]]),
+      as.character(labels[["data_id"]])
     )
-  ) %>%
-  select(variable, etiqueta, respuesta)
+
+    rm(labels)
+
+    # Combino todas las respuestas en un solo tibble
+    df_wide <- purrr::map(ls_resp, function(x) {
+      x |>
+        dplyr::select(data_id, data_answer) |>
+        tidyr::pivot_wider(
+          id_cols = ,
+          names_from = data_id,
+          values_from = data_answer,
+          names_prefix = "var"
+        )
+    }) |>
+      dplyr::bind_rows()
+
+    # Agregar etiquetas de variable
+    for (nm in names(labels_vec)) {
+      attr(df_wide[[nm]], "label") <- labels_vec[[nm]]
+    }
+
+    return(df_wide)
+  }
+
+  # Convertimos la lista general en un tibble
+  df0 <- ls_alchemer[["data"]] |>
+    tibble::enframe() |>
+    tidyr::unnest_wider(value)
+
+  # Procesamos sourvey_data ya que ahi estan todas las respuestas de
+  # las encuestas
+  df1 <- .procesar_encuestas(df0$survey_data)
+
+  # Combinamos la info general con las respuestas procesadas
+  df_final <- df0 |>
+    dplyr::select(!survey_data) |>
+    dplyr::bind_cols(df1)
+
+  # Retornamos la base final
+  return(df_final)
+}
