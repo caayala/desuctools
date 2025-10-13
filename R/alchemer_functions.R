@@ -161,10 +161,10 @@ alch_get_survey_responses <- function(
       return(resp_page1)
     }
 
-    # Extraemos los datos la pagina 1
+    # Extraemos los datos de la página 1
     all_data <- resp_page1$data
 
-    # Recuperar la cantidad de paginas existentes segun la configuracion
+    # Recuperar la cantidad de páginas existentes según la configuración
     total_pages <- resp_page1$total_pages
 
     # Si hay más páginas, iterar y obtener los datos restantes
@@ -302,7 +302,7 @@ alch_create_df <- function(ls_alchemer) {
       x |>
         dplyr::select(data_id, data_answer) |>
         tidyr::pivot_wider(
-          id_cols = ,
+          id_cols = NULL,
           names_from = data_id,
           values_from = data_answer,
           names_prefix = "var"
@@ -323,7 +323,7 @@ alch_create_df <- function(ls_alchemer) {
     tibble::enframe() |>
     tidyr::unnest_wider(value)
 
-  # Procesamos sourvey_data ya que ahi estan todas las respuestas de
+  # Procesamos survey_data ya que ahí están todas las respuestas de
   # las encuestas
   df1 <- .procesar_encuestas(df0$survey_data)
 
