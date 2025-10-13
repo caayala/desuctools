@@ -1,7 +1,7 @@
 Type: Package
 Package: desuctools
 Title: Funciones para trabajo en DESUC
-Version: 0.1.5.9009
+Version: 0.1.5.9010
 Authors@R: c(
     person("Cristián", "Ayala", 
         email = 'caayala@uc.cl', 
