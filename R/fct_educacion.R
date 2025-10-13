@@ -97,7 +97,7 @@ edu_fct_cod_ense <- function(x) {
 #' @returns
 #' A factor with 3 levels, with an attached `"label"` attribute.
 #'
-#' @example
+#' @examples
 #' edu_fct_educacion_especial(c(211, 211, 216, 214, 110)) |>
 #' table()
 #'

@@ -24,6 +24,6 @@ Por defecto recodifica variables de _notas_ de 7 niveles a 3 niveles.
 \examples{
 
 vect <- c(1, 4, 6, 99, NA)
-rec_cat_7a3(vect, labels = c('alto' = 1))
+rec_cat_7a3(vect, labels = c("alto" = 1))
 
 }

@@ -10,8 +10,7 @@
 #'
 #' @export
 #'
-#' @example
-#'
+#' @examples
 #' rut_list = c(
 #' "8714763-0",
 #' "4606477-1",

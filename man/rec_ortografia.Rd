@@ -23,6 +23,6 @@ Código idéntico al de Rasmus Bååth
 }
 \examples{
 
-rec_ortografia(c('pais', 'arbol'))
+rec_ortografia(c("pais", "arbol"))
 
 }

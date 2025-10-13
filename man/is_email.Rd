@@ -18,6 +18,6 @@ La expresión regular utilizada para ello viene del siguiente post en [SO][https
 }
 \examples{
 
-is_email(c('a@a.com', 'a@a'))
+is_email(c("a@a.com", "a@a"))
 
 }

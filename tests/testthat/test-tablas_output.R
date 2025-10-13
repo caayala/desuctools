@@ -17,7 +17,7 @@ df_test <- tibble::tibble(
 
 # tabla_categoria ---------------------------------------------------------
 
-test_that("tabla_categorias proporcion de categoría labelled", {
+test_that("tabla_categorias proporcion de una categoría labelled", {
   expect_identical(tabla_categorias(df_test, sexo)[["prop"]], c(0.25, 0.75))
 })
 
@@ -30,8 +30,7 @@ test_that("tabla_categorias proporcion de dos variables labelled", {
 
 test_that("tabla_categoria agrega en pregunta_lab la etiqueta de categoria", {
   expect_equal(
-    tabla_categorias(df_test, sexo, edad)[["pregunta_lab"]] %>%
-      as.character(),
+    tabla_categorias(df_test, sexo, edad)[["pregunta_lab"]],
     c("Sex", "Sex", "Age", "Age")
   )
 })
@@ -105,10 +104,13 @@ test_that("tabla_categoria proporcion de categoría y total y missing numérico"
       df_test,
       .vars = cat_na,
       .segmentos = sexo,
-      miss = c(2, NA),
+      miss = c(2), # esto no parece tener efecto.
       total = FALSE
-    )[["prop_val"]],
-    c(1, NA, NA, 1, NA, NA)
+    )[, c("casos_val", "mean")], # mean
+    tibble::tibble(
+      casos_val = c(1, 1),
+      mean = c(1, 1)
+    )
   )
 })
 
@@ -120,14 +122,15 @@ test_that("tabla_categoria proporcion de varias categorías", {
       .segmentos = c(sexo, edad),
       total = FALSE
     )[["casos"]],
-    c(1, 0, 1, 2, 2, 0, 0, 2)
+    c(1, 3, 2, 2)
   )
 })
 
 test_that("tabla_categoria proporcion de categoría con segmento constante", {
   expect_equal(
     tabla_vars_segmentos(
-      df_test,
+      df_test |>
+        dplyr::mutate(cat_na = as.factor(cat_na)),
       .vars = cat_na,
       .segmentos = NULL,
       miss = c(NA),

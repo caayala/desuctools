@@ -45,23 +45,29 @@ val                                                        label
 99                                                   No responde
 
 
-¿Cuál de las siguientes ocupaciones corresponde al trabajo del principal sostenedor del hogar?
-Si el principal sostenedor del hogar esta cesante o es jubilado, preguntar por la ultima ocupacion
-remunerada que tuvo. Si el principal sostenedor tiene más de 1 trabajo, debe registrarse el de mayor ingreso.
+¿Cuál de las siguientes ocupaciones corresponde al trabajo del principal
+sostenedor del hogar?
+Si el principal sostenedor del hogar esta cesante o es jubilado,
+preguntar por la ultima ocupacion
+remunerada que tuvo. Si el principal sostenedor tiene más de 1 trabajo,
+debe registrarse el de mayor ingreso.
 
 val Categoría
 
-1. Trabajadores no calificados en ventas y servicios, peones agropecuarios, forestales, construcción, etc.
-2. Obreros, operarios y artesanos de artes mecánicas y de otros oficios.
+1. Trabajadores no calificados en ventas y servicios, peones agropecuarios,
+forestales, construcción, etc.
+2. Obreros, operarios y artesanos de artes mecánicas y de otros oficios.
 3. Trabajadores de los servicios y vendedores de comercio y mercados.
 4. Agricultores y trabajadores calificados agropecuarios y pesqueros.
-5. Operadores de instalaciones y máquinas y montadores / conductores de vehículos.
-6. Empleados de oficina públicos y privados.
-7. Técnicos y profesionales de nivel medio (incluye hasta suboficiales FFAA y Carabineros).
-8. Profesionales, científicos e intelectuales.
-9. Alto ejecutivo (gerente general o gerente de área o sector) de empresa privadas o pública.
-   Director o dueño de grandes empresas.
-   Alto directivo del poder ejecutivo, de los cuerpos legislativos y la administración pública
-   (incluye oficiales de FFAA y Carabineros).
+5. Operadores de instalaciones y máquinas y montadores / conductores de vehículos.
+6. Empleados de oficina públicos y privados.
+7. Técnicos y profesionales de nivel medio
+(incluye hasta suboficiales FFAA y Carabineros).
+8. Profesionales, científicos e intelectuales.
+9. Alto ejecutivo (gerente general o gerente de área o sector)
+de empresa privadas o pública.
+   Director o dueño de grandes empresas.
+   Alto directivo del poder ejecutivo, de los cuerpos legislativos
+y la administración pública (incluye oficiales de FFAA y Carabineros).
 10. Otros grupos no identificados (incluye rentistas, incapacitados, etc.)
 }

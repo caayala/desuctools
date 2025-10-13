@@ -2,23 +2,29 @@
 % Please edit documentation in R/tablas_output.R
 \name{tabla_vars_segmentos}
 \alias{tabla_vars_segmentos}
+\alias{tabla_vars_segmentos.data.frame}
 \title{Tabla de porcentajes de variables según segmentos.}
 \usage{
-tabla_vars_segmentos(
+tabla_vars_segmentos(.df, .vars, .segmentos = NULL, ...)
+
+\method{tabla_vars_segmentos}{data.frame}(
   .df,
   .vars,
   .segmentos = NULL,
   .wt = NULL,
   miss = NULL,
-  total = FALSE
+  total = FALSE,
+  ...
 )
 }
 \arguments{
-\item{.df}{tibble}
+\item{.df}{Un data.frame, tibble o tbl_svy}
 
 \item{.vars}{tidyselect, lista de nombres de variables de las que se quiere saber su proporción de respuestas}
 
 \item{.segmentos}{tidyselect, lista de nombres de variables de segmentación de las preguntas de `.vars`}
+
+\item{...}{Parámetros adicionales que serán pasados a los métodos específicos}
 
 \item{.wt}{name, nombre de la variable de ponderación}
 
@@ -31,4 +37,5 @@ tibble
 }
 \description{
 Obtiene porcentajes de respuestas de múltiples variables según múltiples segmentos.
+Función genérica que funciona con data.frames regulares y objetos tbl_svy.
 }
