@@ -5,8 +5,8 @@
 \title{Obtener respuestas de una encuesta de Alchemer}
 \usage{
 alch_get_survey_responses(
-  api_token = Sys.getenv("ALCH_API"),
-  api_token_secret = Sys.getenv("ALCH_API_SECRET_KEY"),
+  api_token = Sys.getenv("ALCHEMER_API_KEY"),
+  api_token_secret = Sys.getenv("ALCHEMER_API_SECRET"),
   survey_id,
   results_per_page = 500,
   page = "all"
@@ -14,10 +14,10 @@ alch_get_survey_responses(
 }
 \arguments{
 \item{api_token}{`chr` Clave pública de API de Alchemer. Por defecto toma
-\code{Sys.getenv("ALCH_API")}.}
+\code{Sys.getenv("ALCHEMER_API_KEY")}.}
 
 \item{api_token_secret}{`chr` Clave secreta de API. Por defecto toma
-\code{Sys.getenv("ALCH_API_SECRET_KEY")}.}
+\code{Sys.getenv("ALCHEMER_API_SECRET")}.}
 
 \item{survey_id}{`int` ID de la encuesta de la que se desean obtener las respuestas.}
 
@@ -47,8 +47,8 @@ respuestas).
 \examples{
 \dontrun{
 # definir credenciales (mejor usar variables de entorno en tu sistema)
-Sys.setenv(ALCH_API = "tu_api_token")
-Sys.setenv(ALCH_API_SECRET_KEY = "tu_api_secret")
+Sys.setenv(ALCHEMER_API_KEY = "tu_api_token")
+Sys.setenv(ALCHEMER_API_SECRET = "tu_api_secret")
 
 # obtener la primera página
 resp_page1 <- alch_get_survey_responses(survey_id = 123456, page = 1)
