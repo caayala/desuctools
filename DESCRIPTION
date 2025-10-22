@@ -35,6 +35,7 @@ Imports:
     purrr,
     rlang (>= 0.1.2),
     labelled,
+    lubridate,
     rmarkdown,
     sjlabelled,
     sjmisc,
