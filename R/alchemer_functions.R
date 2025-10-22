@@ -157,15 +157,15 @@ alch_get_survey_responses <- function(
     resp_page1 <- get_page(1)
 
     # Si no hay datos, devolver la respuesta de la primera página tal cual
-    if (resp_page1$total_count == 0) {
+    if (resp_page1[["total_count"]] == 0) {
       return(resp_page1)
     }
 
     # Extraemos los datos de la página 1
-    all_data <- resp_page1$data
+    all_data <- resp_page1[["data"]]
 
     # Recuperar la cantidad de páginas existentes según la configuración
-    total_pages <- resp_page1$total_pages
+    total_pages <- resp_page1[["total_pages"]]
 
     # Si hay más páginas, iterar y obtener los datos restantes
     if (total_pages > 1) {
@@ -183,10 +183,10 @@ alch_get_survey_responses <- function(
     }
 
     # Reemplazar el elemento 'data' en la respuesta original con todos los datos
-    resp_page1$data <- all_data
+    resp_page1[["data"]] <- all_data
     # Actualizar metadatos para reflejar que se han combinado las páginas
-    resp_page1$page <- "all"
-    resp_page1$results_per_page <- resp_page1$total_count
+    resp_page1[["page"]] <- "all"
+    resp_page1[["results_per_page"]] <- resp_page1[["total_count"]]
 
     return(resp_page1)
   }
@@ -227,6 +227,7 @@ alch_get_survey_responses <- function(
 #' attr(df$var3, "label")
 #' }
 #'
+#' @importFrom rlang .data
 #' @importFrom purrr map
 #' @importFrom tibble enframe
 #' @importFrom tidyr unnest_wider pivot_wider
@@ -283,10 +284,10 @@ alch_create_df <- function(ls_alchemer) {
 
     # Creo un diccionario con las preguntas y sus etiquetas limpias
     labels <- dplyr::bind_rows(ls_resp, .id = "resp_id") |>
-      dplyr::distinct(data_id, data_question) |>
+      dplyr::distinct(.data[["data_id"]], .data[["data_question"]]) |>
       dplyr::mutate(
-        data_id = paste0("var", data_id),
-        data_question = .simple_strip_html_vec(data_question)
+        data_id = paste0("var", .data[["data_id"]]),
+        data_question = .simple_strip_html_vec(.data[["data_question"]])
       )
 
     # Creo un vector nombrado para renombrar las columnas
@@ -325,7 +326,7 @@ alch_create_df <- function(ls_alchemer) {
 
   # Procesamos survey_data ya que ahí están todas las respuestas de
   # las encuestas
-  df1 <- .procesar_encuestas(df0$survey_data)
+  df1 <- .procesar_encuestas(df0[["survey_data"]])
 
   # Combinamos la info general con las respuestas procesadas
   df_final <- df0 |>
