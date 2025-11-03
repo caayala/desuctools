@@ -193,6 +193,173 @@ alch_get_survey_responses <- function(
 }
 
 
+#' @title Obtener contactos de una campaña de encuesta en Alchemer
+#' @description
+#' Recupera los contactos asociados a una campaña de encuesta en Alchemer.
+#' Permite descargar una página concreta de contactos o todas las páginas
+#' (combinadas) cuando \code{page = "all"}. La función valida parámetros y
+#' devuelve el objeto parseado por la API (lista con metadatos y elemento
+#' \code{data} con los contactos).
+#'
+#' @param api_token `chr` Clave pública de API de Alchemer. Por defecto toma
+#'   \code{Sys.getenv("ALCHEMER_API_KEY")}.
+#' @param api_token_secret `chr` Clave secreta de API. Por defecto toma
+#'   \code{Sys.getenv("ALCHEMER_API_SECRET")}.
+#' @param survey_id `int` ID de la encuesta a la que pertenece la campaña.
+#' @param campaign_id `int` ID de la campaña de la que se desean obtener los contactos.
+#' @param results_per_page `int` Número de contactos por página (1..500). Valor por
+#'   defecto: 500.
+#' @param page `int` o \code{"all"}. Número de página a descargar, o
+#'   \code{"all"} para recuperar y combinar todas las páginas.
+#'
+#' @return `list`. Objeto devuelto por la API (parseado a lista). Si
+#'   \code{page = "all"} el elemento \code{data} contendrá los contactos de
+#'   todas las páginas combinadas.
+#'
+#' @details
+#' - Valida que las credenciales y parámetros sean correctos antes de llamar a la API.
+#' - Cuando \code{page = "all"} hace múltiples llamadas (si procede) y concatena
+#'   todos los elementos \code{data} en la respuesta retornada.
+#' - Los contactos pueden incluir campos como \code{id}, \code{email_address},
+#'   \code{first_name}, \code{last_name}, etc., según la configuración de la campaña.
+#'
+#' @examples
+#' \dontrun{
+#' # definir credenciales (mejor usar variables de entorno en tu sistema)
+#' Sys.setenv(ALCHEMER_API_KEY = "tu_api_token")
+#' Sys.setenv(ALCHEMER_API_SECRET = "tu_api_secret")
+#'
+#' # obtener la primera página de contactos
+#' contactos_page1 <- alch_get_survey_contacts(
+#'   survey_id = 8529571,
+#'   campaign_id = 24631558,
+#'   page = 1
+#' )
+#' str(contactos_page1)
+#'
+#' # obtener todos los contactos combinados
+#' contactos_all <- alch_get_survey_contacts(
+#'   survey_id = 8529571,
+#'   campaign_id = 24631558,
+#'   page = "all"
+#' )
+#' length(contactos_all$data)    # número total de contactos descargados
+#' }
+#'
+#' @importFrom httr2 request req_url_path_append req_url_query req_perform resp_body_json
+#' @importFrom purrr map
+#' @export
+
+alch_get_survey_contacts <- function(
+  api_token = Sys.getenv("ALCHEMER_API_KEY"),
+  api_token_secret = Sys.getenv("ALCHEMER_API_SECRET"),
+  survey_id,
+  campaign_id,
+  results_per_page = 500,
+  page = "all"
+) {
+  # Validaciones
+  # 1. Credenciales de API
+  if (api_token == "" || api_token_secret == "") {
+    stop(
+      "Error: Las credenciales 'api_token' y 'api_token_secret' no pueden estar vacías. Revisa tus variables de entorno."
+    )
+  }
+
+  # 2. Parámetro 'survey_id'
+  if (!is.numeric(survey_id) || length(survey_id) != 1) {
+    stop("Error: 'survey_id' debe ser un único valor numérico.")
+  }
+
+  # 3. Parámetro 'campaign_id'
+  if (!is.numeric(campaign_id) || length(campaign_id) != 1) {
+    stop("Error: 'campaign_id' debe ser un único valor numérico.")
+  }
+
+  # 4. Parámetro 'results_per_page'
+  if (
+    !is.numeric(results_per_page) ||
+      results_per_page <= 0 ||
+      results_per_page > 500
+  ) {
+    stop("Error: 'results_per_page' debe ser un número entero entre 1 y 500.")
+  }
+
+  # 5. Parámetro 'page'
+  if (
+    !identical(page, "all") &&
+      (!is.numeric(page) || length(page) != 1 || page <= 0)
+  ) {
+    stop(
+      "Error: 'page' debe ser la cadena \"all\" o un número entero positivo."
+    )
+  }
+
+  # Base URL para Alchemer API v5
+  base_url <- "https://api.alchemer.com/v5"
+
+  # Función interna para obtener una página específica
+  get_page <- function(
+    page_num,
+    .api_token = api_token,
+    .api_token_secret = api_token_secret
+  ) {
+    req <- httr2::request(base_url) |>
+      httr2::req_url_path_append(
+        "survey",
+        survey_id,
+        "surveycampaign",
+        campaign_id,
+        "surveycontact"
+      ) |>
+      httr2::req_url_query(
+        resultsperpage = results_per_page,
+        page = page_num,
+        api_token = .api_token,
+        api_token_secret = .api_token_secret
+      )
+
+    resp <- httr2::req_perform(req) |>
+      httr2::resp_body_json()
+
+    return(resp)
+  }
+
+  # Si se solicita una página específica
+  if (is.numeric(page)) {
+    resp_data <- get_page(page)
+    return(resp_data)
+  }
+
+  # Si se solicitan todas las páginas
+  if (page == "all") {
+    resp_page1 <- get_page(1)
+
+    if (resp_page1[["total_count"]] == 0) {
+      return(resp_page1)
+    }
+
+    all_data <- resp_page1[["data"]]
+    total_pages <- resp_page1[["total_pages"]]
+
+    if (total_pages > 1) {
+      remaining_pages_resp <- purrr::map(2:total_pages, get_page)
+      remaining_pages_data <- unlist(
+        purrr::map(remaining_pages_resp, "data"),
+        recursive = FALSE
+      )
+      all_data <- c(all_data, remaining_pages_data)
+    }
+
+    resp_page1[["data"]] <- all_data
+    resp_page1[["page"]] <- "all"
+    resp_page1[["results_per_page"]] <- resp_page1[["total_count"]]
+
+    return(resp_page1)
+  }
+}
+
+
 #' @title Construye tibble de respuestas desde la lista de Alchemer
 #' @description
 #' Construye una tabla (tibble) a partir de la salida de la API de Alchemer
