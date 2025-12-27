@@ -4,6 +4,11 @@
 * Creación de métodos en tabla_vars_segmentos para data.frames y tbl_svy.
 * Nueva función para obtener información a partir de un rut: `rut_información`.
 
+# desuctools 0.1.5.9010
+
+* Creación de función `rec_nse_aim2023` para clasificar a personas según criterio 
+de AIM 2023. Reemplaza antigua función `calculo_nse` por estár desactualizada.
+
 # desuctools 0.1.5.9009
 
 * Se agrega la función `sg_date` para formatear fechas según los requerimientos de la 
@@ -48,7 +53,6 @@ Tiene sencillas maneras de controlar la cantidad de request por segundo y re--in
 
 * Added a `NEWS.md` file to track changes to the package.
 
-
 ## New functions
 
 * Función `is_email` para validar sintaxis de correos electrónicos.
@@ -62,19 +66,15 @@ Tiene sencillas maneras de controlar la cantidad de request por segundo y re--in
 * función `varnames_to_label` para simplificar nombre de bases de datos obtenidas desde
       servicios web.
            
-
-
 ## Features
 
 * Agregar columna `comuna18` para tener el código comunal luego de la creación de la región del Ñuble en 2018.
 * Nuevas variables en `regiones_y_comunas` para ajustes de no respuesta.
 * Base de datos con `codigos_ensenanza` para tener equivalencias y descripción de la nomenclatura utilizada por MINEDUC en sus bases de datos.
 
-
-### Gráfico
+## Gráfico
 
 * Función `gg_bar_3_niveles_stack`.
-
 
 ## Bug fix
 

@@ -7,11 +7,13 @@ home:
     utilizados por la Dirección de Estudios Sociales UC (DESUC).
   links:
   - text: Sitio web DESUC
-    href: https://blog.desuc.cl
+    href: https://www.desuc.cl
 
 authors:
   DESUC:
     href: https://github.com/desuc
+
+llm-docs: true
 
 lang: es
 template:

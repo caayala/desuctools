@@ -15,6 +15,7 @@
 #'
 #' @examples
 #' # Convertir una fecha en formato Date para la mañana
+#'
 #' sg_date(as.Date("2024-08-26"))
 #'
 #' # Convertir una fecha en formato Date para la tarde
