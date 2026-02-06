@@ -4,19 +4,30 @@
 \alias{svy_tabla_vars_segmentos}
 \title{Tabla con intervalos de confianza}
 \usage{
-svy_tabla_vars_segmentos(.data, .vars, .segmentos = NULL, ...)
+svy_tabla_vars_segmentos(
+  .df,
+  .vars,
+  .segmentos = NULL,
+  miss = NULL,
+  vartype = c("ci", "se"),
+  level = 0.95
+)
 }
 \arguments{
-\item{.data}{`tbl_svy` data.frame con diseño de encuesta.}
+\item{.df}{`tbl_svy` data.frame con diseño de encuesta.}
 
 \item{.vars}{c(). Variables de interés respecto.}
 
 \item{.segmentos}{c(). Lista de variables por las que se quiere segmentar `.vars`.}
 
-\item{...}{atributos que se pasan a funcion `svy_tabla_var_segmento`.}
+\item{miss}{chr vector. Categorías a excluir en el denominador de `prop_val` y `mean`.}
+
+\item{vartype}{chr vector. Tipo de error para estimaciones (`ci`, `se`, etc.).}
+
+\item{level}{double. Nivel de confianza para intervalos.}
 }
 \value{
-data.frame
+tibble
 }
 \description{
 Devuelve tabla de frecuencias con intervalos de confianza para un nivel

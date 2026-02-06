@@ -17,7 +17,7 @@ include_graphics2(
 an URL or a local path.}
 
 \item{alt_path}{String. An alternative figure path for \code{path}
-with invalid extensions. In the case of PDF ('LaTeX') output,
+with invalid extensions. In the case of PDF ("LaTeX") output,
 invalid extensions are \code{.gif}, \code{.svg}.}
 
 \item{handler}{Function. A function with a single argument \code{path}.
@@ -43,8 +43,8 @@ Read more about using the function at
   \url{http://bit.ly/include_graphics2}.
 }
 \examples{
-png_url <- 'https://commonmark.org/images/markdown-mark.png'
-gif_url <- 'https://media.giphy.com/media/k3dcUPvxuNpK/giphy.gif'
+png_url <- "https://commonmark.org/images/markdown-mark.png"
+gif_url <- "https://media.giphy.com/media/k3dcUPvxuNpK/giphy.gif"
 
 \dontrun{
 include_graphics2(gif_url, alt_path = png_url)

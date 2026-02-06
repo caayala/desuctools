@@ -4,15 +4,18 @@
 \alias{tabla_categorias}
 \title{Tabla de categorías}
 \usage{
-tabla_categorias(.data, ..., .wt = NULL)
+tabla_categorias(.df, ..., .wt = NULL, miss = NULL)
 }
 \arguments{
-\item{.data}{data frame. Base de datos.}
+\item{.df}{data.frame. Base de datos.}
 
 \item{...}{Preguntas de las que se quiere saber su proporcion. Se puede utilizar
 `tidyselect` para facilitar la selección de varias columnas.}
 
-\item{.wt}{Ponderador o expansor de los datos. Por defecto es NULL.}
+\item{.wt}{name. Nombre de columna con ponderador o expansor de los datos. Por defecto es NULL,
+sin expansor.}
+
+\item{miss}{chr vector. Categorías de respuesta que deben excluirse del cálculo de `prop_val`.}
 }
 \value{
 tibble
@@ -20,10 +23,4 @@ tibble
 \description{
 Porcentaje de respuesta de categorías de varias variables.
 Principalmente para mostrar la distribución de casos de variables de segmentación posteriores.
-}
-\details{
-Tablas de resultados ----------------------------------------------------
-
-Generación de una data.frame con el número de casos y proporción de las distintas
-variables de segmentos que se agregen en `...`.
 }

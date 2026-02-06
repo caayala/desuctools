@@ -20,7 +20,7 @@ tibble que quiera ser mostrad en una tabla
 }
 \examples{
 
-df <- data.frame(x = c('a', 'b', 'c'))
+df <- data.frame(x = c("a", "b", "c"))
 
 str_collapse(df, x)
 

@@ -24,11 +24,12 @@ Si se especifica 'tarde', se asigna el último segundo del día (23:59:59).
 }
 \examples{
 # Convertir una fecha en formato Date para la mañana
-sg_date(as.Date('2024-08-26'))
+
+sg_date(as.Date("2024-08-26"))
 
 # Convertir una fecha en formato Date para la tarde
-sg_date(as.Date('2024-08-26'), hora = 'tarde')
+sg_date(as.Date("2024-08-26"), hora = "tarde")
 
 # Convertir una fecha en formato POSIXct manteniendo la hora
-sg_date(as.POSIXct('2024-08-26 14:35:00'))
+sg_date(as.POSIXct("2024-08-26 14:35:00"))
 }

@@ -3,6 +3,74 @@
 #' Generación de una data.frame con el número de casos y proporción de las distintas
 #' variables de segmentos que se agregen en `...`.
 #'
+#' @description Produce una tabla de distribución por categorías para una variable.
+#'
+#' @param .df tibble. datos tidy.
+#' @param .var chr. Variable de la que se sabrá su distribución. Solo una variable.
+#' @param .wt chr. Variable de ponderación. Solo una variable.
+#' @param miss chr vector. Nombre de niveles de categorías de `.var` que deben
+#' ser considerados missing.
+#'
+#' @importFrom forcats as_factor fct_na_value_to_level
+#' @importFrom rlang  %||%
+
+tabla_categoria <- function(.df, .var, .wt = NULL, miss = NULL) {
+  v_pregunta <- .df[[.var]]
+
+  # Si no hay pesos, se construye un vector de 1.
+  if (is.null(.wt)) {
+    v_wgt <- rep(1L, length(v_pregunta))
+  } else {
+    v_wgt <- .df[[.wt]]
+  }
+
+  df_agg <- data.frame(
+    casos = v_wgt,
+    pregunta_cat = forcats::as_factor(v_pregunta)
+  )
+
+  # Declarar explícitamente NA que pudiesen estar en la categoría de respuestas
+  # de la pregunta.
+  # Solo si hay casos NA en el factor
+  if (is.na(df_agg$pregunta_cat) |> any()) {
+    df_agg$pregunta_cat <- forcats::fct_na_value_to_level(df_agg$pregunta_cat)
+  }
+
+  tab <- aggregate(
+    casos ~ pregunta_cat,
+    df_agg,
+    FUN = \(x) sum(x, na.rm = FALSE),
+    na.action = "na.pass",
+    drop = FALSE
+  )
+
+  # Agregar 0 si es que hay combinación de pregunta y segmento sin casos.
+  tab$casos <- replace(tab$casos, is.na(tab$casos), 0)
+
+  # Variable y etiqueta de pregunta
+  tab$pregunta_var <- .var
+  tab$pregunta_lab <- attr(.df[[.var]], "label", exact = TRUE) %||% "-"
+
+  # Agrega el porcentaje de respuesta.
+  tab <- tabla_prop(tab, .segmento = "pregunta_var")
+
+  # Agrega el porcentaje válido si es que se señalan categorias perdidas.
+  if (!is.null(miss)) {
+    tab <- tabla_prop_val(tab, miss = miss)
+  }
+
+  # Orden de variables de salida
+  col_orden <- c("pregunta_var", "pregunta_lab", "pregunta_cat")
+
+  col_adicionales <- setdiff(names(tab), col_orden)
+
+  tab <- tab[c(col_orden, col_adicionales)]
+
+  # Orden de casos
+  tab |>
+    arrange(pregunta_cat)
+}
+
 #' @title Tabla de categorías
 #'
 #' @description
@@ -11,290 +79,433 @@
 #'
 #' @name tabla_categorias
 #'
-#' @param .data data frame. Base de datos.
+#' @param .df data.frame. Base de datos.
 #' @param ... Preguntas de las que se quiere saber su proporcion. Se puede utilizar
 #' `tidyselect` para facilitar la selección de varias columnas.
-#' @param .wt Ponderador o expansor de los datos. Por defecto es NULL.
+#' @param .wt name. Nombre de columna con ponderador o expansor de los datos. Por defecto es NULL,
+#' sin expansor.
+#' @param miss chr vector. Categorías de respuesta que deben excluirse del cálculo de `prop_val`.
+#'
+#' @return tibble
+#'
+#' @importFrom rlang quo_is_null enquo
+#' @importFrom tidyselect eval_select
+#' @importFrom purrr map list_flatten list_rbind
+#'
+#' @export
+tabla_categorias <- function(.df, ..., .wt = NULL, miss = NULL) {
+  # Transformar variable en NSE a un chr para poder ser input de función
+  # tabla_cateroria2
+  wt_quo <- rlang::enquo(.wt)
+
+  if (!rlang::quo_is_null(wt_quo)) {
+    .wt <- wt_quo |> as_label()
+  }
+
+  vars <- tidyselect::eval_select(expr = expr(c(...)), data = .df)
+  vars <- names(vars)
+
+  tab <- map(
+    vars,
+    \(x) tabla_categoria(.df = .df, .var = x, .wt = .wt, miss = miss)
+  )
+
+  tab |>
+    purrr::list_flatten() |>
+    purrr::list_rbind()
+}
+
+
+#' Cálculo de proporciones
+#'
+#' @param .df tibble.
+#' @param .segmento chr.
 #'
 #' @return tibble
 #'
 #' @import dplyr
-#' @importFrom rlang %||% .data enquo
-#' @importFrom forcats as_factor fct_na_value_to_level
-#' @importFrom sjmisc to_label
-#' @importFrom tidyselect vars_select
-#' @importFrom purrr map_chr
-#' @importFrom tidyr pivot_longer
 #'
-#' @export
-tabla_categorias <- function(.data,
-                             ...,
-                             .wt = NULL) {
-  # Tabla con número de casos y proporción de respuestas por distintas categorías.
-  wt_quo <- enquo(.wt)
-
-  preguntas <- tidyselect::vars_select(names(.data), ...)
-
-  # Vector de etiqueta de variables.
-  seg_labels <- map_chr(preguntas, ~attr(.data[[.]], 'label') %||% '')
-  names(seg_labels) <- preguntas
-
-  tabla <- .data %>%
-    mutate(across(any_of(preguntas), haven::as_factor),
-           !!wt_quo,
-           .keep = 'none') %>%
-    group_by(across(any_of(preguntas))) %>%
-    summarise(n = sum(!!wt_quo %||% n()),
-              .groups = 'drop') %>%
-    tidyr::pivot_longer(cols = -n,
-                        names_to = 'pregunta_var',
-                        values_to = 'pregunta_cat') %>%
-    mutate(pregunta_var = forcats::as_factor(.data$pregunta_var),
-           pregunta_cat = forcats::as_factor(.data$pregunta_cat),
-           pregunta_cat = forcats::fct_na_value_to_level(.data$pregunta_cat,
-                                                         level = 'NA'))
-
-  tabla <- tabla %>%
-    count(.data[['pregunta_var']],
-          .data[['pregunta_cat']],
-          wt = .data[['n']]) %>%
-    group_by(.data[['pregunta_var']]) %>%
-    mutate(prop = n/sum(n)) %>%
-    rename(casos = n) %>%
-    ungroup()
-
-  tabla %>%
-    mutate(pregunta_lab = forcats::as_factor(seg_labels[.data$pregunta_var])) %>%
-    select(starts_with('pregunta'), everything())
-}
-
-tabla_orden <- function(.data, .var, .segmento = NULL) {
-  # Orden de variables y categorias para la presentación de tablas.
-
-  var_quo <- rlang::enquo(.var)
-  segmento_quo <- rlang::enquo(.segmento)
-
-  var_seg_exprs <- rlang::exprs(!!segmento_quo, starts_with(!!rlang::as_label(var_quo)))
-
-  .data %>%
-    select_at(vars(!!!var_seg_exprs, everything())) %>%
-    arrange_at(vars(!!!var_seg_exprs))
-}
-
-tabla_prop <- function(.data, .segmento) {
+#' @examples
+#' df <- tibble::tibble(var = c("a", "b"),
+#'             casos = c(30, 70))
+#'
+#' desuctools:::tabla_prop(df, .segmento = NULL)
+#'
+#' desuctools:::tabla_prop(df, .segmento = "var")
+#'
+tabla_prop <- function(.df, .segmento) {
   # Cálculo de porcentaje de respuestas en tabla con numero de casos.
+  # Proporción de "casos" en cada grupo ".segmento" y luego reemplazar NaN por 0.
 
-  segmento_quo <- rlang::enquo(.segmento)
+  .df$prop <- ave(
+    .df[["casos"]],
+    .df[[.segmento]],
+    FUN = \(x) x / sum(x, na.rm = TRUE)
+  )
+  .df$prop <- ifelse(is.nan(.df$prop), 0, .df$prop)
 
-  .data %>%
-    group_by_at(vars(!!segmento_quo)) %>%
-    mutate(prop = .data$casos / sum(.data$casos)) %>%
-    ungroup()
+  return(.df)
 }
 
 
-tabla_prop_val <- function(.data, .var, .segmento, miss) {
-  # Cálculo de porcentaje de respuestas válidas en tabla con numero de casos.
+#' Calculo de proporción para categorías válidas.
+#'
+#' @param .df tibble
+#' @param by chr vector. variables respecto de la que se calculará el porcentaje.
+#' @param miss chr vector. Categorías que se deben considerar como missing o inválidas.
+#'
+#' @return tibble
+#'
+#' @examples
+#' df <- tibble::tibble(
+#' pregunta_cat = c("a", "b", "x"),
+#' casos = c(30, 30, 40)
+#' )
+#'
+#' desuctools:::tabla_prop_val(df, miss = "x")
+#'
+#' desuctools:::tabla_prop_val(df, by = "pregunta_cat", miss = "x")
+#'
+tabla_prop_val <- function(.df, by = NULL, miss) {
+  # Cálculo de porcetaje de respuestas válidas en tabla con numero de casos.
 
-  # Pasar de quosure con texto a string y luego simbolo.
-  var_quo <- rlang::sym(rlang::as_name(.var))
-  segmento_quo <- enquo(.segmento)
+  .df$casos_val <- replace(
+    .df$casos,
+    desuc_is_missing_category(.df$pregunta_cat, miss = miss),
+    NA
+  )
 
-  .data %>%
-    group_by_at(vars(!!segmento_quo)) %>%
-    mutate(casos_val = replace(.data[["casos"]], (!!var_quo %in% miss), NA_real_),
-           prop_val = .data[["casos_val"]] / sum(.data[["casos_val"]], na.rm = TRUE)) %>%
-    select(!'casos_val') %>%
-    ungroup()
+  df <- .df |>
+    dplyr::mutate(
+      prop_val = .data[["casos_val"]] / sum(.data[["casos_val"]], na.rm = TRUE),
+      .by = all_of(by)
+    )
+
+  # Eliminar variable auxiliar.
+  df$casos_val <- NULL
+
+  return(df)
 }
 
-tabla_total <- function(.data,
-                        .var,
-                        .segmento,
-                        miss = NULL) {
-  # Cálculo de porcetaje para el total de segmento
 
-  tab_total <- .data %>%
-    group_by(across({{ .var }})) %>%
-    summarise(across('casos', sum)) %>%
-    mutate({{ .segmento }} := "Total") %>%
-    ungroup()
+# Helpers internos para selección y tipo de variable ----------------------
 
-  tab_total <- tabla_prop(tab_total, .segmento = NULL)
+desuc_normalize_tidyselect <- function(sel_quo) {
+  expr_sel <- rlang::quo_get_expr(sel_quo)
 
-  # Agrega el porcentaje válido si es que se señalan categorias perdidas.
-  tab <- bind_rows(.data %>%
-                     mutate({{ .segmento }} := as.character({{ .segmento }})),
-                   tab_total)
-
-  tab <- tab %>%
-    mutate({{ .segmento }} := forcats::as_factor({{ .segmento }}))
-
-  if (!is.null(miss)) {
-    tab <- tabla_prop_val(tab,
-                          .var = enquo(.var),
-                          .segmento = {{ .segmento }},
-                          miss = miss)
+  if (rlang::is_call(expr_sel, "vars")) {
+    expr_sel <- rlang::expr(c(!!!rlang::call_args(expr_sel)))
+    sel_quo <- rlang::new_quosure(expr_sel, env = rlang::quo_get_env(sel_quo))
   }
+
+  sel_quo
+}
+
+desuc_eval_select_names <- function(data, sel_quo, allow_null = FALSE) {
+  if (allow_null && rlang::quo_is_null(sel_quo)) {
+    return(list(NULL))
+  }
+
+  sel_quo <- desuc_normalize_tidyselect(sel_quo)
+  sel <- tidyselect::eval_select(expr = sel_quo, data = data)
+
+  names(sel)
+}
+
+desuc_is_categorical_var <- function(x) {
+  if (is.factor(x) || is.character(x)) {
+    return(TRUE)
+  }
+
+  if (inherits(x, "haven_labelled")) {
+    labels <- attr(x, "labels", exact = TRUE)
+    return(!is.null(labels) && length(labels) > 0)
+  }
+
+  FALSE
+}
+
+desuc_is_missing_category <- function(x, miss = NULL) {
+  x_chr <- as.character(x)
+  miss_chr <- as.character(miss[!is.na(miss)])
+
+  is.na(x) | is.na(x_chr) | x_chr %in% c("(Missing)", miss_chr)
+}
+
+desuc_weighted_mean <- function(x, w) {
+  if (length(x) == 0) {
+    return(NA_real_)
+  }
+
+  val <- stats::weighted.mean(x = x, w = w, na.rm = TRUE)
+
+  ifelse(is.nan(val), NA_real_, val)
+}
+
+
+#' Agrega dato total por segmento.
+#'
+#' @description Es una ayuda para tabla_vars_segmentos.
+#'
+#' @param .df tibble
+#'
+#' @importFrom dplyr bind_rows
+#' @importFrom forcats as_factor
+#'
+#' @return tibble
+#'
+tabla_total_prop <- function(.df) {
+  tab_tot <- aggregate(
+    casos ~ pregunta_cat,
+    data = .df,
+    FUN = \(x) sum(x, na.rm = FALSE),
+    na.action = na.pass,
+    drop = FALSE
+  )
+
+  tab_tot$segmento_var <- unique(.df$segmento_var)
+  tab_tot$segmento_lab <- unique(.df$segmento_lab)
+
+  tab_tot$segmento_cat <- "Total"
+
+  tab_tot$pregunta_var <- unique(.df$pregunta_var)
+  tab_tot$pregunta_lab <- unique(.df$pregunta_lab)
+
+  tab <- dplyr::bind_rows(.df, tab_tot)
+
+  tab$segmento_cat <- forcats::as_factor(tab$segmento_cat)
+
   return(tab)
 }
 
-tabla_var_segmento <- function(.data,
-                               .var,
-                               .segmento = NULL,
-                               .wt = NULL,
-                               total = FALSE,
-                               miss = NULL) {
-  # Tabla con número de casos y proporción de variable
-  # Se agrega una variable de de segmentación llamada 'segmento' con valor 'Total'.
 
-  var_quo <- enquo(.var)
-  segmento_quo <- enquo(.segmento)
-  wt_quo <- enquo(.wt)
+#' Tabla de respuestas de una variable para cada categoría de un segmento.
+#'
+#' Resuelve el caso particular para tabla_vars_segmentos.
+#'
+#' @param .df tibble.
+#' @param .var chr.
+#' @param .segmento chr.
+#' @param .wt chr.
+#' @param miss chr vector.
+#' @param total logic
+#'
+#' @importFrom forcats as_factor fct_na_value_to_level
+#' @importFrom dplyr arrange
+#'
+#' @return tibble
+#'
+tabla_var_segmento <- function(
+  .df,
+  .var,
+  .segmento = NULL,
+  .wt = NULL,
+  miss = NULL,
+  total = FALSE
+) {
+  v_pregunta <- .df[[.var]]
 
-  tab <- .data %>%
-    transmute(across(c(!!segmento_quo, !!var_quo, !!wt_quo),
-                     \(x) sjmisc::to_label(x, add.non.labelled = TRUE))) %>%
-    group_by(across(c(!!segmento_quo, !!var_quo))) %>%
-    summarise(casos = sum(!!wt_quo %||% n())) %>%
-    ungroup()
-
-  # Agrega el porcentaje de respuesta.
-  tab <- tabla_prop(tab,
-                    .segmento = !!segmento_quo)
-
-  # Agrega el porcentaje válido si es que se señalan categorías perdidas.
-  if (!is.null(miss)) {
-    tab <- tabla_prop_val(tab,
-                          .var = var_quo,
-                          .segmento = !!segmento_quo,
-                          miss = miss)
+  # Si no hay pesos, se construye un vector de 1.
+  if (is.null(.wt)) {
+    v_wgt <- rep(1L, length(v_pregunta))
+  } else {
+    v_wgt <- .df[[.wt]]
   }
 
-  # Agrega el porcentaje total a los segmentos.
-  if (total) {
-    tab <- tabla_total(tab,
-                       .var = !!var_quo,
-                       .segmento = !!segmento_quo,
-                       miss = miss)
+  if (is.null(.segmento)) {
+    # Si no hay segmentos sobre los que dividir la variable de interés.
+    v_segmento <- rep("Total", length(v_pregunta))
+    segmento_var <- "Total"
+    segmento_lab <- "Total"
+  } else {
+    v_segmento <- .df[[.segmento]]
+    segmento_var <- .segmento
+    segmento_lab <- attr(.df[[.segmento]], "label", exact = TRUE) %||% "-"
   }
 
-  tabla_orden(tab,
-              .var = !!var_quo,
-              .segmento = !!segmento_quo)
-}
+  df_agg <- data.frame(
+    casos = v_wgt,
+    segmento_cat = forcats::as_factor(v_segmento)
+  )
 
+  if (desuc_is_categorical_var(v_pregunta)) {
+    # Caso en que pregunta es labelled, factor o string: se calcula proporción.
+    df_agg$pregunta_cat <- forcats::as_factor(v_pregunta)
 
-tabla_var_segmentos <- function(.data,
-                                .var,
-                                .segmentos,
-                                .wt = NULL,
-                                total = FALSE,
-                                miss = NULL) {
-  # Resultados de una pregunta `.var` para varios segmentos `.segmentos`
-
-  tabla_var_seg <- function(.data, .seg) {
-
-    seq_quo <- enquo(.seg)
-
-    tab <- tabla_var_segmento(.data,
-                              .var = {{ .var }},
-                              .segmento = {{ .seg }},
-                              total = total,
-                              .wt = {{ .wt }},
-                              miss = miss) %>%
-      mutate(segmento_var = !!rlang::as_label(seq_quo))
-
-    if(rlang::quo_is_null(seq_quo)){
-      tab$segmento_cat <- "NULL"
-    } else {
-      tab <- tab %>%
-        rename(segmento_cat = !!rlang::as_label(seq_quo))
+    # Declarar explícitamente NA que pudiesen estar en la categoría de respuestas
+    # de la pregunta.
+    # Solo si hay casos NA en el factor
+    if (anyNA(df_agg$pregunta_cat)) {
+      df_agg$pregunta_cat <- forcats::fct_na_value_to_level(df_agg$pregunta_cat)
     }
 
-    tab %>%
-      mutate(across(c('segmento_var', 'segmento_cat'), as.character))
+    tab <- aggregate(
+      casos ~ segmento_cat + pregunta_cat,
+      df_agg,
+      FUN = \(x) sum(x, na.rm = FALSE),
+      na.action = na.pass,
+      drop = FALSE
+    )
+
+    # Agregar 0 si es que hay combinación de pregunta y segmento sin casos.
+    tab$casos <- replace(tab$casos, is.na(tab$casos), 0)
+
+    # Agrega el porcentaje total a los segmentos.
+    if (total) {
+      tab <- tabla_total_prop(tab)
+    }
+
+    # Agrega el porcentaje de respuesta.
+    tab <- tabla_prop(tab, .segmento = "segmento_cat")
+
+    # Agrega el porcentaje válido si es que se señalan categorias perdidas.
+    if (!is.null(miss)) {
+      tab <- tabla_prop_val(tab, miss = miss, by = "segmento_cat")
+    }
+  } else {
+    # Caso en que pregunta sea numérica: se calcula promedio.
+    df_agg$pregunta_cat <- v_pregunta
+
+    tab <- aggregate(
+      x = seq_len(nrow(df_agg)), # índices de fila
+      by = list(segmento_cat = df_agg[["segmento_cat"]]),
+      FUN = function(idx) {
+        x <- df_agg[["pregunta_cat"]][idx]
+        x_val <- !is.na(x) & !(x %in% miss)
+        w <- df_agg[["casos"]][idx]
+
+        c(
+          casos = sum(w, na.rm = TRUE),
+          casos_val = sum(w[x_val], na.rm = TRUE),
+          mean = desuc_weighted_mean(x = x[x_val], w = w[x_val])
+        )
+      },
+      drop = FALSE
+    )
+
+    tab <- cbind(tab[1], tab$x)
+
+    tab$pregunta_cat <- "mean"
+
+    if (total && !is.null(.segmento)) {
+      x <- df_agg[["pregunta_cat"]]
+      x_val <- !is.na(x) & !(x %in% miss)
+      w <- df_agg[["casos"]]
+
+      tab_tot <- data.frame(
+        segmento_cat = "Total",
+        casos = sum(w, na.rm = TRUE),
+        casos_val = sum(w[x_val], na.rm = TRUE),
+        mean = desuc_weighted_mean(x = x[x_val], w = w[x_val]),
+        pregunta_cat = "mean"
+      )
+
+      tab <- dplyr::bind_rows(tab, tab_tot)
+      tab$segmento_cat <- forcats::as_factor(tab$segmento_cat)
+    }
   }
 
-  tab <- map(.segmentos, ~tabla_var_seg(.data, .seg = !!.))
+  # Variable y etiqueta de pregunta
+  tab$pregunta_var <- .var
+  tab$pregunta_lab <- attr(.df[[.var]], "label", exact = TRUE) %||% "-"
 
-  tab <- reduce(tab, bind_rows) %>%
-    mutate(across("segmento_cat", forcats::as_factor))
+  # Variable y etiqueta de segmentos
+  tab$segmento_var <- segmento_var
+  tab$segmento_lab <- segmento_lab
 
-  # Copia label y labels a variable "var" recién creada.
-  # No utilizo esto para no pegar las etiquetas de
-  # tab <- sjlabelled::copy_labels(df_new = tab,
-  #                                df_origin = .data)
+  # Orden de variables de salida
+  col_orden <- c(
+    "segmento_var",
+    "segmento_lab",
+    "segmento_cat",
+    "pregunta_var",
+    "pregunta_lab",
+    "pregunta_cat"
+  )
 
-  # Dejar solo el 'label' de la variable recién creada
-  var_filtro <- rlang::as_name(enquo(.var))
+  col_adicionales <- setdiff(names(tab), col_orden)
 
-  tab[[var_filtro]] <- structure(tab[[var_filtro]],
-                                 label = attr(.data[[var_filtro]], 'label', exact = TRUE))
+  tab <- tab[c(col_orden, col_adicionales)]
 
-  tab %>%
-    select("segmento_var",
-           "segmento_cat", everything())
+  # Orden de casos
+  tab[order(tab$segmento_cat, tab$pregunta_cat), ]
 }
+
 
 #' @title Tabla de porcentajes de variables según segmentos.
 #'
 #' @description
-#' Obtiene porcentajes de respuestas de múltiples variables según multiples segmentos.
+#' Obtiene porcentajes de respuestas de múltiples variables según múltiples segmentos.
+#' Función genérica que funciona con data.frames regulares y objetos tbl_svy.
 #'
-#' @param .data tibble
-#'
-#' @param .vars vars(), lista de nombres de variables de las que se quiere saber su proporción de respuestas
-#' @param .segmentos vars(), lista de nombres de variables de segmentación de las preguntas de `.vars`
-#' @param .wt name, nombre de la variable de ponderación
-#' @param total logical, Si total = TRUE, se agrega el total para cada segmento.
-#' @param miss integers, Vector de valores que deben coniderarse como missings.
+#' @param .df Un data.frame, tibble o tbl_svy
+#' @param .vars tidyselect, lista de nombres de variables de las que se quiere saber su proporción de respuestas
+#' @param .segmentos tidyselect, lista de nombres de variables de segmentación de las preguntas de `.vars`
+#' @param ... Parámetros adicionales que serán pasados a los métodos específicos
 #'
 #' @return tibble
 #'
-#' @import dplyr
-#' @importFrom purrr map map2 reduce
-#' @importFrom forcats as_factor
-#' @importFrom tidyselect vars_select
-#' @importFrom rlang .data
-#'
 #' @export
-tabla_vars_segmentos <- function(.data,
-                                 .vars,
-                                 .segmentos,
-                                 .wt = NULL,
-                                 total = FALSE,
-                                 miss = NULL) {
+tabla_vars_segmentos <- function(.df, .vars, .segmentos = NULL, ...) {
+  UseMethod("tabla_vars_segmentos")
+}
 
-  variables <- tidyselect::vars_select(names(.data), !!!.vars)
+#' @export
+#' @rdname tabla_vars_segmentos
+#' @param .wt name, nombre de la variable de ponderación
+#' @param miss integers, Vector de valores que deben coniderarse como missings.
+#' @param total logical, Si total = TRUE, se agrega el total para cada segmento.
+tabla_vars_segmentos.data.frame <- function(
+  .df,
+  .vars,
+  .segmentos = NULL,
+  .wt = NULL,
+  miss = NULL,
+  total = FALSE,
+  ...
+) {
+  vars <- desuc_eval_select_names(
+    data = .df,
+    sel_quo = rlang::enquo(.vars),
+    allow_null = FALSE
+  )
 
-  tab <- purrr::map(variables, ~tabla_var_segmentos(.data,
-                                                    .var = !!.,
-                                                    .segmentos = .segmentos,
-                                                    .wt = {{ .wt }},
-                                                    total = total,
-                                                    miss = miss))
+  # Revisar si se entrega un ponderador
+  wt_quo <- rlang::enquo(.wt)
 
-  tabla_variables <- function(.data, .var) {
-
-    # Captura la etiqueta de la variable. Si no tiene, lo deja en blanco
-    var_label <- attr(.data[[.var]], 'label') %||% "-"
-
-    .data %>%
-      mutate(pregunta_var = as.character(.var),
-             pregunta_lab = var_label) %>%
-      rename(pregunta_cat = all_of(.var))
+  if (rlang::quo_is_null(wt_quo)) {
+    wt_chr <- NULL
+  } else {
+    wt_chr <- rlang::as_label(wt_quo)
   }
 
-  purrr::map2(tab, variables, ~tabla_variables(.x, .y)) %>%
-    purrr::reduce(bind_rows) %>%
-    select(starts_with("segmento"),
-           'pregunta_var',
-           'pregunta_lab',
-           'pregunta_cat',
-           everything()) %>%
-    mutate(across(c("segmento_var",
-                    "pregunta_var",
-                    "pregunta_lab"),
-                  forcats::as_factor))
+  segmentos <- desuc_eval_select_names(
+    data = .df,
+    sel_quo = rlang::enquo(.segmentos),
+    allow_null = TRUE
+  )
+
+  tab <- purrr::map(
+    vars,
+    \(x_v) {
+      purrr::map(
+        segmentos,
+        \(y_s) {
+          tabla_var_segmento(
+            .df = .df,
+            .var = x_v,
+            .segmento = y_s,
+            .wt = wt_chr,
+            total = total,
+            miss = miss
+          )
+        }
+      )
+    }
+  )
+
+  tab |>
+    purrr::list_flatten() |>
+    purrr::list_rbind() |>
+    tibble::as_tibble()
 }

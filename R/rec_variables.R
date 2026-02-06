@@ -1,14 +1,12 @@
 # Recodificación
 
 # Función para recodifircar variables y agregarle etiquetas a las
-rec_cat <- function(variable,
-                    rec,
-                    labels = NULL){
-
-  sjmisc::rec(variable,
-              rec = rec) %>%
-    haven::labelled(labels = labels,
-                    label = attr(variable, 'label'))
+rec_cat <- function(variable, rec, labels = NULL) {
+        sjmisc::rec(variable, rec = rec) %>%
+                haven::labelled(
+                        labels = labels,
+                        label = attr(variable, "label")
+                )
 }
 
 #' @title Recodificaión de variables 5 a 3
@@ -31,15 +29,14 @@ rec_cat <- function(variable,
 #' @examples
 #'
 #' vect <- c(1, 4, 6, 99, NA)
-#' rec_cat_5a3(vect, labels = c('alto' = 1))
+#' rec_cat_5a3(vect, labels = c("alto" = 1))
 #'
-rec_cat_5a3 <- function(variable,
-                        rec = "1:2 = 1; 3 = 2; 4:5 = 3; else = 9",
-                        labels = NULL){
-
-  rec_cat(variable = variable,
-          rec = rec,
-          labels = labels)
+rec_cat_5a3 <- function(
+        variable,
+        rec = "1:2 = 1; 3 = 2; 4:5 = 3; else = 9",
+        labels = NULL
+) {
+        rec_cat(variable = variable, rec = rec, labels = labels)
 }
 
 #' @title Recodificaión de variables 7 a 3
@@ -62,13 +59,12 @@ rec_cat_5a3 <- function(variable,
 #' @examples
 #'
 #' vect <- c(1, 4, 6, 99, NA)
-#' rec_cat_7a3(vect, labels = c('alto' = 1))
+#' rec_cat_7a3(vect, labels = c("alto" = 1))
 #'
-rec_cat_7a3 <- function(variable,
-                        rec = "1:4 = 1; 5 = 2; 6:7 = 3; else = 9",
-                        labels = NULL){
-
-  rec_cat(variable = variable,
-          rec = rec,
-          labels = labels)
+rec_cat_7a3 <- function(
+        variable,
+        rec = "1:4 = 1; 5 = 2; 6:7 = 3; else = 9",
+        labels = NULL
+) {
+        rec_cat(variable = variable, rec = rec, labels = labels)
 }

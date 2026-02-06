@@ -6,23 +6,18 @@
 # Uso interno para funciones específicas.
 #
 
-format_prefix <-  function(x,
-                           prefix,
-                           digits) {
-
+format_prefix <- function(x, prefix, digits) {
   x <- round(x, digits = digits)
 
   if (is.null(prefix)) {
-    prefix <- ''
+    prefix <- ""
   } else {
-    prefix <- paste0(prefix, ' ')
+    prefix <- paste0(prefix, " ")
   }
 
-  paste0(prefix,
-         format(x,
-                big.mark = '.',
-                decimal.mark = ',',
-                scientific = FALSE)
+  paste0(
+    prefix,
+    format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE)
   )
 }
 
@@ -46,10 +41,8 @@ format_prefix <-  function(x,
 #'
 #' format_clp(1000000)
 #'
-format_clp <-  function(x, digits = 0) {
-  format_prefix(x,
-                prefix = 'CLP',
-                digits = digits)
+format_clp <- function(x, digits = 0) {
+  format_prefix(x, prefix = "CLP", digits = digits)
 }
 
 
@@ -73,10 +66,8 @@ format_clp <-  function(x, digits = 0) {
 #'
 #' format_dinero(1000000)
 #'
-format_dinero <-  function(x, digits = 0) {
-  format_prefix(x,
-                prefix = '$',
-                digits = digits)
+format_dinero <- function(x, digits = 0) {
+  format_prefix(x, prefix = "$", digits = digits)
 }
 
 
@@ -100,8 +91,6 @@ format_dinero <-  function(x, digits = 0) {
 #'
 #' format_num(1000000)
 #'
-format_num <-  function(x, digits = 0) {
-  format_prefix(x,
-                prefix = NULL,
-                digits = digits)
+format_num <- function(x, digits = 0) {
+  format_prefix(x, prefix = NULL, digits = digits)
 }

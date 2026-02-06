@@ -30,5 +30,4 @@
 #'
 #' @source <http://www.ine.cl/>
 
-
 "regiones_y_comunas"

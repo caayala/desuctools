@@ -5,27 +5,30 @@
 \title{Tabla con intervalos de confianza}
 \usage{
 svy_tabla_var_segmento(
-  .data,
+  .df,
   .var,
   .segmento = NULL,
-  na.rm = TRUE,
+  miss = NULL,
+  vartype = c("ci", "se"),
   level = 0.95
 )
 }
 \arguments{
-\item{.data}{data frame con diseño complejo}
+\item{.df}{data frame con diseño complejo}
 
 \item{.var}{Variable en la que interesa comparar categorías de respuesta.}
 
 \item{.segmento}{Segmentos de interés para ver diferencias en categorías
 de variable `.var`. Por defecto NULL}
 
-\item{na.rm}{boolean. Considera o no missings, por defecto FALSE.}
+\item{miss}{chr vector. Categorías a excluir en el denominador de `prop_val` y `mean`.}
+
+\item{vartype}{chr vector. Tipo de error para estimaciones (`ci`, `se`, etc.).}
 
 \item{level}{double. Nivel de significancia para intervalos de confianza}
 }
 \value{
-data.frame
+tibble
 }
 \description{
 Devuelve tabla de frecuencias con intervalos de confianza para un nivel

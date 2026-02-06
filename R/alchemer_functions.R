@@ -27,7 +27,7 @@
 alch_read_spss <- function(url) {
   temp_zip <- tempfile(fileext = ".zip") # Descargo archivo zip
 
-  download.file(url, destfile = temp_zip)
+  download.file(url, destfile = temp_zip, mode = "wb")
 
   temp_dir <- tempdir() # Descomprimo archivo descargado
 
