@@ -2,18 +2,18 @@
 % Please edit documentation in R/rut_informacion.R
 \name{rut_informacion}
 \alias{rut_informacion}
-\title{Obtiene informacion para un RUT}
+\title{Obtiene información para un RUT}
 \usage{
 rut_informacion(.rut)
 }
 \arguments{
-\item{.rut}{string. rut sin puntos, con guion y dígito verificador.}
+\item{.rut}{string. rut sin puntos, con guión y dígito verificador.}
 }
 \value{
 Una lista con datos asociados al RUT.
 }
 \description{
-Obtiene informacion personal a partir de un RUT de Chile.
+Obtiene información personal a partir de un RUT de Chile.
 }
 \examples{
 rut_list = c(

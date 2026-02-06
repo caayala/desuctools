@@ -14,7 +14,7 @@ alch_get_survey_contacts(
 )
 }
 \arguments{
-\item{api_token}{\code{chr} Clave publica de API de Alchemer. Por defecto toma
+\item{api_token}{\code{chr} Clave pública de API de Alchemer. Por defecto toma
 \code{Sys.getenv("ALCHEMER_API_KEY")}.}
 
 \item{api_token_secret}{\code{chr} Clave secreta de API. Por defecto toma
@@ -24,15 +24,15 @@ alch_get_survey_contacts(
 
 \item{campaign_id}{\code{int} ID de la campaña de la que se desean obtener los contactos.}
 
-\item{results_per_page}{\code{int} Numero de contactos por página (1..500). Valor por
+\item{results_per_page}{\code{int} Número de contactos por página (1..500). Valor por
 defecto: 500.}
 
-\item{page}{\code{int} o \code{"all"}. Numero de página a descargar, o
+\item{page}{\code{int} o \code{"all"}. Número de página a descargar, o
 \code{"all"} para recuperar y combinar todas las páginas.}
 }
 \value{
 \code{list}. Objeto devuelto por la API (parseado a lista). Si
-\code{page = "all"} el elemento \code{data} contendra los contactos de
+\code{page = "all"} el elemento \code{data} contendrá los contactos de
 todas las páginas combinadas.
 }
 \description{
@@ -48,7 +48,7 @@ devuelve el objeto parseado por la API (lista con metadatos y elemento
 \item Cuando \code{page = "all"} hace multiples llamadas (si procede) y concatena
 todos los elementos \code{data} en la respuesta retornada.
 \item Los contactos pueden incluir campos como \code{id}, \code{email_address},
-\code{first_name}, \code{last_name}, etc., segun la configuracion de la campaña.
+\code{first_name}, \code{last_name}, etc., según la configuracion de la campañó.
 }
 }
 \examples{
@@ -71,7 +71,7 @@ contactos_all <- alch_get_survey_contacts(
   campaign_id = 24631558,
   page = "all"
 )
-length(contactos_all$data)    # numero total de contactos descargados
+length(contactos_all$data)    # número total de contactos descargados
 }
 
 }

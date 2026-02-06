@@ -22,13 +22,13 @@ rec_nse_aim2023(.edu_jh, .ocu_jh, .tramo_ingreso, factor = FALSE)
 labelled. Vector con la clasificación GSE.
 }
 \description{
-Clasifica el nivel socioeconómico (GSE) segun la
+Clasifica el nivel socioeconómico (GSE) según la
 actualización AIM 2023, usando:
 \itemize{
-\item edu_jh: educación jefe(a) de hogar (códigos edu_jh: 1-5)
-\item ocu_jh: ocupación jefe(a) de hogar (códigos ocu_jh: 1-6)
-\item residentes: numero de personas residentes en el hogar (>=1)
-\item tramo_ingreso: Tramos de ingreso autónomo per cápita del hogar (1-7, 99 = NS/NR)
+\item \code{edu_jh}: educación jefe(a) de hogar (códigos edu_jh: 1-5)
+\item \code{ocu_jh}: ocupación jefe(a) de hogar (códigos ocu_jh: 1-6)
+\item \code{residentes}: numero de personas residentes en el hogar (>=1)
+\item \code{tramo_ingreso}: Tramos de ingreso autónomo per cápita del hogar (1-7, 99 = NS/NR)
 }
 
 Devuelve un vector de caracteres con el GSE: E, D, C3, C2, C1b, C1a, AB.

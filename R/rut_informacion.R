@@ -1,9 +1,9 @@
-#' Obtiene informacion para un RUT
+#' Obtiene información para un RUT
 #'
 #' @description
-#' Obtiene informacion personal a partir de un RUT de Chile.
+#' Obtiene información personal a partir de un RUT de Chile.
 #'
-#' @param .rut string. rut sin puntos, con guion y dígito verificador.
+#' @param .rut string. rut sin puntos, con guión y dígito verificador.
 #'
 #' @returns
 #' Una lista con datos asociados al RUT.

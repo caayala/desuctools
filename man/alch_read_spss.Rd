@@ -14,8 +14,8 @@ tibble
 }
 \description{
 Lee el archivo .sav a partir del \emph{distribution link} de un reporte de
-exportacion de una encuesta programada en Alchemer.
-https://help.alchemer.com/help/spss
+exportación de una encuesta programada en Alchemer.
+\url{https://help.alchemer.com/help/spss}
 
 Compatibility
 \itemize{
@@ -24,4 +24,9 @@ Compatibility
 \item "Other, Write-In" rows in grid questions as not available in SPSS exports.
 \item The Time Started field is not includes as part of the SPSS export.
 }
+}
+\details{
+Funciones para el trabajo con Alchemer
+Servicio de encuestas web
+\url{https://app.alchemer.com/}
 }

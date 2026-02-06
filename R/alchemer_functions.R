@@ -1,13 +1,13 @@
-# Funci\u00f3nes para el trabajo con Alchemer
-# Servicio de encuestas web
-# https://app.alchemer.com/
+#' Funciones para el trabajo con Alchemer
+#' Servicio de encuestas web
+#' <https://app.alchemer.com/>
 
 #' @title read Alchemer SPSS export
 #'
 #' @description
 #' Lee el archivo .sav a partir del _distribution link_ de un reporte de
-#' exportacion de una encuesta programada en Alchemer.
-#' https://help.alchemer.com/help/spss
+#' exportación de una encuesta programada en Alchemer.
+#' <https://help.alchemer.com/help/spss>
 #'
 #' Compatibility
 #' - Comments are not available in SPSS exports.
@@ -45,23 +45,23 @@ alch_read_spss <- function(url) {
 #' parseado por la API (lista con metadatos y elemento \code{data} con las
 #' respuestas).
 #'
-#' @param api_token `chr` Clave publica de API de Alchemer. Por defecto toma
+#' @param api_token `chr` Clave pública de API de Alchemer. Por defecto toma
 #'   \code{Sys.getenv("ALCHEMER_API_KEY")}.
 #' @param api_token_secret `chr` Clave secreta de API. Por defecto toma
 #'   \code{Sys.getenv("ALCHEMER_API_SECRET")}.
 #' @param survey_id `int` ID de la encuesta de la que se desean obtener las respuestas.
-#' @param results_per_page `int` Numero de respuestas por página (1..500). Valor por
+#' @param results_per_page `int` Número de respuestas por página (1..500). Valor por
 #'   defecto: 500.
-#' @param page `int` o \code{"all"}. Numero de página a descargar, o
+#' @param page `int` o \code{"all"}. Número de página a descargar, o
 #'   \code{"all"} para recuperar y combinar todas las páginas.
 #'
 #' @return `list`. Objeto devuelto por la API (parseado a lista). Si
-#'   \code{page = "all"} el elemento \code{data} contendra las respuestas de
+#'   \code{page = "all"} el elemento \code{data} contendrá las respuestas de
 #'   todas las páginas combinadas.
 #'
 #' @details
 #' - Valida que las credenciales y parámetros sean correctos antes de llamar a la API.
-#' - Cuando \code{page = "all"} hace multiples llamadas (si procede) y concatena
+#' - Cuando \code{page = "all"} hace múltiples llamadas (si procede) y concatena
 #'   todos los elementos \code{data} en la respuesta retornada.
 #'
 #' @examples
@@ -97,12 +97,12 @@ alch_get_survey_responses <- function(
     )
   }
 
-  # 2. Parametro 'survey_id'
+  # 2. Párametro 'survey_id'
   if (!is.numeric(survey_id) || length(survey_id) != 1) {
-    stop("Error: 'survey_id' debe ser un unico valor num\u00e9rico.")
+    stop("Error: 'survey_id' debe ser un \u00fanico valor num\u00e9rico.")
   }
 
-  # 3. Parametro 'results_per_page'
+  # 3. Párametro 'results_per_page'
   if (
     !is.numeric(results_per_page) ||
       results_per_page <= 0 ||
@@ -111,7 +111,7 @@ alch_get_survey_responses <- function(
     stop("Error: 'results_per_page' debe ser un numero entero entre 1 y 500.")
   }
 
-  # 4. Parametro 'page'
+  # 4. Párametro 'page'
   if (
     !identical(page, "all") &&
       (!is.numeric(page) || length(page) != 1 || page <= 0)
@@ -124,7 +124,7 @@ alch_get_survey_responses <- function(
   # Base URL para Alchemer API v5
   base_url <- "https://api.alchemer.com/v5"
 
-  # Funci\u00f3n interna para obtener una p\u00e1gina especifica
+  # Función interna para obtener una página específica
   get_page <- function(
     page_num,
     .api_token = api_token,
@@ -145,31 +145,31 @@ alch_get_survey_responses <- function(
     return(resp)
   }
 
-  # Si se solicita una p\u00e1gina especifica, se devuelve la respuesta completa
+  # Si se solicita una página especifica, se devuelve la respuesta específica
   if (is.numeric(page)) {
     resp_data <- get_page(page)
     return(resp_data)
   }
 
-  # Si se solicitan todas las p\u00e1ginas
+  # Si se solicitan todas las páginas
   if (page == "all") {
-    # Request inicial para obtener la primera p\u00e1gina y metadatos
+    # Request inicial para obtener la primera página y metadatos
     resp_page1 <- get_page(1)
 
-    # Si no hay datos, devolver la respuesta de la primera p\u00e1gina tal cual
+    # Si no hay datos, devolver la respuesta de la primera página tal cual
     if (resp_page1[["total_count"]] == 0) {
       return(resp_page1)
     }
 
-    # Extraemos los datos de la p\u00e1gina 1
+    # Extraemos los datos de la página 1
     all_data <- resp_page1[["data"]]
 
-    # Recuperar la cantidad de p\u00e1ginas existentes segun la configuracion
+    # Recuperar la cantidad de páginas existentes según la configuración
     total_pages <- resp_page1[["total_pages"]]
 
-    # Si hay mas p\u00e1ginas, iterar y obtener los datos restantes
+    # Si hay mas páginas, iterar y obtener los datos restantes
     if (total_pages > 1) {
-      # Usar purrr::map para iterar desde la p\u00e1gina 2 hasta el final
+      # Usar purrr::map para iterar desde la página 2 hasta el final
       remaining_pages_resp <- purrr::map(2:total_pages, get_page)
 
       # Extraer solo la data de cada respuesta
@@ -178,13 +178,13 @@ alch_get_survey_responses <- function(
         recursive = FALSE
       )
 
-      # Combinar los datos de todas las p\u00e1ginas
+      # Combinar los datos de todas las páginas
       all_data <- c(all_data, remaining_pages_data)
     }
 
     # Reemplazar el elemento 'data' en la respuesta original con todos los datos
     resp_page1[["data"]] <- all_data
-    # Actualizar metadatos para reflejar que se han combinado las p\u00e1ginas
+    # Actualizar metadatos para reflejar que se han combinado las páginas
     resp_page1[["page"]] <- "all"
     resp_page1[["results_per_page"]] <- resp_page1[["total_count"]]
 
@@ -201,19 +201,19 @@ alch_get_survey_responses <- function(
 #' devuelve el objeto parseado por la API (lista con metadatos y elemento
 #' \code{data} con los contactos).
 #'
-#' @param api_token `chr` Clave publica de API de Alchemer. Por defecto toma
+#' @param api_token `chr` Clave pública de API de Alchemer. Por defecto toma
 #'   \code{Sys.getenv("ALCHEMER_API_KEY")}.
 #' @param api_token_secret `chr` Clave secreta de API. Por defecto toma
 #'   \code{Sys.getenv("ALCHEMER_API_SECRET")}.
 #' @param survey_id `int` ID de la encuesta a la que pertenece la campaña.
 #' @param campaign_id `int` ID de la campaña de la que se desean obtener los contactos.
-#' @param results_per_page `int` Numero de contactos por página (1..500). Valor por
+#' @param results_per_page `int` Número de contactos por página (1..500). Valor por
 #'   defecto: 500.
-#' @param page `int` o \code{"all"}. Numero de página a descargar, o
+#' @param page `int` o \code{"all"}. Número de página a descargar, o
 #'   \code{"all"} para recuperar y combinar todas las páginas.
 #'
 #' @return `list`. Objeto devuelto por la API (parseado a lista). Si
-#'   \code{page = "all"} el elemento \code{data} contendra los contactos de
+#'   \code{page = "all"} el elemento \code{data} contendrá los contactos de
 #'   todas las páginas combinadas.
 #'
 #' @details
@@ -221,7 +221,7 @@ alch_get_survey_responses <- function(
 #' - Cuando \code{page = "all"} hace multiples llamadas (si procede) y concatena
 #'   todos los elementos \code{data} en la respuesta retornada.
 #' - Los contactos pueden incluir campos como \code{id}, \code{email_address},
-#'   \code{first_name}, \code{last_name}, etc., segun la configuracion de la campaña.
+#'   \code{first_name}, \code{last_name}, etc., según la configuracion de la campañó.
 #'
 #' @examples
 #' \dontrun{
@@ -243,7 +243,7 @@ alch_get_survey_responses <- function(
 #'   campaign_id = 24631558,
 #'   page = "all"
 #' )
-#' length(contactos_all$data)    # numero total de contactos descargados
+#' length(contactos_all$data)    # número total de contactos descargados
 #' }
 #'
 #' @importFrom httr2 request req_url_path_append req_url_query req_perform resp_body_json
@@ -266,39 +266,41 @@ alch_get_survey_contacts <- function(
     )
   }
 
-  # 2. Parametro 'survey_id'
+  # 2. Párametro 'survey_id'
   if (!is.numeric(survey_id) || length(survey_id) != 1) {
-    stop("Error: 'survey_id' debe ser un unico valor num\u00e9rico.")
+    stop("Error: 'survey_id' debe ser un \u00fanico valor num\u00e9rico.")
   }
 
-  # 3. Parametro 'campaign_id'
+  # 3. Párametro 'campaign_id'
   if (!is.numeric(campaign_id) || length(campaign_id) != 1) {
-    stop("Error: 'campaign_id' debe ser un unico valor num\u00e9rico.")
+    stop("Error: 'campaign_id' debe ser un \u00fanico valor num\u00e9rico.")
   }
 
-  # 4. Parametro 'results_per_page'
+  # 4. Párametro 'results_per_page'
   if (
     !is.numeric(results_per_page) ||
       results_per_page <= 0 ||
       results_per_page > 500
   ) {
-    stop("Error: 'results_per_page' debe ser un numero entero entre 1 y 500.")
+    stop(
+      "Error: 'results_per_page' debe ser un n\u00famero entero entre 1 y 500."
+    )
   }
 
-  # 5. Parametro 'page'
+  # 5. Párametro 'page'
   if (
     !identical(page, "all") &&
       (!is.numeric(page) || length(page) != 1 || page <= 0)
   ) {
     stop(
-      "Error: 'page' debe ser la cadena \"all\" o un numero entero positivo."
+      "Error: 'page' debe ser la cadena \"all\" o un n\u00famero entero positivo."
     )
   }
 
   # Base URL para Alchemer API v5
   base_url <- "https://api.alchemer.com/v5"
 
-  # Funci\u00f3n interna para obtener una p\u00e1gina especifica
+  # Función interna para obtener una página específica
   get_page <- function(
     page_num,
     .api_token = api_token,
@@ -325,13 +327,13 @@ alch_get_survey_contacts <- function(
     return(resp)
   }
 
-  # Si se solicita una p\u00e1gina especifica
+  # Si se solicita una página específica
   if (is.numeric(page)) {
     resp_data <- get_page(page)
     return(resp_data)
   }
 
-  # Si se solicitan todas las p\u00e1ginas
+  # Si se solicitan todas las páginas
   if (page == "all") {
     resp_page1 <- get_page(1)
 
@@ -361,7 +363,9 @@ alch_get_survey_contacts <- function(
 
 
 #' @title Construye tibble de respuestas desde la lista de Alchemer
+#'
 #' @description
+#'
 #' Construye una tabla (tibble) a partir de la salida de la API de Alchemer
 #' (objeto devuelto por \code{alch_get_survey_responses}). Extrae para cada
 #' pregunta los campos \code{id}, \code{question} y \code{answer}, pivotea las
@@ -401,7 +405,7 @@ alch_get_survey_contacts <- function(
 #' @importFrom dplyr bind_rows bind_cols select distinct mutate across starts_with
 #' @export
 alch_create_df <- function(ls_alchemer) {
-  # Funci\u00f3n interna para extraer y construir la base de datos de
+  # Función interna para extraer y construir la base de datos de
   # respuestas de Alchemer
   .procesar_encuestas <- function(lista_encuestas) {
     # Itera sobre cada respuesta de encuesta y combina los resultados en un tibble
@@ -417,7 +421,7 @@ alch_create_df <- function(ls_alchemer) {
         tidyr::unnest_wider(col = data, names_sep = "_")
     })
 
-    # Funci\u00f3n para eliminar etiquetas HTML y normalizar espacios en una cadena
+    # Función para eliminar etiquetas HTML y normalizar espacios en una cadena
     .simple_strip_html_vec <- function(x) {
       x_chr <- as.character(x)
       entities <- c(

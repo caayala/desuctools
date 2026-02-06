@@ -2,13 +2,13 @@
 #'
 #' @description
 #'
-#' Clasifica el nivel socioeconómico (GSE) segun la
+#' Clasifica el nivel socioeconómico (GSE) según la
 #' actualización AIM 2023, usando:
 #'
-#' - edu_jh: educación jefe(a) de hogar (códigos edu_jh: 1-5)
-#' - ocu_jh: ocupación jefe(a) de hogar (códigos ocu_jh: 1-6)
-#' - residentes: numero de personas residentes en el hogar (>=1)
-#' - tramo_ingreso: Tramos de ingreso autónomo per cápita del hogar (1-7, 99 = NS/NR)
+#' - `edu_jh`: educación jefe(a) de hogar (códigos edu_jh: 1-5)
+#' - `ocu_jh`: ocupación jefe(a) de hogar (códigos ocu_jh: 1-6)
+#' - `residentes`: numero de personas residentes en el hogar (>=1)
+#' - `tramo_ingreso`: Tramos de ingreso autónomo per cápita del hogar (1-7, 99 = NS/NR)
 #'
 #' Devuelve un vector de caracteres con el GSE: E, D, C3, C2, C1b, C1a, AB.
 #'
@@ -73,7 +73,7 @@
 #' @export
 rec_nse_aim2023 <- function(.edu_jh, .ocu_jh, .tramo_ingreso, factor = FALSE) {
   ## --------------------------------------------------------------
-  ## 0. Chequeos b\u00e1sicos
+  ## 0. Chequeos básicos
   ## --------------------------------------------------------------
   n <- length(.edu_jh)
   if (
@@ -104,14 +104,14 @@ rec_nse_aim2023 <- function(.edu_jh, .ocu_jh, .tramo_ingreso, factor = FALSE) {
     )
   }
 
-  ## Recodificar educaci\u00f3n
+  ## Recodificar educación
   map_edu <- c(1, 1, 2, 3, 3, 4, 4, 4, 5, 5)
   edu_jh_rec <- map_edu[as.integer(.edu_jh)]
 
   # print(edu_jh_rec)
 
-  ## Recodificar ocupaci\u00f3n
-  ## Recodificar educaci\u00f3n
+  ## Recodificar ocupación
+  ## Recodificar educación
   map_ocu <- c(1, 2, 3, 3, 3, 3, 4, 5, 6, 6)
   ocu_jh_rec <- map_ocu[as.integer(.ocu_jh)]
 
@@ -122,7 +122,7 @@ rec_nse_aim2023 <- function(.edu_jh, .ocu_jh, .tramo_ingreso, factor = FALSE) {
 
   ## --------------------------------------------------------------
   ## 1. Tabla YPCE: cruce residentes (1-8) x tramo_ingreso (1-7)
-  ##    Aqu\u00ed se asume YPCE = tramo_ingreso (por tramo equivalente).
+  ##    Aquí se asume YPCE = tramo_ingreso (por tramo equivalente).
   ## --------------------------------------------------------------
 
   tabla_ypce <- expand.grid(
@@ -132,7 +132,7 @@ rec_nse_aim2023 <- function(.edu_jh, .ocu_jh, .tramo_ingreso, factor = FALSE) {
   tabla_ypce$ypce <- tabla_ypce$tramo_ingreso
 
   ## --------------------------------------------------------------
-  ## 2. Tabla GSE AIM 2023 (c\u00f3digos num\u00e9ricos P1/P2) en formato ancho
+  ## 2. Tabla GSE AIM 2023 (códigos numéricos P1/P2) en formato ancho
   ## --------------------------------------------------------------
   # fmt: skip
   tabla_gse_wide <- data.frame(
@@ -212,7 +212,7 @@ rec_nse_aim2023 <- function(.edu_jh, .ocu_jh, .tramo_ingreso, factor = FALSE) {
   )
 
   ## -------------------------------
-  ##  CONVERSI\u00d3N SEG\u00daN factor =
+  ##  CONVERSIÓN SEGÚN factor =
   ## -------------------------------
   niveles <- c("E", "D", "C3", "C2", "C1b", "C1a", "AB")
 

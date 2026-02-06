@@ -25,17 +25,17 @@ shift_missing <- function(
   .var2 = NULL,
   missing = c(77L, 88L, 99L)
 ) {
-  # Revisa preguntas de respuesta m\u00faltiple para corregir respuestas
-  # inv\u00e1lidas en variables posteriores.
+  # Revisa preguntas de respuesta múltiple para corregir respuestas
+  # inválidas en variables posteriores.
   missing <- c(missing, NA)
 
   x <- pull(.data, {{ .var1 }})
 
-  # Posici\u00f3n en donde el vector x es missing
+  # Posición en donde el vector x es missing
   x_index <- which(x %in% missing)
 
   if (rlang::quo_is_null(enquo(.var2))) {
-    # Para esos casos, reemplazo el valor de y por NA ya que qued\u00f3 en x
+    # Para esos casos, reemplazo el valor de y por NA ya que quedó en x
     x[x_index] <- NA_integer_
 
     .data %>%
@@ -46,7 +46,7 @@ shift_missing <- function(
     # En esos casos, reemplazo el valor de x por el valor de y
     x[x_index] <- y[x_index]
 
-    # Para esos casos, reemplazo el valor de y por NA ya que qued\u00f3 en x
+    # Para esos casos, reemplazo el valor de y por NA ya que quedó en x
     y[x_index] <- NA_integer_
 
     .data %>%
@@ -66,7 +66,7 @@ shift_missing <- function(
 #' @param collapse string, string con el que se unirán los textos. Por defecto
 #'        ", ".
 #'
-#' @importFrom dplyr %>% pull enquo
+#' @importFrom dplyr pull enquo
 #' @importFrom stringr str_c
 #'
 #' @examples
@@ -80,7 +80,7 @@ shift_missing <- function(
 str_collapse <- function(.data, .var, collapse = ", ") {
   # Colapsar valores de una variable en un string.
 
-  pull(.data, {{ .var }}) %>%
+  pull(.data, {{ .var }}) |>
     stringr::str_c(collapse = collapse)
 }
 
@@ -106,7 +106,7 @@ str_entre <- function(text, ini = "", fin = "") {
     stringr::str_extract(
       text,
       stringr::str_glue("(?<={ini}).*(?={fin})")
-    ) %>%
+    ) |>
       stringr::str_squish(),
     names = names(text)
   )
@@ -133,7 +133,7 @@ str_entre <- function(text, ini = "", fin = "") {
 #' @export
 #'
 str_entre_parentesis <- function(text) {
-  # Extrae texto entre par\u00e9ntesis
+  # Extrae texto entre paréntesis
   text_extract <- str_entre(text, ini = "\\(", fin = "\\)")
 
   text_extract <- ifelse(is.na(nchar(text_extract)), text, text_extract)
@@ -146,7 +146,7 @@ str_entre_parentesis <- function(text) {
 #'
 #' @description
 #' Número de dígitos enteros para valores con decimales. Diseñada para casos en que
-#' longitud y latitud son capturados como digitos sin decimal y necesitan ser reescalados.
+#' longitud y latitud son capturados como dígitos sin decimal y necesitan ser reescalados.
 #'
 #' @name digitos_entero
 #'

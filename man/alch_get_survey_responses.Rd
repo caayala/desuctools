@@ -13,7 +13,7 @@ alch_get_survey_responses(
 )
 }
 \arguments{
-\item{api_token}{\code{chr} Clave publica de API de Alchemer. Por defecto toma
+\item{api_token}{\code{chr} Clave pública de API de Alchemer. Por defecto toma
 \code{Sys.getenv("ALCHEMER_API_KEY")}.}
 
 \item{api_token_secret}{\code{chr} Clave secreta de API. Por defecto toma
@@ -21,15 +21,15 @@ alch_get_survey_responses(
 
 \item{survey_id}{\code{int} ID de la encuesta de la que se desean obtener las respuestas.}
 
-\item{results_per_page}{\code{int} Numero de respuestas por página (1..500). Valor por
+\item{results_per_page}{\code{int} Número de respuestas por página (1..500). Valor por
 defecto: 500.}
 
-\item{page}{\code{int} o \code{"all"}. Numero de página a descargar, o
+\item{page}{\code{int} o \code{"all"}. Número de página a descargar, o
 \code{"all"} para recuperar y combinar todas las páginas.}
 }
 \value{
 \code{list}. Objeto devuelto por la API (parseado a lista). Si
-\code{page = "all"} el elemento \code{data} contendra las respuestas de
+\code{page = "all"} el elemento \code{data} contendrá las respuestas de
 todas las páginas combinadas.
 }
 \description{
@@ -42,7 +42,7 @@ respuestas).
 \details{
 \itemize{
 \item Valida que las credenciales y parámetros sean correctos antes de llamar a la API.
-\item Cuando \code{page = "all"} hace multiples llamadas (si procede) y concatena
+\item Cuando \code{page = "all"} hace múltiples llamadas (si procede) y concatena
 todos los elementos \code{data} en la respuesta retornada.
 }
 }

@@ -2,14 +2,14 @@
 #'
 #' Esta función toma una fecha y la convierte al formato requerido por la API de SurveyToGo.
 #' Si no se especifica una hora, se asume 'mañana' (00:00:00).
-#' Si se especifica 'tarde', se asigna el último segundo del dia (23:59:59).
+#' Si se especifica 'tarde', se asigna el último segundo del día (23:59:59).
 #'
 #' @param date Fecha en formato Date o POSIXct. Si se proporciona una fecha en formato POSIXct,
-#' se mantendra la hora proporcionada en el objeto.
+#' se mantendrá la hora proporcionada en el objeto.
 #' @param hora Cadena de texto que indica si se debe tomar la 'mañana' (00:00:00) o la 'tarde'
 #' (23:59:59) como hora de referencia para la fecha. Valor por defecto es 'mañana'.
 #'
-#' @return Un string con la fecha formateada en el estandar ISO 8601 extendido, incluyendo
+#' @return Un string con la fecha formateada en el estándar ISO 8601 extendido, incluyendo
 #' milisegundos y la zona horaria correspondiente.
 #' @export
 #'
@@ -29,18 +29,18 @@ sg_date <- function(date, hora = "ma\u00f1ana") {
     stop("Error: 'date' debe ser un objeto de tipo Date o POSIXct.")
   }
 
-  # Compatibilidad: acepta "ma\u00f1ana" y "ma\u00f1ana".
+  # Compatibilidad: acepta "mañana" o "tarde".
   if (identical(hora, "ma\u00f1ana")) {
     hora <- "ma\u00f1ana"
   }
 
-  # Verificar que hora sea 'ma\u00f1ana'/'ma\u00f1ana' o 'tarde'
+  # Verificar que hora sea "mañana" o "tarde"
   if (!hora %in% c("ma\u00f1ana", "tarde")) {
     stop("Error: 'hora' debe ser 'ma\u00f1ana' o 'tarde'.")
   }
 
   timezone_format <- function(date) {
-    # Funci\u00f3n para formatear la zona horaria.
+    # Función para formatear la zona horaria.
     tz_date <- format(date, "%z")
     paste0(substr(tz_date, 1, 3), ":", substr(tz_date, 4, 5))
   }

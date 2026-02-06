@@ -17,7 +17,7 @@ vector numerico.
 }
 \description{
 Número de dígitos enteros para valores con decimales. Diseñada para casos en que
-longitud y latitud son capturados como digitos sin decimal y necesitan ser reescalados.
+longitud y latitud son capturados como dígitos sin decimal y necesitan ser reescalados.
 }
 \examples{
 
