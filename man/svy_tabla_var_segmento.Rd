@@ -14,16 +14,18 @@ svy_tabla_var_segmento(
 )
 }
 \arguments{
+\item{.df}{data frame con diseño complejo}
+
 \item{.var}{Variable en la que interesa comparar categorías de respuesta.}
 
 \item{.segmento}{Segmentos de interés para ver diferencias en categorías
 de variable `.var`. Por defecto NULL}
 
+\item{miss}{chr vector. Categorías a excluir en el denominador de `prop_val` y `mean`.}
+
+\item{vartype}{chr vector. Tipo de error para estimaciones (`ci`, `se`, etc.).}
+
 \item{level}{double. Nivel de significancia para intervalos de confianza}
-
-\item{.data}{data frame con diseño complejo}
-
-\item{na.rm}{boolean. Considera o no missings, por defecto FALSE.}
 }
 \value{
 tibble

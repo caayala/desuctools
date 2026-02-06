@@ -78,7 +78,7 @@ test_that("tabla_vars_segmentos proporcion de categoría y total", {
     tabla_vars_segmentos(
       df_test,
       .vars = sexo,
-      .segmentos = cat,
+      .segmentos = c(cat),
       total = TRUE
     )[["prop"]],
     c(0.5, 0.5, 0, 1, 0.25, 0.75)
@@ -104,25 +104,30 @@ test_that("tabla_categoria proporcion de categoría y total y missing numérico"
       df_test,
       .vars = cat_na,
       .segmentos = sexo,
-      miss = c(2), # esto no parece tener efecto.
-      total = FALSE
-    )[, c("casos_val", "mean")], # mean
+      miss = c(2),
+      total = TRUE
+    )[, c("casos", "casos_val", "mean")],
     tibble::tibble(
-      casos_val = c(1, 1),
-      mean = c(1, 1)
+      casos = c(1, 3, 4),
+      casos_val = c(1, 1, 2),
+      mean = c(1, 1, 1)
     )
   )
 })
 
-test_that("tabla_categoria proporcion de varias categorías", {
+test_that("tabla_categoria media de varias categorías", {
   expect_equal(
     tabla_vars_segmentos(
       df_test,
       .vars = cat,
       .segmentos = c(sexo, edad),
       total = FALSE
-    )[["casos"]],
-    c(1, 3, 2, 2)
+    )[, c("casos", "casos_val", "mean")],
+    tibble::tibble(
+      casos = c(1, 3, 2, 2),
+      casos_val = c(1, 3, 2, 2),
+      mean = c(1, 5 / 3, 1, 2)
+    )
   )
 })
 
@@ -135,8 +140,12 @@ test_that("tabla_categoria proporcion de categoría con segmento constante", {
       .segmentos = NULL,
       miss = c(NA),
       total = FALSE
-    )[["prop_val"]],
-    c(2 / 3, 1 / 3, NA)
+    )[, c("casos", "prop", "prop_val")],
+    tibble::tibble(
+      casos = c(2, 1, 1),
+      prop = c(2 / 4, 1 / 4, 1 / 4),
+      prop_val = c(2 / 3, 1 / 3, NA)
+    )
   )
 })
 
@@ -176,6 +185,8 @@ test_that("tabla_vars_segmentos S3 generic works with tibble", {
 
   expect_s3_class(result, "tbl_df")
   expect_equal(nrow(result), 4) # 2 categories in sexo × 2 categories in cat
+  expect_equal(result$casos, c(1, 1, 0, 2))
+  expect_equal(result$prop, c(0.5, 0.5, 0, 1))
 })
 
 test_that("tabla_vars_segmentos.data.frame handles multiple variables", {
@@ -214,17 +225,54 @@ test_that("tabla_vars_segmentos.data.frame handles weighted data correctly", {
 test_that("tabla_vars_segmentos.data.frame handles missings with prop_val", {
   result <- tabla_vars_segmentos(
     df_test,
-    .vars = cat_na,
+    .vars = sexo,
     .segmentos = sexo,
-    miss = c(2, NA)
+    miss = c("M", NA)
   )
 
   # Check that prop_val is calculated
   expect_true("prop_val" %in% names(result))
 
   # Categories marked as missing should have NA in prop_val
-  missing_rows <- result$pregunta_cat %in% c("2", "(Missing)")
+  missing_rows <- result$pregunta_cat %in% c("M", NA)
   expect_true(all(is.na(result$prop_val[missing_rows])))
+})
+
+test_that("tabla_vars_segmentos.data.frame numerica retorna mean y casos_val", {
+  result <- tabla_vars_segmentos(
+    df_test,
+    .vars = cat_na,
+    .segmentos = sexo,
+    miss = 2
+  )
+
+  expect_true("mean" %in% names(result))
+  expect_equal(unique(result$pregunta_cat), "mean")
+  expect_equal(result$casos_val, c(1, 1))
+  expect_equal(result$mean, c(1, 1))
+  expect_false("prop_val" %in% names(result))
+})
+
+test_that("tabla_vars_segmentos.data.frame tidyselect en vars y segmentos", {
+  result <- tabla_vars_segmentos(
+    df_test,
+    .vars = starts_with("se"),
+    .segmentos = all_of(c("cat"))
+  )
+
+  expect_equal(unique(result$pregunta_var), "sexo")
+  expect_equal(unique(result$segmento_var), "cat")
+})
+
+test_that("tabla_vars_segmentos.data.frame acepta vars() por compatibilidad", {
+  result <- tabla_vars_segmentos(
+    df_test,
+    .vars = vars(sexo, edad),
+    .segmentos = vars(cat)
+  )
+
+  expect_equal(sort(unique(result$pregunta_var)), sort(c("sexo", "edad")))
+  expect_equal(unique(result$segmento_var), "cat")
 })
 
 #  rec_cat_5a3 ------------------------------------------------------------

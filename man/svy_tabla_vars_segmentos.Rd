@@ -14,13 +14,17 @@ svy_tabla_vars_segmentos(
 )
 }
 \arguments{
+\item{.df}{`tbl_svy` data.frame con diseño de encuesta.}
+
 \item{.vars}{c(). Variables de interés respecto.}
 
 \item{.segmentos}{c(). Lista de variables por las que se quiere segmentar `.vars`.}
 
-\item{.data}{`tbl_svy` data.frame con diseño de encuesta.}
+\item{miss}{chr vector. Categorías a excluir en el denominador de `prop_val` y `mean`.}
 
-\item{...}{atributos que se pasan a funcion `svy_tabla_var_segmento`.}
+\item{vartype}{chr vector. Tipo de error para estimaciones (`ci`, `se`, etc.).}
+
+\item{level}{double. Nivel de confianza para intervalos.}
 }
 \value{
 tibble

@@ -3,7 +3,8 @@ d <- data.frame(
   fct = factor(c(rep(1, 12), rep(0, 8)), labels = c("No", "Si")),
   lab = haven::labelled(
     c(rep(1, 12), rep(0, 8)),
-    labels = c("Si" = 1, "No" = 0)
+    labels = c("Si" = 1, "No" = 0),
+    label = "Variable labelled"
   ),
   lab_na = haven::labelled(
     c(rep(1, 12), rep(0, 7), NA),
@@ -13,42 +14,61 @@ d <- data.frame(
   num = c(rep(1, 12), rep(0, 8)),
   esc = 1:20,
   esc_na = c(NA_integer_, 2:20),
-  wgt = c(rep(.5, 10), rep(1.5, 10))
+  wgt = c(rep(0.5, 10), rep(1.5, 10))
 )
 
 s <- srvyr::as_survey_design(d, weights = wgt)
-
 # svy_tabla_var_segmento ---------------------------------------------------------
 
 # Resultados sin segmentos
 
 test_that("svy_tabla_var_segmento proporcion de categoría factor", {
+  result <- svy_tabla_var_segmento(s, .var = "fct")
+
   expect_identical(
-    svy_tabla_var_segmento(s, .var = "fct")$pregunta_cat,
+    result$pregunta_cat,
     factor(c("No", "Si"))
   )
 })
 
 test_that("svy_tabla_var_segmento proporcion de categoría labelled", {
+  result <- svy_tabla_var_segmento(s, .var = "lab")
+
   expect_identical(
-    svy_tabla_var_segmento(s, .var = "lab")$pregunta_cat,
+    result$pregunta_cat,
     factor(c("No", "Si"))
+  )
+  expect_identical(
+    result$pregunta_lab,
+    c("Variable labelled", "Variable labelled")
   )
 })
 
 test_that("svy_tabla_var_segmento mismos resultados entre factor y labelled", {
+  result_fct <- svy_tabla_var_segmento(s, .var = "fct")
+  result_lab <- svy_tabla_var_segmento(s, .var = "lab")
+
   expect_identical(
-    svy_tabla_var_segmento(s, .var = "fct")$prop,
-    svy_tabla_var_segmento(s, .var = "lab")$prop
+    result_fct$prop,
+    result_lab$prop
   )
 })
 
 test_that("svy_tabla_var_segmento media de escalar", {
-  expect_s3_class(svy_tabla_var_segmento(s, .var = "esc"), "tbl_df")
+  result <- svy_tabla_var_segmento(s, .var = "esc")
+
+  expect_s3_class(result, "tbl_df")
+  expect_equal(result$mean, weighted.mean(d$esc, d$wgt))
 })
 
 test_that("svy_tabla_var_segmento proporcion de categoría labelled", {
-  expect_s3_class(svy_tabla_var_segmento(s, .var = "lab_na"), "tbl_df")
+  result <- svy_tabla_var_segmento(s, .var = "lab_na")
+
+  expect_s3_class(result, "tbl_df")
+  expect_equal(result$prop, c(0.525, 0.4, 0, 0.075))
+
+  result <- svy_tabla_var_segmento(s, .var = "lab_na", miss = c(9, NA))
+  expect_equal(result$prop_val, c(10.5 / 18.5, 8 / 18.5, 0, NA))
 })
 
 # Resultados con segmentos
@@ -145,7 +165,7 @@ test_that("tabla_vars_segmentos S3 generic dispatches correctly for tbl_svy", {
     ) %in%
       names(result)
   ))
-  expect_equal(result$segmento_cat, factor("Total"))
+  expect_true(all(as.character(result$segmento_cat) == "Total"))
 })
 
 test_that("tabla_vars_segmentos and svy_tabla_vars_segmentos produce identical results", {
@@ -204,4 +224,43 @@ test_that("tabla_vars_segmentos.tbl_svy includes confidence intervals", {
 
   # Check that confidence interval columns are included
   expect_true(all(c("prop_low", "prop_upp") %in% names(result)))
+})
+
+test_that("tabla_vars_segmentos.survey.design2 despacha via metodo S3", {
+  s_design <- survey::svydesign(ids = ~1, weights = ~wgt, data = d)
+
+  result <- tabla_vars_segmentos(
+    s_design,
+    .vars = fct,
+    .segmentos = x
+  )
+
+  expect_true(all(c("prop", "pregunta_cat", "segmento_cat") %in% names(result)))
+  expect_s3_class(result, "tbl_df")
+})
+
+test_that("tabla_vars_segmentos.tbl_svy numerica incluye mean y errores", {
+  result <- tabla_vars_segmentos(
+    s,
+    .vars = esc,
+    .segmentos = x,
+    miss = 20,
+    vartype = c("ci", "se")
+  )
+
+  expect_equal(unique(result$pregunta_cat), "mean")
+  expect_true(all(
+    c("mean", "mean_low", "mean_upp", "mean_se", "casos_val") %in% names(result)
+  ))
+})
+
+test_that("tabla_vars_segmentos.tbl_svy soporta tidyselect en vars y segmentos", {
+  result <- tabla_vars_segmentos(
+    s,
+    .vars = starts_with("f"),
+    .segmentos = all_of(c("x"))
+  )
+
+  expect_equal(unique(result$pregunta_var), "fct")
+  expect_equal(unique(result$segmento_var), "x")
 })

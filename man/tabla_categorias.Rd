@@ -14,6 +14,8 @@ tabla_categorias(.df, ..., .wt = NULL, miss = NULL)
 
 \item{.wt}{name. Nombre de columna con ponderador o expansor de los datos. Por defecto es NULL,
 sin expansor.}
+
+\item{miss}{chr vector. Categorías de respuesta que deben excluirse del cálculo de `prop_val`.}
 }
 \value{
 tibble

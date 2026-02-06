@@ -20,11 +20,13 @@ tibble
 Calculo de proporción para categorías válidas.
 }
 \examples{
-df <- tibble(pregunta_cat = c("a", "b", "x"),
-             casos = c(30, 30, 40))
+df <- tibble::tibble(
+pregunta_cat = c("a", "b", "x"),
+casos = c(30, 30, 40)
+)
 
-tabla_prop_val(df, miss = "x")
+desuctools:::tabla_prop_val(df, miss = "x")
 
-tabla_prop_val(df, by = "pregunta_cat", miss = "x")
+desuctools:::tabla_prop_val(df, by = "pregunta_cat", miss = "x")
 
 }

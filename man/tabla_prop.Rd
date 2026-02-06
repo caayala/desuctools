@@ -18,11 +18,11 @@ tibble
 Cálculo de proporciones
 }
 \examples{
-df <- tibble(var = c("a", "b"),
+df <- tibble::tibble(var = c("a", "b"),
             casos = c(30, 70))
 
-tabla_prop(df, .segmento = NULL)
+desuctools:::tabla_prop(df, .segmento = NULL)
 
-tabla_prop(df, .segmento = "var")
+desuctools:::tabla_prop(df, .segmento = "var")
 
 }
