@@ -10,25 +10,26 @@ edu_fct_educacion_especial(x)
 \item{x}{A numeric vector.}
 }
 \value{
-A factor with 3 levels, with an attached `"label"` attribute.
+A factor with 3 levels, with an attached \code{"label"} attribute.
 }
 \description{
 Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 Diferencia Educación Especial en tres niveles.
-es igual al dígito `6`.
+es igual al dígito \code{6}.
 
 Los cod_educ relacioandos son:
-
-- 211 Educación Especial Discapacidad Auditiva
-- 212 Educación Especial Discapacidad Intelectual
-- 213 Educación Especial Discapacidad Visual
-- 214 Educación Especial Trastornos Específicos del Lenguaje
-- 215 Educación Especial Trastornos Motores
-- 216 Educación Especial Autismo
-- 217 Educación Especial Discapacidad Graves Alteraciones en la Capacidad de Relación y Comunicación
-- 218 Educación Especial Discapacidad Múltiple
-- 219 Educación Especial Sordoceguera
-- 299 Opción 4 Programa Integración Escolar
+\itemize{
+\item 211 Educación Especial Discapacidad Auditiva
+\item 212 Educación Especial Discapacidad Intelectual
+\item 213 Educación Especial Discapacidad Visual
+\item 214 Educación Especial Trastornos Específicos del Lenguaje
+\item 215 Educación Especial Trastornos Motores
+\item 216 Educación Especial Autismo
+\item 217 Educación Especial Discapacidad Graves Alteraciones en la Capacidad de Relación y Comunicación
+\item 218 Educación Especial Discapacidad Múltiple
+\item 219 Educación Especial Sordoceguera
+\item 299 Opción 4 Programa Integración Escolar
+}
 }
 \examples{
 edu_fct_educacion_especial(c(211, 211, 216, 214, 110)) |>
@@ -36,5 +37,5 @@ table()
 
 }
 \seealso{
-[https://centroestudios.mineduc.cl/datos-abiertos/]
+\link{https://centroestudios.mineduc.cl/datos-abiertos/}
 }

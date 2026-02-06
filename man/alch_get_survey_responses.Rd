@@ -13,24 +13,24 @@ alch_get_survey_responses(
 )
 }
 \arguments{
-\item{api_token}{`chr` Clave publica de API de Alchemer. Por defecto toma
+\item{api_token}{\code{chr} Clave publica de API de Alchemer. Por defecto toma
 \code{Sys.getenv("ALCHEMER_API_KEY")}.}
 
-\item{api_token_secret}{`chr` Clave secreta de API. Por defecto toma
+\item{api_token_secret}{\code{chr} Clave secreta de API. Por defecto toma
 \code{Sys.getenv("ALCHEMER_API_SECRET")}.}
 
-\item{survey_id}{`int` ID de la encuesta de la que se desean obtener las respuestas.}
+\item{survey_id}{\code{int} ID de la encuesta de la que se desean obtener las respuestas.}
 
-\item{results_per_page}{`int` Numero de respuestas por página (1..500). Valor por
+\item{results_per_page}{\code{int} Numero de respuestas por página (1..500). Valor por
 defecto: 500.}
 
-\item{page}{`int` o \code{"all"}. Numero de página a descargar, o
+\item{page}{\code{int} o \code{"all"}. Numero de página a descargar, o
 \code{"all"} para recuperar y combinar todas las páginas.}
 }
 \value{
-`list`. Objeto devuelto por la API (parseado a lista). Si
-  \code{page = "all"} el elemento \code{data} contendra las respuestas de
-  todas las páginas combinadas.
+\code{list}. Objeto devuelto por la API (parseado a lista). Si
+\code{page = "all"} el elemento \code{data} contendra las respuestas de
+todas las páginas combinadas.
 }
 \description{
 Recupera las respuestas de una encuesta en Alchemer. Permite descargar una
@@ -40,9 +40,11 @@ parseado por la API (lista con metadatos y elemento \code{data} con las
 respuestas).
 }
 \details{
-- Valida que las credenciales y parámetros sean correctos antes de llamar a la API.
-- Cuando \code{page = "all"} hace multiples llamadas (si procede) y concatena
-  todos los elementos \code{data} en la respuesta retornada.
+\itemize{
+\item Valida que las credenciales y parámetros sean correctos antes de llamar a la API.
+\item Cuando \code{page = "all"} hace multiples llamadas (si procede) y concatena
+todos los elementos \code{data} en la respuesta retornada.
+}
 }
 \examples{
 \dontrun{

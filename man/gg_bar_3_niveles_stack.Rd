@@ -27,42 +27,42 @@ gg_bar_3_niveles_stack(
 )
 }
 \arguments{
-\item{.df}{`data.frame` Debe contener variables `pregunta_lab` y `pregunta_cat`.
-Funciona bien a partir de data.frame de resultado de función `tabla_vars_segmentos`.}
+\item{.df}{\code{data.frame} Debe contener variables \code{pregunta_lab} y \code{pregunta_cat}.
+Funciona bien a partir de data.frame de resultado de función \code{tabla_vars_segmentos}.}
 
-\item{x}{`quo` Nombre de variable a utilizar en eje X.}
+\item{x}{\code{quo} Nombre de variable a utilizar en eje X.}
 
-\item{title}{`chr` Título del gráfico.}
+\item{title}{\code{chr} Título del gráfico.}
 
-\item{subtitle}{`chr` Subtítulo del gráfico.}
+\item{subtitle}{\code{chr} Subtítulo del gráfico.}
 
-\item{caption}{`chr` Caption del gráfico.}
+\item{caption}{\code{chr} Caption del gráfico.}
 
-\item{missing}{`chr` vector con categorías de respuesta consideradas 'missing'.}
+\item{missing}{\code{chr} vector con categorías de respuesta consideradas 'missing'.}
 
-\item{text_size}{`num` tamaño de letra.}
+\item{text_size}{\code{num} tamaño de letra.}
 
-\item{flip}{`logical` TRUE gira los ejes.}
+\item{flip}{\code{logical} TRUE gira los ejes.}
 
 \item{colour_neg_neu_pos}{Vector con tres colores para negativo, neutro y positivo.}
 
-\item{y_prop}{`chr` Variable con valor de proporciones a graficar.}
+\item{y_prop}{\code{chr} Variable con valor de proporciones a graficar.}
 
-\item{y_na}{`dbl` posición de la etiqueta en y de valores missing.}
+\item{y_na}{\code{dbl} posición de la etiqueta en y de valores missing.}
 
-\item{x_na}{`dbl` posición de la etiqueta en x de valores missing.}
+\item{x_na}{\code{dbl} posición de la etiqueta en x de valores missing.}
 
 \item{facet_col}{Variable de facet columna.}
 
 \item{facet_row}{Variable de facet fila.}
 
-\item{x_str_entre_ini}{`chr` caracter desde el cual se cortará la etiqueta de x.
+\item{x_str_entre_ini}{\code{chr} caracter desde el cual se cortará la etiqueta de x.
 El caracter no queda incluido. Si queda en blanco '', parte desde el inicio,}
 
-\item{x_str_entre_fin}{`chr` caracter hasta donde se cortará la etiqueta de x.
+\item{x_str_entre_fin}{\code{chr} caracter hasta donde se cortará la etiqueta de x.
 El caracter no queda incluido. Si queda en blanco '', termina al final.}
 
-\item{x_str_width}{`int` numero de caracteres para wrap las etiquetas de x.}
+\item{x_str_width}{\code{int} numero de caracteres para wrap las etiquetas de x.}
 
 \item{colour_na}{color para los valores de dato missing, si se incluye.}
 

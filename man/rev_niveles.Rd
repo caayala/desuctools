@@ -19,14 +19,14 @@ rev_niveles(x, ...)
 \method{rev_niveles}{numeric}(x, rango_inv = NULL, ...)
 }
 \arguments{
-\item{x}{`vector`: Vector de datos que se quiere invertir}
+\item{x}{\code{vector}: Vector de datos que se quiere invertir}
 
 \item{...}{placeholder.}
 
-\item{niveles_inv}{`chr`: Niveles de un factor que serán invertidos.
+\item{niveles_inv}{\code{chr}: Niveles de un factor que serán invertidos.
 Por defecto, invierte todos los niveles.}
 
-\item{rango_inv}{`num`: Vector de dos niveles en el que se señala el valor
+\item{rango_inv}{\code{num}: Vector de dos niveles en el que se señala el valor
 del primero y último valor que será invertido. Se espera que esos dos valores
 definan un rango.
 Por defecto, invierte todos los niveles.}

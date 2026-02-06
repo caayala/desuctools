@@ -14,7 +14,7 @@ vector logico
 }
 \description{
 Validación de la sintaxis de correos electrónicos.
-La expresión regular utilizada para ello viene del siguiente post en [SO][https://stackoverflow.com/questions/201323/how-to-validate-an-email-address-using-a-regular-expression]
+La expresión regular utilizada para ello viene del siguiente post en \link[=https://stackoverflow.com/questions/201323/how-to-validate-an-email-address-using-a-regular-expression]{SO}
 }
 \examples{
 

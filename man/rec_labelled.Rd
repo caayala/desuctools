@@ -7,9 +7,9 @@
 rec_labelled(.vec, ls_niveles)
 }
 \arguments{
-\item{.vec}{`labelled_haven`: vector/variable a recodificar}
+\item{.vec}{\code{labelled_haven}: vector/variable a recodificar}
 
-\item{ls_niveles}{`list`: lista con recodificaciones.
+\item{ls_niveles}{\code{list}: lista con recodificaciones.
 Debe cumplir un formato específico.}
 }
 \value{

@@ -16,8 +16,8 @@ Por defecto digits = 0.}
 character
 }
 \description{
-Transforma número a texto como `$` con separación
-de miles con `.` y decimales con `,`.
+Transforma número a texto como \code{$} con separación
+de miles con \code{.} y decimales con \verb{,}.
 }
 \examples{
 

@@ -40,7 +40,7 @@ inserting figures with \code{knitr::include_graphics}.
 }
 \details{
 Read more about using the function at
-  \url{http://bit.ly/include_graphics2}.
+\url{http://bit.ly/include_graphics2}.
 }
 \examples{
 png_url <- "https://commonmark.org/images/markdown-mark.png"

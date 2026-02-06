@@ -17,6 +17,6 @@ pregunta_orden(.x, .y, cat_orden)
 numeric vector
 }
 \description{
-función de ayuda para `forcats::fct_reorder2` con tal de ordenar distintas preguntas
-según una catogoría de respuesta de interès `cat_orden`.
+función de ayuda para \code{forcats::fct_reorder2} con tal de ordenar distintas preguntas
+según una catogoría de respuesta de interès \code{cat_orden}.
 }

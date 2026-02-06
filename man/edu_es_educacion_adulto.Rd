@@ -15,8 +15,8 @@ Un vector lógico indicando si es un código de enseñanza para adultos.
 \description{
 Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 Detecta niveles de enseñanza para adultos ya que su segunda cifra significativa
-es igual al dígito `6`.
+es igual al dígito \code{6}.
 }
 \seealso{
-[https://centroestudios.mineduc.cl/datos-abiertos/]
+\link{https://centroestudios.mineduc.cl/datos-abiertos/}
 }

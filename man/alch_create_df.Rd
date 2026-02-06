@@ -12,9 +12,9 @@ el elemento \code{data} con las respuestas (lista de respuestas).}
 }
 \value{
 Tibble. Una fila por respuesta de encuesta con las columnas de
-  metadatos originales y columnas de respuesta llamadas \code{var<id>}.
-  Cada columna de respuesta recibe el atributo \code{"label"} con la
-  pregunta correspondiente (texto limpio).
+metadatos originales y columnas de respuesta llamadas \code{var<id>}.
+Cada columna de respuesta recibe el atributo \code{"label"} con la
+pregunta correspondiente (texto limpio).
 }
 \description{
 Construye una tabla (tibble) a partir de la salida de la API de Alchemer
@@ -25,12 +25,14 @@ respuestas a formato ancho (una fila por respuesta) creando columnas
 con el texto de la pregunta (etiquetas HTML son limpiadas).
 }
 \details{
-- Si una pregunta no tiene \code{answer}, el valor resultante sera \code{NA}.
-- Respuestas multiples por misma pregunta se colapsan en una cadena
-  separada por \code{"; "}.
-- La función asume que \code{ls_alchemer[["data"]]} es una lista con la
-  estructura estandar de la API (cada elemento contiene sublistas con
-  elementos \code{id}, \code{question}, \code{answer} entre otros).
+\itemize{
+\item Si una pregunta no tiene \code{answer}, el valor resultante sera \code{NA}.
+\item Respuestas multiples por misma pregunta se colapsan en una cadena
+separada por \code{"; "}.
+\item La función asume que \code{ls_alchemer[["data"]]} es una lista con la
+estructura estandar de la API (cada elemento contiene sublistas con
+elementos \code{id}, \code{question}, \code{answer} entre otros).
+}
 }
 \examples{
 \dontrun{

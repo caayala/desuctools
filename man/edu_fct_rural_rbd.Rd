@@ -7,15 +7,15 @@
 edu_fct_rural_rbd(x)
 }
 \arguments{
-\item{x}{Un vector de códigos, típicamente variable `RURAL_RBD`.}
+\item{x}{Un vector de códigos, típicamente variable \code{RURAL_RBD}.}
 }
 \value{
-A factor with 2 levels, with an attached `"label"` attribute.
+A factor with 2 levels, with an attached \code{"label"} attribute.
 }
 \description{
 Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 Índice de ruralidad del establecimiento.
 }
 \seealso{
-[https://centroestudios.mineduc.cl/datos-abiertos/]
+\link{https://centroestudios.mineduc.cl/datos-abiertos/}
 }

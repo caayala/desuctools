@@ -13,7 +13,7 @@ shift_missing(.data, .var1, .var2 = NULL, missing = c(77L, 88L, 99L))
 
 \item{.var2}{nombre de la variable la segunda variable}
 
-\item{missing}{vector con valores considerados no válidos (por defecto \code{77, 88, 99}). `NA` es considerado siempre.}
+\item{missing}{vector con valores considerados no válidos (por defecto \code{77, 88, 99}). \code{NA} es considerado siempre.}
 }
 \value{
 Una data frame con los valores de .var1 y .var2 corregidos

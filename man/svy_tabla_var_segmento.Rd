@@ -19,11 +19,11 @@ svy_tabla_var_segmento(
 \item{.var}{Variable en la que interesa comparar categorías de respuesta.}
 
 \item{.segmento}{Segmentos de interés para ver diferencias en categorías
-de variable `.var`. Por defecto NULL}
+de variable \code{.var}. Por defecto NULL}
 
-\item{miss}{chr vector. Categorías a excluir en el denominador de `prop_val` y `mean`.}
+\item{miss}{chr vector. Categorías a excluir en el denominador de \code{prop_val} y \code{mean}.}
 
-\item{vartype}{chr vector. Tipo de error para estimaciones (`ci`, `se`, etc.).}
+\item{vartype}{chr vector. Tipo de error para estimaciones (\code{ci}, \code{se}, etc.).}
 
 \item{level}{double. Nivel de significancia para intervalos de confianza}
 }
@@ -32,6 +32,6 @@ tibble
 }
 \description{
 Devuelve tabla de frecuencias con intervalos de confianza para un nivel
-`level`de significancia entre las categorías de respuesta de la
-variable `.var`.
+\code{level}de significancia entre las categorías de respuesta de la
+variable \code{.var}.
 }
