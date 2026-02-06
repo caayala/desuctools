@@ -21,26 +21,26 @@ alch_get_survey_responses(
 
 \item{survey_id}{`int` ID de la encuesta de la que se desean obtener las respuestas.}
 
-\item{results_per_page}{`int` Numero de respuestas por p\u00e1gina (1..500). Valor por
+\item{results_per_page}{`int` Numero de respuestas por página (1..500). Valor por
 defecto: 500.}
 
-\item{page}{`int` o \code{"all"}. Numero de p\u00e1gina a descargar, o
-\code{"all"} para recuperar y combinar todas las p\u00e1ginas.}
+\item{page}{`int` o \code{"all"}. Numero de página a descargar, o
+\code{"all"} para recuperar y combinar todas las páginas.}
 }
 \value{
 `list`. Objeto devuelto por la API (parseado a lista). Si
   \code{page = "all"} el elemento \code{data} contendra las respuestas de
-  todas las p\u00e1ginas combinadas.
+  todas las páginas combinadas.
 }
 \description{
 Recupera las respuestas de una encuesta en Alchemer. Permite descargar una
-p\u00e1gina concreta de resultados o todas las p\u00e1ginas (combinadas) cuando
-\code{page = "all"}. La funci\u00f3n valida par\u00e1metros y devuelve el objeto
+página concreta de resultados o todas las páginas (combinadas) cuando
+\code{page = "all"}. La función valida parámetros y devuelve el objeto
 parseado por la API (lista con metadatos y elemento \code{data} con las
 respuestas).
 }
 \details{
-- Valida que las credenciales y par\u00e1metros sean correctos antes de llamar a la API.
+- Valida que las credenciales y parámetros sean correctos antes de llamar a la API.
 - Cuando \code{page = "all"} hace multiples llamadas (si procede) y concatena
   todos los elementos \code{data} en la respuesta retornada.
 }
@@ -50,11 +50,11 @@ respuestas).
 Sys.setenv(ALCHEMER_API_KEY = "tu_api_token")
 Sys.setenv(ALCHEMER_API_SECRET = "tu_api_secret")
 
-# obtener la primera p\u00e1gina
+# obtener la primera página
 resp_page1 <- alch_get_survey_responses(survey_id = 123456, page = 1)
 str(resp_page1)
 
-# obtener todas las p\u00e1ginas combinadas
+# obtener todas las páginas combinadas
 resp_all <- alch_get_survey_responses(survey_id = 123456, page = "all")
 length(resp_all$data)    # numero total de respuestas descargadas
 }

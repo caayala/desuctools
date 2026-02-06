@@ -2,7 +2,7 @@
 % Please edit documentation in R/alchemer_functions.R
 \name{alch_get_survey_contacts}
 \alias{alch_get_survey_contacts}
-\title{Obtener contactos de una campa\u00f1a de encuesta en Alchemer}
+\title{Obtener contactos de una campaña de encuesta en Alchemer}
 \usage{
 alch_get_survey_contacts(
   api_token = Sys.getenv("ALCHEMER_API_KEY"),
@@ -20,34 +20,34 @@ alch_get_survey_contacts(
 \item{api_token_secret}{`chr` Clave secreta de API. Por defecto toma
 \code{Sys.getenv("ALCHEMER_API_SECRET")}.}
 
-\item{survey_id}{`int` ID de la encuesta a la que pertenece la campa\u00f1a.}
+\item{survey_id}{`int` ID de la encuesta a la que pertenece la campaña.}
 
-\item{campaign_id}{`int` ID de la campa\u00f1a de la que se desean obtener los contactos.}
+\item{campaign_id}{`int` ID de la campaña de la que se desean obtener los contactos.}
 
-\item{results_per_page}{`int` Numero de contactos por p\u00e1gina (1..500). Valor por
+\item{results_per_page}{`int` Numero de contactos por página (1..500). Valor por
 defecto: 500.}
 
-\item{page}{`int` o \code{"all"}. Numero de p\u00e1gina a descargar, o
-\code{"all"} para recuperar y combinar todas las p\u00e1ginas.}
+\item{page}{`int` o \code{"all"}. Numero de página a descargar, o
+\code{"all"} para recuperar y combinar todas las páginas.}
 }
 \value{
 `list`. Objeto devuelto por la API (parseado a lista). Si
   \code{page = "all"} el elemento \code{data} contendra los contactos de
-  todas las p\u00e1ginas combinadas.
+  todas las páginas combinadas.
 }
 \description{
-Recupera los contactos asociados a una campa\u00f1a de encuesta en Alchemer.
-Permite descargar una p\u00e1gina concreta de contactos o todas las p\u00e1ginas
-(combinadas) cuando \code{page = "all"}. La funci\u00f3n valida par\u00e1metros y
+Recupera los contactos asociados a una campaña de encuesta en Alchemer.
+Permite descargar una página concreta de contactos o todas las páginas
+(combinadas) cuando \code{page = "all"}. La función valida parámetros y
 devuelve el objeto parseado por la API (lista con metadatos y elemento
 \code{data} con los contactos).
 }
 \details{
-- Valida que las credenciales y par\u00e1metros sean correctos antes de llamar a la API.
+- Valida que las credenciales y parámetros sean correctos antes de llamar a la API.
 - Cuando \code{page = "all"} hace multiples llamadas (si procede) y concatena
   todos los elementos \code{data} en la respuesta retornada.
 - Los contactos pueden incluir campos como \code{id}, \code{email_address},
-  \code{first_name}, \code{last_name}, etc., segun la configuracion de la campa\u00f1a.
+  \code{first_name}, \code{last_name}, etc., segun la configuracion de la campaña.
 }
 \examples{
 \dontrun{
@@ -55,7 +55,7 @@ devuelve el objeto parseado por la API (lista con metadatos y elemento
 Sys.setenv(ALCHEMER_API_KEY = "tu_api_token")
 Sys.setenv(ALCHEMER_API_SECRET = "tu_api_secret")
 
-# obtener la primera p\u00e1gina de contactos
+# obtener la primera página de contactos
 contactos_page1 <- alch_get_survey_contacts(
   survey_id = 8529571,
   campaign_id = 24631558,

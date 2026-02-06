@@ -10,20 +10,20 @@ sg_date(date, hora = "mañana")
 \item{date}{Fecha en formato Date o POSIXct. Si se proporciona una fecha en formato POSIXct,
 se mantendra la hora proporcionada en el objeto.}
 
-\item{hora}{Cadena de texto que indica si se debe tomar la 'ma\u00f1ana' (00:00:00) o la 'tarde'
-(23:59:59) como hora de referencia para la fecha. Valor por defecto es 'ma\u00f1ana'.}
+\item{hora}{Cadena de texto que indica si se debe tomar la 'mañana' (00:00:00) o la 'tarde'
+(23:59:59) como hora de referencia para la fecha. Valor por defecto es 'mañana'.}
 }
 \value{
 Un string con la fecha formateada en el estandar ISO 8601 extendido, incluyendo
 milisegundos y la zona horaria correspondiente.
 }
 \description{
-Esta funci\u00f3n toma una fecha y la convierte al formato requerido por la API de SurveyToGo.
-Si no se especifica una hora, se asume 'ma\u00f1ana' (00:00:00).
-Si se especifica 'tarde', se asigna el \u00faltimo segundo del dia (23:59:59).
+Esta función toma una fecha y la convierte al formato requerido por la API de SurveyToGo.
+Si no se especifica una hora, se asume 'mañana' (00:00:00).
+Si se especifica 'tarde', se asigna el último segundo del dia (23:59:59).
 }
 \examples{
-# Convertir una fecha en formato Date para la ma\u00f1ana
+# Convertir una fecha en formato Date para la mañana
 
 sg_date(as.Date("2024-08-26"))
 

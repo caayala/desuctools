@@ -2,20 +2,20 @@
 % Please edit documentation in R/fct_educacion.R
 \name{edu_es_educacion_adulto}
 \alias{edu_es_educacion_adulto}
-\title{Detecta c\u00f3digos de ense\u00f1anza para adultos}
+\title{Detecta códigos de enseñanza para adultos}
 \usage{
 edu_es_educacion_adulto(x)
 }
 \arguments{
-\item{x}{Un vector num\u00e9rico o de cadenas.}
+\item{x}{Un vector numérico o de cadenas.}
 }
 \value{
-Un vector l\u00f3gico indicando si es un c\u00f3digo de ense\u00f1anza para adultos.
+Un vector lógico indicando si es un código de enseñanza para adultos.
 }
 \description{
-Recodificaci\u00f3n para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
-Detecta niveles de ense\u00f1anza para adultos ya que su segunda cifra significativa
-es igual al d\u00edgito `6`.
+Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
+Detecta niveles de enseñanza para adultos ya que su segunda cifra significativa
+es igual al dígito `6`.
 }
 \seealso{
 [https://centroestudios.mineduc.cl/datos-abiertos/]

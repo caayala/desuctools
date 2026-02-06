@@ -20,7 +20,7 @@
 frq_trunc <- function(...,
                       width = 50L,
                       ellipsis = '...') {
-    # frecuencia de variable truncando las etiquetas para mejorar visualización.
+    # frecuencia de variable truncando las etiquetas para mejorar visualizaci\u00f3n.
 
     tab <- sjmisc::frq(...)
 
@@ -68,7 +68,7 @@ kable_desuc <- function(.data,
                         font_size = 8,
                         latex_options = c('hold_position'),
                         ...){
-    # Ajustes de formatos para tablas según estilo DESUC.
+    # Ajustes de formatos para tablas seg\u00fan estilo DESUC.
     .data %>%
         knitr::kable(digits = digits,
                      row.names = row.names,
@@ -128,7 +128,7 @@ tabla_columnas <- function(data, ncols = 2){
 #'
 #' @export
 chunk_size <- function(...) {
-    # Cambio de tamaño del chunk.
+    # Cambio de tama\u00f1o del chunk.
     # Obtenido desde
     # https://stackoverflow.com/questions/25646333/code-chunk-font-size-in-rmarkdown-with-knitr-and-latex
 

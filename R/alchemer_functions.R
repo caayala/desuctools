@@ -40,8 +40,8 @@ alch_read_spss <- function(url) {
 #' @title Obtener respuestas de una encuesta de Alchemer
 #' @description
 #' Recupera las respuestas de una encuesta en Alchemer. Permite descargar una
-#' p\u00e1gina concreta de resultados o todas las p\u00e1ginas (combinadas) cuando
-#' \code{page = "all"}. La funci\u00f3n valida par\u00e1metros y devuelve el objeto
+#' página concreta de resultados o todas las páginas (combinadas) cuando
+#' \code{page = "all"}. La función valida parámetros y devuelve el objeto
 #' parseado por la API (lista con metadatos y elemento \code{data} con las
 #' respuestas).
 #'
@@ -50,17 +50,17 @@ alch_read_spss <- function(url) {
 #' @param api_token_secret `chr` Clave secreta de API. Por defecto toma
 #'   \code{Sys.getenv("ALCHEMER_API_SECRET")}.
 #' @param survey_id `int` ID de la encuesta de la que se desean obtener las respuestas.
-#' @param results_per_page `int` Numero de respuestas por p\u00e1gina (1..500). Valor por
+#' @param results_per_page `int` Numero de respuestas por página (1..500). Valor por
 #'   defecto: 500.
-#' @param page `int` o \code{"all"}. Numero de p\u00e1gina a descargar, o
-#'   \code{"all"} para recuperar y combinar todas las p\u00e1ginas.
+#' @param page `int` o \code{"all"}. Numero de página a descargar, o
+#'   \code{"all"} para recuperar y combinar todas las páginas.
 #'
 #' @return `list`. Objeto devuelto por la API (parseado a lista). Si
 #'   \code{page = "all"} el elemento \code{data} contendra las respuestas de
-#'   todas las p\u00e1ginas combinadas.
+#'   todas las páginas combinadas.
 #'
 #' @details
-#' - Valida que las credenciales y par\u00e1metros sean correctos antes de llamar a la API.
+#' - Valida que las credenciales y parámetros sean correctos antes de llamar a la API.
 #' - Cuando \code{page = "all"} hace multiples llamadas (si procede) y concatena
 #'   todos los elementos \code{data} en la respuesta retornada.
 #'
@@ -70,11 +70,11 @@ alch_read_spss <- function(url) {
 #' Sys.setenv(ALCHEMER_API_KEY = "tu_api_token")
 #' Sys.setenv(ALCHEMER_API_SECRET = "tu_api_secret")
 #'
-#' # obtener la primera p\u00e1gina
+#' # obtener la primera página
 #' resp_page1 <- alch_get_survey_responses(survey_id = 123456, page = 1)
 #' str(resp_page1)
 #'
-#' # obtener todas las p\u00e1ginas combinadas
+#' # obtener todas las páginas combinadas
 #' resp_all <- alch_get_survey_responses(survey_id = 123456, page = "all")
 #' length(resp_all$data)    # numero total de respuestas descargadas
 #' }
@@ -193,11 +193,11 @@ alch_get_survey_responses <- function(
 }
 
 
-#' @title Obtener contactos de una campa\u00f1a de encuesta en Alchemer
+#' @title Obtener contactos de una campaña de encuesta en Alchemer
 #' @description
-#' Recupera los contactos asociados a una campa\u00f1a de encuesta en Alchemer.
-#' Permite descargar una p\u00e1gina concreta de contactos o todas las p\u00e1ginas
-#' (combinadas) cuando \code{page = "all"}. La funci\u00f3n valida par\u00e1metros y
+#' Recupera los contactos asociados a una campaña de encuesta en Alchemer.
+#' Permite descargar una página concreta de contactos o todas las páginas
+#' (combinadas) cuando \code{page = "all"}. La función valida parámetros y
 #' devuelve el objeto parseado por la API (lista con metadatos y elemento
 #' \code{data} con los contactos).
 #'
@@ -205,23 +205,23 @@ alch_get_survey_responses <- function(
 #'   \code{Sys.getenv("ALCHEMER_API_KEY")}.
 #' @param api_token_secret `chr` Clave secreta de API. Por defecto toma
 #'   \code{Sys.getenv("ALCHEMER_API_SECRET")}.
-#' @param survey_id `int` ID de la encuesta a la que pertenece la campa\u00f1a.
-#' @param campaign_id `int` ID de la campa\u00f1a de la que se desean obtener los contactos.
-#' @param results_per_page `int` Numero de contactos por p\u00e1gina (1..500). Valor por
+#' @param survey_id `int` ID de la encuesta a la que pertenece la campaña.
+#' @param campaign_id `int` ID de la campaña de la que se desean obtener los contactos.
+#' @param results_per_page `int` Numero de contactos por página (1..500). Valor por
 #'   defecto: 500.
-#' @param page `int` o \code{"all"}. Numero de p\u00e1gina a descargar, o
-#'   \code{"all"} para recuperar y combinar todas las p\u00e1ginas.
+#' @param page `int` o \code{"all"}. Numero de página a descargar, o
+#'   \code{"all"} para recuperar y combinar todas las páginas.
 #'
 #' @return `list`. Objeto devuelto por la API (parseado a lista). Si
 #'   \code{page = "all"} el elemento \code{data} contendra los contactos de
-#'   todas las p\u00e1ginas combinadas.
+#'   todas las páginas combinadas.
 #'
 #' @details
-#' - Valida que las credenciales y par\u00e1metros sean correctos antes de llamar a la API.
+#' - Valida que las credenciales y parámetros sean correctos antes de llamar a la API.
 #' - Cuando \code{page = "all"} hace multiples llamadas (si procede) y concatena
 #'   todos los elementos \code{data} en la respuesta retornada.
 #' - Los contactos pueden incluir campos como \code{id}, \code{email_address},
-#'   \code{first_name}, \code{last_name}, etc., segun la configuracion de la campa\u00f1a.
+#'   \code{first_name}, \code{last_name}, etc., segun la configuracion de la campaña.
 #'
 #' @examples
 #' \dontrun{
@@ -229,7 +229,7 @@ alch_get_survey_responses <- function(
 #' Sys.setenv(ALCHEMER_API_KEY = "tu_api_token")
 #' Sys.setenv(ALCHEMER_API_SECRET = "tu_api_secret")
 #'
-#' # obtener la primera p\u00e1gina de contactos
+#' # obtener la primera página de contactos
 #' contactos_page1 <- alch_get_survey_contacts(
 #'   survey_id = 8529571,
 #'   campaign_id = 24631558,
@@ -381,7 +381,7 @@ alch_get_survey_contacts <- function(
 #' - Si una pregunta no tiene \code{answer}, el valor resultante sera \code{NA}.
 #' - Respuestas multiples por misma pregunta se colapsan en una cadena
 #'   separada por \code{"; "}.
-#' - La funci\u00f3n asume que \code{ls_alchemer[["data"]]} es una lista con la
+#' - La función asume que \code{ls_alchemer[["data"]]} es una lista con la
 #'   estructura estandar de la API (cada elemento contiene sublistas con
 #'   elementos \code{id}, \code{question}, \code{answer} entre otros).
 #'

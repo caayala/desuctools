@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_educacion.R
 \name{edu_fct_educacion_especial}
 \alias{edu_fct_educacion_especial}
-\title{Factor para distingir Educaci\u00f3n Especial}
+\title{Factor para distingir Educación Especial}
 \usage{
 edu_fct_educacion_especial(x)
 }
@@ -13,22 +13,22 @@ edu_fct_educacion_especial(x)
 A factor with 3 levels, with an attached `"label"` attribute.
 }
 \description{
-Recodificaci\u00f3n para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
-Diferencia Educaci\u00f3n Especial en tres niveles.
-es igual al d\u00edgito `6`.
+Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
+Diferencia Educación Especial en tres niveles.
+es igual al dígito `6`.
 
 Los cod_educ relacioandos son:
 
-- 211 Educaci\u00f3n Especial Discapacidad Auditiva
-- 212 Educaci\u00f3n Especial Discapacidad Intelectual
-- 213 Educaci\u00f3n Especial Discapacidad Visual
-- 214 Educaci\u00f3n Especial Trastornos Espec\u00edficos del Lenguaje
-- 215 Educaci\u00f3n Especial Trastornos Motores
-- 216 Educaci\u00f3n Especial Autismo
-- 217 Educaci\u00f3n Especial Discapacidad Graves Alteraciones en la Capacidad de Relaci\u00f3n y Comunicaci\u00f3n
-- 218 Educaci\u00f3n Especial Discapacidad M\u00faltiple
-- 219 Educaci\u00f3n Especial Sordoceguera
-- 299 Opci\u00f3n 4 Programa Integraci\u00f3n Escolar
+- 211 Educación Especial Discapacidad Auditiva
+- 212 Educación Especial Discapacidad Intelectual
+- 213 Educación Especial Discapacidad Visual
+- 214 Educación Especial Trastornos Específicos del Lenguaje
+- 215 Educación Especial Trastornos Motores
+- 216 Educación Especial Autismo
+- 217 Educación Especial Discapacidad Graves Alteraciones en la Capacidad de Relación y Comunicación
+- 218 Educación Especial Discapacidad Múltiple
+- 219 Educación Especial Sordoceguera
+- 299 Opción 4 Programa Integración Escolar
 }
 \examples{
 edu_fct_educacion_especial(c(211, 211, 216, 214, 110)) |>

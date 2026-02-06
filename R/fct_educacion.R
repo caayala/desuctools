@@ -1,12 +1,12 @@
-#' Factor de niveles de ense\u00f1anza
+#' Factor de niveles de enseñanza
 #'
 #' @description
-#' Recodificaci\u00f3n para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
-#' Niveles de ense\u00f1anza
+#' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
+#' Niveles de enseñanza
 #'
 #' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
 #'
-#' @param x Un vector de c\u00f3digos, t\u00edpicamente variable `COD_ENSE` o `COD_ENS_X`.
+#' @param x Un vector de códigos, típicamente variable `COD_ENSE` o `COD_ENS_X`.
 #'
 #' @returns
 #' A factor with 44 levels, with an attached `"label"` attribute.
@@ -70,25 +70,25 @@ edu_fct_cod_ense <- function(x) {
     )
 }
 
-#' Factor para distingir Educaci\u00f3n Especial
+#' Factor para distingir Educación Especial
 #'
 #' @description
-#' Recodificaci\u00f3n para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
-#' Diferencia Educaci\u00f3n Especial en tres niveles.
-#' es igual al d\u00edgito `6`.
+#' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
+#' Diferencia Educación Especial en tres niveles.
+#' es igual al dígito `6`.
 #'
 #' Los cod_educ relacioandos son:
 #'
-#' - 211 Educaci\u00f3n Especial Discapacidad Auditiva
-#' - 212 Educaci\u00f3n Especial Discapacidad Intelectual
-#' - 213 Educaci\u00f3n Especial Discapacidad Visual
-#' - 214 Educaci\u00f3n Especial Trastornos Espec\u00edficos del Lenguaje
-#' - 215 Educaci\u00f3n Especial Trastornos Motores
-#' - 216 Educaci\u00f3n Especial Autismo
-#' - 217 Educaci\u00f3n Especial Discapacidad Graves Alteraciones en la Capacidad de Relaci\u00f3n y Comunicaci\u00f3n
-#' - 218 Educaci\u00f3n Especial Discapacidad M\u00faltiple
-#' - 219 Educaci\u00f3n Especial Sordoceguera
-#' - 299 Opci\u00f3n 4 Programa Integraci\u00f3n Escolar
+#' - 211 Educación Especial Discapacidad Auditiva
+#' - 212 Educación Especial Discapacidad Intelectual
+#' - 213 Educación Especial Discapacidad Visual
+#' - 214 Educación Especial Trastornos Específicos del Lenguaje
+#' - 215 Educación Especial Trastornos Motores
+#' - 216 Educación Especial Autismo
+#' - 217 Educación Especial Discapacidad Graves Alteraciones en la Capacidad de Relación y Comunicación
+#' - 218 Educación Especial Discapacidad Múltiple
+#' - 219 Educación Especial Sordoceguera
+#' - 299 Opción 4 Programa Integración Escolar
 #'
 #' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
 #'
@@ -123,15 +123,15 @@ edu_fct_educacion_especial <- function(x) {
 }
 
 
-#' Factor de niveles de ense\u00f1anza agrupado
+#' Factor de niveles de enseñanza agrupado
 #'
 #' @description
-#' Recodificaci\u00f3n para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
-#' Niveles de ense\u00f1anza agrupados
+#' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
+#' Niveles de enseñanza agrupados
 #'
 #' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
 #'
-#' @param x Un vector de c\u00f3digos, t\u00edpicamente variable `COD_ENSE2`.
+#' @param x Un vector de códigos, típicamente variable `COD_ENSE2`.
 #'
 #' @returns
 #' A factor with 8 levels, with an attached `"label"` attribute.
@@ -158,15 +158,15 @@ edu_fct_cod_ense2 <- function(x) {
 }
 
 
-#' Factor de niveles de ense\u00f1anza agrupado
+#' Factor de niveles de enseñanza agrupado
 #'
 #' @description
-#' Recodificaci\u00f3n para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
-#' Niveles de ense\u00f1anza con educaci\u00f3n especial reasignado.
+#' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
+#' Niveles de enseñanza con educación especial reasignado.
 #'
 #' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
 #'
-#' @param x Un vector de c\u00f3digos, t\u00edpicamente variable `COD_ENSE3`.
+#' @param x Un vector de códigos, típicamente variable `COD_ENSE3`.
 #'
 #' @returns
 #' A factor with 7 levels, with an attached `"label"` attribute.
@@ -191,15 +191,15 @@ edu_fct_cod_ense3 <- function(x) {
     )
 }
 
-#' Factor de c\u00f3digo de dependencia del establecimiento agrupado
+#' Factor de código de dependencia del establecimiento agrupado
 #'
 #' @description
-#' Recodificaci\u00f3n para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
-#' C\u00f3digo de Dependencia del Establecimiento (agrupado).
+#' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
+#' Código de Dependencia del Establecimiento (agrupado).
 #'
 #' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
 #'
-#' @param x Un vector de c\u00f3digos, t\u00edpicamente variable `COD_DEPE2`.
+#' @param x Un vector de códigos, típicamente variable `COD_DEPE2`.
 #'
 #' @returns
 #' A factor with 5 levels, with an attached `"label"` attribute.
@@ -223,15 +223,15 @@ edu_fct_cod_depe2 <- function(x) {
 }
 
 
-#' Factor de c\u00f3digo de ense\u00f1anza en 13 niveles
+#' Factor de código de enseñanza en 13 niveles
 #'
 #' @description
-#' Recodificaci\u00f3n para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
-#' Recodificaci\u00f3n del C\u00f3digo de Ense\u00f1anza en 13 niveles.
+#' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
+#' Recodificación del Código de Enseñanza en 13 niveles.
 #'
 #' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
 #'
-#' @param x Un vector de c\u00f3digos, t\u00edpicamente variable `COD_DEPE2`.
+#' @param x Un vector de códigos, típicamente variable `COD_DEPE2`.
 #'
 #' @returns
 #' A factor with 13 levels, with an attached `"label"` attribute.
@@ -266,12 +266,12 @@ edu_fct_ens <- function(x) {
 #' Factor de ruralidad
 #'
 #' @description
-#' Recodificaci\u00f3n para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
-#' \u00cdndice de ruralidad del establecimiento.
+#' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
+#' Índice de ruralidad del establecimiento.
 #'
 #' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
 #'
-#' @param x Un vector de c\u00f3digos, t\u00edpicamente variable `RURAL_RBD`.
+#' @param x Un vector de códigos, típicamente variable `RURAL_RBD`.
 #'
 #' @returns
 #' A factor with 2 levels, with an attached `"label"` attribute.
@@ -291,19 +291,19 @@ edu_fct_rural_rbd <- function(x) {
     )
 }
 
-#' Detecta c\u00f3digos de ense\u00f1anza para adultos
+#' Detecta códigos de enseñanza para adultos
 #'
 #' @description
-#' Recodificaci\u00f3n para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
-#' Detecta niveles de ense\u00f1anza para adultos ya que su segunda cifra significativa
-#' es igual al d\u00edgito `6`.
+#' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
+#' Detecta niveles de enseñanza para adultos ya que su segunda cifra significativa
+#' es igual al dígito `6`.
 #'
 #' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
 #'
-#' @param x Un vector num\u00e9rico o de cadenas.
+#' @param x Un vector numérico o de cadenas.
 #'
 #' @returns
-#' Un vector l\u00f3gico indicando si es un c\u00f3digo de ense\u00f1anza para adultos.
+#' Un vector lógico indicando si es un código de enseñanza para adultos.
 #'
 #' @export
 edu_es_educacion_adulto <- function(x) {

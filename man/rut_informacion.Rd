@@ -7,7 +7,7 @@
 rut_informacion(.rut)
 }
 \arguments{
-\item{.rut}{string. rut sin puntos, con guion y d\u00edgito verificador.}
+\item{.rut}{string. rut sin puntos, con guion y dígito verificador.}
 }
 \value{
 Una lista con datos asociados al RUT.

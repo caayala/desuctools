@@ -3,7 +3,7 @@
 #' @description
 #' Obtiene informacion personal a partir de un RUT de Chile.
 #'
-#' @param .rut string. rut sin puntos, con guion y d\u00edgito verificador.
+#' @param .rut string. rut sin puntos, con guion y dígito verificador.
 #'
 #' @returns
 #' Una lista con datos asociados al RUT.

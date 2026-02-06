@@ -20,6 +20,7 @@ Description: Funciones y datos útiles en el trabajo de limpieza,
     revisión, tabulación y graficación de datos de la Dirección de
     Estudios Sociales UC.
 URL: https://desuc.github.io/desuctools, https://github.com/desuc/desuctools
+BugReports: https://github.com/desuc/desuctools/issues
 License: MIT + file LICENSE
 Depends:
     R (>= 4.2)
