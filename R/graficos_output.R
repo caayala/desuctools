@@ -57,7 +57,7 @@ gg_bar_3_niveles_stack <- function(
   missing = NULL,
   text_size = 3,
   flip = TRUE,
-  colour_neg_neu_pos = c('#C00001', '#FFC000', '#20497D'),
+  colour_neg_neu_pos = c('#ec363e', '#dba008', '#0b5ed6'),
   y_prop = prop,
   y_na = 1.1,
   x_na = 0.6,
@@ -67,9 +67,9 @@ gg_bar_3_niveles_stack <- function(
   x_str_entre_fin = '',
   x_str_width = 50,
   colour_na = 'grey20',
-  font_family = 'Calibri'
+  font_family = 'Roboto'
 ) {
-  # Revisar que est\u00e9n las variables necesarias en la tabla de datos
+  # Revisar que estén las variables necesarias en la tabla de datos
   var_check <- c('pregunta_lab', 'prop', 'pregunta_cat')
 
   if (!all(sapply(var_check, function(x) any(names(.df) %in% x)))) {
@@ -86,8 +86,8 @@ gg_bar_3_niveles_stack <- function(
     stop("4 niveles o m\u00e1s en pregunta_cat sin missing expl\u00edcito")
   }
 
-  gg_niv3 <- .df %>%
-    filter(!.data$pregunta_cat %in% missing) %>%
+  gg_niv3 <- .df |>
+    filter(!.data$pregunta_cat %in% missing) |>
     ggplot(aes(x = {{ x }}, y = {{ y_prop }}, fill = .data[['pregunta_cat']])) +
     geom_col(width = .5, position = position_stack(reverse = TRUE)) +
     geom_hline(yintercept = 0, colour = 'grey30') +
@@ -101,13 +101,14 @@ gg_bar_3_niveles_stack <- function(
     ) +
     scale_x_discrete(
       '',
-      labels = function(x)
+      labels = function(x) {
         desuctools::str_entre(
           x,
           ini = x_str_entre_ini,
           fin = x_str_entre_fin
-        ) %>%
+        ) |>
           stringr::str_wrap(width = x_str_width)
+      }
     ) +
     scale_y_continuous(
       '% de respuestas',
@@ -130,13 +131,13 @@ gg_bar_3_niveles_stack <- function(
   }
 
   if (!is.null(missing)) {
-    tab_ns <- .df %>%
-      filter(.data[['pregunta_cat']] %in% missing) %>%
-      group_by(across(c({{ x }}, {{ facet_col }}, {{ facet_row }}))) %>%
+    tab_ns <- .df |>
+      filter(.data[['pregunta_cat']] %in% missing) |>
+      group_by(across(c({{ x }}, {{ facet_col }}, {{ facet_row }}))) |>
       summarise(
         pregunta_cat = str_c(.data[['pregunta_cat']], collapse = '/'),
         prop = sum(.data[['prop']])
-      ) %>%
+      ) |>
       tidyr::replace_na(list('prop' = 0))
 
     pos_x_annotate <- length(unique(.df[[rlang::as_name(enquo(x))]]))

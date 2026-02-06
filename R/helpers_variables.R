@@ -257,7 +257,7 @@ fct_reorder_cat <- function(.f, .cat, .val, cat_orden, .desc = FALSE) {
 #' region_orden(c(1, 13, 5, 15))
 #'
 region_orden <- function(reg, as.factor = TRUE) {
-  # Ordena n\u00famero de regiones en un factor de norte a sur.
+  # Ordena número de regiones en un factor de norte a sur.
   reg_num <- c(15, 1:5, 13, 6, 7, 16, 8, 9, 14, 10:12)
   reg_nom <- c(
     "Arica y Parinacota",

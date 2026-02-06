@@ -13,7 +13,7 @@ gg_bar_3_niveles_stack(
   missing = NULL,
   text_size = 3,
   flip = TRUE,
-  colour_neg_neu_pos = c("#C00001", "#FFC000", "#20497D"),
+  colour_neg_neu_pos = c("#ec363e", "#dba008", "#0b5ed6"),
   y_prop = prop,
   y_na = 1.1,
   x_na = 0.6,
@@ -23,7 +23,7 @@ gg_bar_3_niveles_stack(
   x_str_entre_fin = "",
   x_str_width = 50,
   colour_na = "grey20",
-  font_family = "Calibri"
+  font_family = "Roboto"
 )
 }
 \arguments{

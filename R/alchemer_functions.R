@@ -76,7 +76,7 @@ alch_read_spss <- function(url) {
 #'
 #' # obtener todas las páginas combinadas
 #' resp_all <- alch_get_survey_responses(survey_id = 123456, page = "all")
-#' length(resp_all$data)    # numero total de respuestas descargadas
+#' length(resp_all$data)    # número total de respuestas descargadas
 #' }
 #'
 #' @importFrom httr2 request req_url_path_append req_url_query req_perform resp_body_json

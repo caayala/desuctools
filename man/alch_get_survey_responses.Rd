@@ -58,7 +58,7 @@ str(resp_page1)
 
 # obtener todas las páginas combinadas
 resp_all <- alch_get_survey_responses(survey_id = 123456, page = "all")
-length(resp_all$data)    # numero total de respuestas descargadas
+length(resp_all$data)    # número total de respuestas descargadas
 }
 
 }
