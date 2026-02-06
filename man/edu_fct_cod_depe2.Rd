@@ -17,5 +17,5 @@ Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC
 Código de Dependencia del Establecimiento (agrupado).
 }
 \seealso{
-\link{https://centroestudios.mineduc.cl/datos-abiertos/}
+\url{https://centroestudios.mineduc.cl/datos-abiertos/}
 }

@@ -17,5 +17,5 @@ Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC
 Recodificación del Código de Enseñanza en 13 niveles.
 }
 \seealso{
-\link{https://centroestudios.mineduc.cl/datos-abiertos/}
+\url{https://centroestudios.mineduc.cl/datos-abiertos/}
 }

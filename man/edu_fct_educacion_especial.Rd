@@ -19,16 +19,16 @@ es igual al dígito \code{6}.
 
 Los cod_educ relacioandos son:
 \itemize{
-\item 211 Educación Especial Discapacidad Auditiva
-\item 212 Educación Especial Discapacidad Intelectual
-\item 213 Educación Especial Discapacidad Visual
-\item 214 Educación Especial Trastornos Específicos del Lenguaje
-\item 215 Educación Especial Trastornos Motores
-\item 216 Educación Especial Autismo
-\item 217 Educación Especial Discapacidad Graves Alteraciones en la Capacidad de Relación y Comunicación
-\item 218 Educación Especial Discapacidad Múltiple
-\item 219 Educación Especial Sordoceguera
-\item 299 Opción 4 Programa Integración Escolar
+\item \code{211}: Educación Especial Discapacidad Auditiva
+\item \code{212}: Educación Especial Discapacidad Intelectual
+\item \code{213}: Educación Especial Discapacidad Visual
+\item \code{214}: Educación Especial Trastornos Específicos del Lenguaje
+\item \code{215}: Educación Especial Trastornos Motores
+\item \code{216}: Educación Especial Autismo
+\item \code{217}: Educación Especial Discapacidad Graves Alteraciones en la Capacidad de Relación y Comunicación
+\item \code{218}: Educación Especial Discapacidad Múltiple
+\item \code{219}: Educación Especial Sordoceguera
+\item \code{299}: Opción 4 Programa Integración Escolar
 }
 }
 \examples{
@@ -37,5 +37,5 @@ table()
 
 }
 \seealso{
-\link{https://centroestudios.mineduc.cl/datos-abiertos/}
+\url{https://centroestudios.mineduc.cl/datos-abiertos/}
 }

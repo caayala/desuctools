@@ -6,27 +6,6 @@
 \title{Datos de regiones y comunas de Chile}
 \format{
 Un data.frame con 346 filas \code{comunas} y 19 variables.
-\describe{
-\item{id}{orden de comunas siguiendo geografía y código comunal}
-\item{region_orden}{numeración de regiones de norte a sur}
-\item{comuna}{código de comuna}
-\item{comuna18}{código de comuna luego de la creación de la región de Ñuble en 2018}
-\item{region}{número de región}
-\item{provincia}{código de provincia luego de la creación de la región de Ñuble}
-\item{region_nom}{nombre oficial de la región}
-\item{region_nom_small}{nombre breve de la región}
-\item{comuna_nom}{nombre de la comuna}
-\item{region_capital}{TRUE si comuna es capital regional}
-\item{comuna_extrema}{1 si comuna es extrema para INE, 2 si es extrema para DESUC}
-\item{gran_santiago}{TRUE si comuna pertenece al Gran Santiago}
-\item{gran_santiago_zonas}{nombre de zonas del Gran Santiago}
-\item{educ_sup_com}{\\% hogares con algún miembro con educación superior}
-\item{hacinamiento}{\\% hogares con hacinamiento}
-\item{allegamiento_int}{\\% hogares con allegamiento interno}
-\item{carente_ser_bas}{\\% hogares carentes de servicios básicos}
-\item{carente_entorno}{\\% hogares carentes de características beneficiosas en el entorno}
-\item{decil}{promedio de decir de ingresos de los hogares}
-}
 }
 \source{
 \url{http://www.ine.cl/}
@@ -37,5 +16,28 @@ regiones_y_comunas
 \description{
 Tabla que contiene nombres y códigos de regiones y comunas de Chile,
 además de algunas segmentación es utilizadas habitualmente.
+}
+\details{
+\itemize{
+\item \code{id}: orden de comunas siguiendo geografía y código comunal
+\item \code{region_orden}: numeración de regiones de norte a sur
+\item \code{comuna}: código de comuna
+\item \code{comuna18}: código de comuna luego de la creación de la región de Ñuble en 2018
+\item \code{region}: número de región
+\item \code{provincia}: código de provincia luego de la creación de la región de Ñuble
+\item \code{region_nom}: nombre oficial de la región
+\item \code{region_nom_small}: nombre breve de la región
+\item \code{comuna_nom}: nombre de la comuna
+\item \code{region_capital}: TRUE si comuna es capital regional
+\item \code{comuna_extrema}: 1 si comuna es extrema para INE, 2 si es extrema para DESUC
+\item \code{gran_santiago}: TRUE si comuna pertenece al Gran Santiago
+\item \code{gran_santiago_zonas}: nombre de zonas del Gran Santiago
+\item \code{educ_sup_com}: \\% hogares con algún miembro con educación superior
+\item \code{hacinamiento}: \\% hogares con hacinamiento
+\item \code{allegamiento_int}: \\% hogares con allegamiento interno
+\item \code{carente_ser_bas}: \\% hogares carentes de servicios básicos
+\item \code{carente_entorno}: \\% hogares carentes de características beneficiosas en el entorno
+\item \code{decil}: promedio de decir de ingresos de los hogares
+}
 }
 \keyword{datasets}

@@ -18,5 +18,5 @@ Detecta niveles de enseñanza para adultos ya que su segunda cifra significativa
 es igual al dígito \code{6}.
 }
 \seealso{
-\link{https://centroestudios.mineduc.cl/datos-abiertos/}
+\url{https://centroestudios.mineduc.cl/datos-abiertos/}
 }

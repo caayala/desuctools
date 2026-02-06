@@ -4,7 +4,7 @@
 #' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 #' Niveles de enseñanza
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x Un vector de códigos, típicamente variable `COD_ENSE` o `COD_ENS_X`.
 #'
@@ -79,18 +79,18 @@ edu_fct_cod_ense <- function(x) {
 #'
 #' Los cod_educ relacioandos son:
 #'
-#' - 211 Educación Especial Discapacidad Auditiva
-#' - 212 Educación Especial Discapacidad Intelectual
-#' - 213 Educación Especial Discapacidad Visual
-#' - 214 Educación Especial Trastornos Específicos del Lenguaje
-#' - 215 Educación Especial Trastornos Motores
-#' - 216 Educación Especial Autismo
-#' - 217 Educación Especial Discapacidad Graves Alteraciones en la Capacidad de Relación y Comunicación
-#' - 218 Educación Especial Discapacidad Múltiple
-#' - 219 Educación Especial Sordoceguera
-#' - 299 Opción 4 Programa Integración Escolar
+#' - `211`: Educación Especial Discapacidad Auditiva
+#' - `212`: Educación Especial Discapacidad Intelectual
+#' - `213`: Educación Especial Discapacidad Visual
+#' - `214`: Educación Especial Trastornos Específicos del Lenguaje
+#' - `215`: Educación Especial Trastornos Motores
+#' - `216`: Educación Especial Autismo
+#' - `217`: Educación Especial Discapacidad Graves Alteraciones en la Capacidad de Relación y Comunicación
+#' - `218`: Educación Especial Discapacidad Múltiple
+#' - `219`: Educación Especial Sordoceguera
+#' - `299`: Opción 4 Programa Integración Escolar
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x A numeric vector.
 #'
@@ -129,7 +129,7 @@ edu_fct_educacion_especial <- function(x) {
 #' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 #' Niveles de enseñanza agrupados
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x Un vector de códigos, típicamente variable `COD_ENSE2`.
 #'
@@ -164,7 +164,7 @@ edu_fct_cod_ense2 <- function(x) {
 #' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 #' Niveles de enseñanza con educación especial reasignado.
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x Un vector de códigos, típicamente variable `COD_ENSE3`.
 #'
@@ -197,7 +197,7 @@ edu_fct_cod_ense3 <- function(x) {
 #' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 #' Código de Dependencia del Establecimiento (agrupado).
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x Un vector de códigos, típicamente variable `COD_DEPE2`.
 #'
@@ -229,7 +229,7 @@ edu_fct_cod_depe2 <- function(x) {
 #' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 #' Recodificación del Código de Enseñanza en 13 niveles.
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x Un vector de códigos, típicamente variable `COD_DEPE2`.
 #'
@@ -269,7 +269,7 @@ edu_fct_ens <- function(x) {
 #' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 #' Índice de ruralidad del establecimiento.
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x Un vector de códigos, típicamente variable `RURAL_RBD`.
 #'
@@ -298,7 +298,7 @@ edu_fct_rural_rbd <- function(x) {
 #' Detecta niveles de enseñanza para adultos ya que su segunda cifra significativa
 #' es igual al dígito `6`.
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x Un vector numérico o de cadenas.
 #'

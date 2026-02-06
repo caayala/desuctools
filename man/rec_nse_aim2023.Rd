@@ -32,10 +32,8 @@ actualización AIM 2023, usando:
 }
 
 Devuelve un vector de caracteres con el GSE: E, D, C3, C2, C1b, C1a, AB.
-
-Preguntas:
-
-Educación
+\subsection{Preguntas:}{
+\subsection{Educación del jefe de hogar}{
 
 \code{edu_jh}: ¿Cuál es el nivel educacional alcanzado (último año aprobado) por el principal sostenedor del hogar?
 \itemize{
@@ -50,12 +48,15 @@ Educación
 \item 9 a 5 Universitaria completa (carreras de 4 o mas años) / oficial de FF.AA./Carabineros
 \item 10 a 5 Postgrado (Postítulo, Máster, Magíster, Doctor)
 }
+}
 
-\code{ocu_jh} ¿Cuál de las siguientes ocupaciónes corresponde al trabajo del principal sostenedor del hogar?
-(SI EL PRINCIPAL SOSTENEDOR DEL HOGAR ESTA CESANTE O ES JUBILADO, PREGUNTAR POR LA ULTIMA OCUPACION REMUNERADA QUE TUVO)
+\subsection{Ocupación del jefe de hogar}{
+
+\code{ocu_jh} ¿Cuál de las siguientes ocupaciónes corresponde al trabajo del principal sostenedor del hogar?\if{html}{\out{<br>}}
+(SI EL PRINCIPAL SOSTENEDOR DEL HOGAR ESTA CESANTE O ES JUBILADO, PREGUNTAR POR LA ULTIMA OCUPACION REMUNERADA QUE TUVO)\if{html}{\out{<br>}}
 (SI EL PRINCIPAL SOSTENEDOR TIENE MAS DE 1 TRABAJO, DEBE REGISTRARSE EL DE MAYOR INGRESO)
 \itemize{
-\item 1 a 1 Trabajadores no calificados en ventas y servicios, peones agropecuarios, forestales, construccion, etc.
+\item 1 a 1 Trabajadores no calificados en ventas y servicios, peones agropecuarios, forestales, construcción, etc.
 \item 2 a 2 Obreros, operarios y artesanos de artes mecánicas y de otros oficios
 \item 3 a 3 Trabajadores de los servicios y vendedores de comercio y mercados
 \item 4 a 3 Agricultores y trabajadores calificados agropecuarios y pesqueros
@@ -67,6 +68,9 @@ Alto ejecutivo (gerente general o gerente de area o sector) de empresa privadas 
 grandes empresas. Alto directivo del poder ejecutivo, de los cuerpos legislativos y de la administracion publica
 (incluye oficiales de FF.AA./carabineros)
 \item 9 a 6 Profesionales, científicos e intelectuales
+}
+}
+
 }
 }
 \examples{

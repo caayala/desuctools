@@ -12,9 +12,9 @@
 #'
 #' Devuelve un vector de caracteres con el GSE: E, D, C3, C2, C1b, C1a, AB.
 #'
-#' Preguntas:
+#' ## Preguntas:
 #'
-#' Educación
+#' ### Educación del jefe de hogar
 #'
 #' `edu_jh`: ¿Cuál es el nivel educacional alcanzado (último año aprobado) por el principal sostenedor del hogar?
 #'
@@ -29,11 +29,13 @@
 #'    - 9 a 5 Universitaria completa (carreras de 4 o mas años) / oficial de FF.AA./Carabineros
 #'    - 10 a 5 Postgrado (Postítulo, Máster, Magíster, Doctor)
 #'
-#' `ocu_jh` ¿Cuál de las siguientes ocupaciónes corresponde al trabajo del principal sostenedor del hogar?
-#' (SI EL PRINCIPAL SOSTENEDOR DEL HOGAR ESTA CESANTE O ES JUBILADO, PREGUNTAR POR LA ULTIMA OCUPACION REMUNERADA QUE TUVO)
+#' ### Ocupación del jefe de hogar
+#'
+#' `ocu_jh` ¿Cuál de las siguientes ocupaciónes corresponde al trabajo del principal sostenedor del hogar?<br>
+#' (SI EL PRINCIPAL SOSTENEDOR DEL HOGAR ESTA CESANTE O ES JUBILADO, PREGUNTAR POR LA ULTIMA OCUPACION REMUNERADA QUE TUVO)<br>
 #' (SI EL PRINCIPAL SOSTENEDOR TIENE MAS DE 1 TRABAJO, DEBE REGISTRARSE EL DE MAYOR INGRESO)
 #'
-#' - 1 a 1 Trabajadores no calificados en ventas y servicios, peones agropecuarios, forestales, construccion, etc.
+#' - 1 a 1 Trabajadores no calificados en ventas y servicios, peones agropecuarios, forestales, construcción, etc.
 #' - 2 a 2 Obreros, operarios y artesanos de artes mecánicas y de otros oficios
 #' - 3 a 3 Trabajadores de los servicios y vendedores de comercio y mercados
 #' - 4 a 3 Agricultores y trabajadores calificados agropecuarios y pesqueros
