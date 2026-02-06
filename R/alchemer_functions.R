@@ -97,27 +97,29 @@ alch_get_survey_responses <- function(
     )
   }
 
-  # 2. Párametro 'survey_id'
+  # 2. Parámetro 'survey_id'
   if (!is.numeric(survey_id) || length(survey_id) != 1) {
     stop("Error: 'survey_id' debe ser un \u00fanico valor num\u00e9rico.")
   }
 
-  # 3. Párametro 'results_per_page'
+  # 3. Parámetro 'results_per_page'
   if (
     !is.numeric(results_per_page) ||
       results_per_page <= 0 ||
       results_per_page > 500
   ) {
-    stop("Error: 'results_per_page' debe ser un numero entero entre 1 y 500.")
+    stop(
+      "Error: 'results_per_page' debe ser un n\u00famero entero entre 1 y 500."
+    )
   }
 
-  # 4. Párametro 'page'
+  # 4. Parámetro 'page'
   if (
     !identical(page, "all") &&
       (!is.numeric(page) || length(page) != 1 || page <= 0)
   ) {
     stop(
-      "Error: 'page' debe ser la cadena \"all\" o un numero entero positivo."
+      "Error: 'page' debe ser la cadena \"all\" o un n\u00famero entero positivo."
     )
   }
 
@@ -145,7 +147,7 @@ alch_get_survey_responses <- function(
     return(resp)
   }
 
-  # Si se solicita una página especifica, se devuelve la respuesta específica
+  # Si se solicita una página específica, se devuelve la respuesta completa
   if (is.numeric(page)) {
     resp_data <- get_page(page)
     return(resp_data)
@@ -167,7 +169,7 @@ alch_get_survey_responses <- function(
     # Recuperar la cantidad de páginas existentes según la configuración
     total_pages <- resp_page1[["total_pages"]]
 
-    # Si hay mas páginas, iterar y obtener los datos restantes
+    # Si hay más páginas, iterar y obtener los datos restantes
     if (total_pages > 1) {
       # Usar purrr::map para iterar desde la página 2 hasta el final
       remaining_pages_resp <- purrr::map(2:total_pages, get_page)
@@ -218,10 +220,10 @@ alch_get_survey_responses <- function(
 #'
 #' @details
 #' - Valida que las credenciales y parámetros sean correctos antes de llamar a la API.
-#' - Cuando \code{page = "all"} hace multiples llamadas (si procede) y concatena
+#' - Cuando \code{page = "all"} hace múltiples llamadas (si procede) y concatena
 #'   todos los elementos \code{data} en la respuesta retornada.
 #' - Los contactos pueden incluir campos como \code{id}, \code{email_address},
-#'   \code{first_name}, \code{last_name}, etc., según la configuracion de la campañó.
+#'   \code{first_name}, \code{last_name}, etc., según la configuración de la campaña.
 #'
 #' @examples
 #' \dontrun{
@@ -266,17 +268,17 @@ alch_get_survey_contacts <- function(
     )
   }
 
-  # 2. Párametro 'survey_id'
+  # 2. Parámetro 'survey_id'
   if (!is.numeric(survey_id) || length(survey_id) != 1) {
     stop("Error: 'survey_id' debe ser un \u00fanico valor num\u00e9rico.")
   }
 
-  # 3. Párametro 'campaign_id'
+  # 3. Parámetro 'campaign_id'
   if (!is.numeric(campaign_id) || length(campaign_id) != 1) {
     stop("Error: 'campaign_id' debe ser un \u00fanico valor num\u00e9rico.")
   }
 
-  # 4. Párametro 'results_per_page'
+  # 4. Parámetro 'results_per_page'
   if (
     !is.numeric(results_per_page) ||
       results_per_page <= 0 ||
@@ -287,7 +289,7 @@ alch_get_survey_contacts <- function(
     )
   }
 
-  # 5. Párametro 'page'
+  # 5. Parámetro 'page'
   if (
     !identical(page, "all") &&
       (!is.numeric(page) || length(page) != 1 || page <= 0)
@@ -382,11 +384,11 @@ alch_get_survey_contacts <- function(
 #'   pregunta correspondiente (texto limpio).
 #'
 #' @details
-#' - Si una pregunta no tiene \code{answer}, el valor resultante sera \code{NA}.
-#' - Respuestas multiples por misma pregunta se colapsan en una cadena
+#' - Si una pregunta no tiene \code{answer}, el valor resultante será \code{NA}.
+#' - Respuestas múltiples por misma pregunta se colapsan en una cadena
 #'   separada por \code{"; "}.
 #' - La función asume que \code{ls_alchemer[["data"]]} es una lista con la
-#'   estructura estandar de la API (cada elemento contiene sublistas con
+#'   estructura estándar de la API (cada elemento contiene sub-listas con
 #'   elementos \code{id}, \code{question}, \code{answer} entre otros).
 #'
 #' @examples
@@ -409,7 +411,7 @@ alch_create_df <- function(ls_alchemer) {
   # respuestas de Alchemer
   .procesar_encuestas <- function(lista_encuestas) {
     # Itera sobre cada respuesta de encuesta y combina los resultados en un tibble
-    # El argumento .id = "resp_id" crea una columna con el indice de cada respuesta
+    # El argumento .id = "resp_id" crea una columna con el índice de cada respuesta
     ls_resp <- purrr::map(lista_encuestas, function(x) {
       # Convierte la lista de preguntas de una respuesta en un tibble
       tibble::enframe(x, name = "pregunta_original_id", value = "data") |>
@@ -417,7 +419,7 @@ alch_create_df <- function(ls_alchemer) {
         dplyr::mutate(
           data = map(data, ~ .x[c("id", "question", "answer")])
         ) |>
-        # Expande la columna de lista "data" en multiples columnas
+        # Expande la columna de lista "data" en múltiples columnas
         tidyr::unnest_wider(col = data, names_sep = "_")
     })
 
@@ -495,7 +497,7 @@ alch_create_df <- function(ls_alchemer) {
     tibble::enframe() |>
     tidyr::unnest_wider(value)
 
-  # Procesamos survey_data ya que ahi estan todas las respuestas de
+  # Procesamos survey_data ya que ahí están todas las respuestas de
   # las encuestas
   df1 <- .procesar_encuestas(df0[["survey_data"]])
 

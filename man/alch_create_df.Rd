@@ -26,11 +26,11 @@ con el texto de la pregunta (etiquetas HTML son limpiadas).
 }
 \details{
 \itemize{
-\item Si una pregunta no tiene \code{answer}, el valor resultante sera \code{NA}.
-\item Respuestas multiples por misma pregunta se colapsan en una cadena
+\item Si una pregunta no tiene \code{answer}, el valor resultante será \code{NA}.
+\item Respuestas múltiples por misma pregunta se colapsan en una cadena
 separada por \code{"; "}.
 \item La función asume que \code{ls_alchemer[["data"]]} es una lista con la
-estructura estandar de la API (cada elemento contiene sublistas con
+estructura estándar de la API (cada elemento contiene sub-listas con
 elementos \code{id}, \code{question}, \code{answer} entre otros).
 }
 }

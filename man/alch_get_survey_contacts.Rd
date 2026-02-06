@@ -45,10 +45,10 @@ devuelve el objeto parseado por la API (lista con metadatos y elemento
 \details{
 \itemize{
 \item Valida que las credenciales y parámetros sean correctos antes de llamar a la API.
-\item Cuando \code{page = "all"} hace multiples llamadas (si procede) y concatena
+\item Cuando \code{page = "all"} hace múltiples llamadas (si procede) y concatena
 todos los elementos \code{data} en la respuesta retornada.
 \item Los contactos pueden incluir campos como \code{id}, \code{email_address},
-\code{first_name}, \code{last_name}, etc., según la configuracion de la campañó.
+\code{first_name}, \code{last_name}, etc., según la configuración de la campaña.
 }
 }
 \examples{
