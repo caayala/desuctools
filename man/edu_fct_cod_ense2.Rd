@@ -2,19 +2,19 @@
 % Please edit documentation in R/fct_educacion.R
 \name{edu_fct_cod_ense2}
 \alias{edu_fct_cod_ense2}
-\title{Factor de niveles de enseñanza agrupado}
+\title{Factor de niveles de ense\u00f1anza agrupado}
 \usage{
 edu_fct_cod_ense2(x)
 }
 \arguments{
-\item{x}{Un vector de códigos, típicamente variable `COD_ENSE2`.}
+\item{x}{Un vector de c\u00f3digos, t\u00edpicamente variable `COD_ENSE2`.}
 }
 \value{
 A factor with 8 levels, with an attached `"label"` attribute.
 }
 \description{
-Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
-Niveles de enseñanza agrupados
+Recodificaci\u00f3n para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
+Niveles de ense\u00f1anza agrupados
 }
 \seealso{
 [https://centroestudios.mineduc.cl/datos-abiertos/]

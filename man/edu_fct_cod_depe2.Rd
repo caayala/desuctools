@@ -2,19 +2,19 @@
 % Please edit documentation in R/fct_educacion.R
 \name{edu_fct_cod_depe2}
 \alias{edu_fct_cod_depe2}
-\title{Factor de código de dependencia del establecimiento agrupado}
+\title{Factor de c\u00f3digo de dependencia del establecimiento agrupado}
 \usage{
 edu_fct_cod_depe2(x)
 }
 \arguments{
-\item{x}{Un vector de códigos, típicamente variable `COD_DEPE2`.}
+\item{x}{Un vector de c\u00f3digos, t\u00edpicamente variable `COD_DEPE2`.}
 }
 \value{
 A factor with 5 levels, with an attached `"label"` attribute.
 }
 \description{
-Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
-Código de Dependencia del Establecimiento (agrupado).
+Recodificaci\u00f3n para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
+C\u00f3digo de Dependencia del Establecimiento (agrupado).
 }
 \seealso{
 [https://centroestudios.mineduc.cl/datos-abiertos/]

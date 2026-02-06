@@ -2,7 +2,7 @@
 % Please edit documentation in R/rec_nse_aim2023.R
 \name{rec_nse_aim2023}
 \alias{rec_nse_aim2023}
-\title{Clasificación NSE AIM 2023}
+\title{Clasificaci\u00f3n NSE AIM 2023}
 \source{
 https://aimchile.cl/wp-content/uploads/2025/06/Actualizacion-y-Manual-GSE-AIM-2023.pdf
 }
@@ -10,58 +10,58 @@ https://aimchile.cl/wp-content/uploads/2025/06/Actualizacion-y-Manual-GSE-AIM-20
 rec_nse_aim2023(.edu_jh, .ocu_jh, .tramo_ingreso, factor = FALSE)
 }
 \arguments{
-\item{edu_jh}{Integer. Vector de códigos de educación (P1 AIM: 1–5).}
+\item{.edu_jh}{Integer. Vector de c\u00f3digos de educaci\u00f3n (P1 AIM: 1-5).}
 
-\item{ocu_jh}{Integer. Vector de códigos de ocupación (P2 AIM: 1–6).}
+\item{.ocu_jh}{Integer. Vector de c\u00f3digos de ocupaci\u00f3n (P2 AIM: 1-6).}
 
-\item{residentes}{Integer. Vector de número de residentes en el hogar.}
+\item{.tramo_ingreso}{Integer. Vector de tramo de ingreso (1-7, 99 = NS/NR).}
 
-\item{tramo_ingreso}{Integer. Vector de tramo de ingreso (1–7, 99 = NS/NR).}
+\item{factor}{logical. Si es `TRUE`, retorna factor ordenado; si es `FALSE`, retorna labelled.}
 }
 \value{
-labelled. Vector con la clasificación GSE.
+labelled. Vector con la clasificaci\u00f3n GSE.
 }
 \description{
-Clasifica el nivel socioeconómico (GSE) según la
-actualización AIM 2023, usando:
-- edu_jh: educación jefe(a) de hogar (códigos edu_jh: 1–5)
-- ocu_jh: ocupación jefe(a) de hogar (códigos ocu_jh: 1–6)
-- residentes: número de personas residentes en el hogar (>=1)
-- tramo_ingreso: Tramos de ingreso autónomo per cápita del hogar (1–7, 99 = NS/NR)
+Clasifica el nivel socioecon\u00f3mico (GSE) segun la
+actualizaci\u00f3n AIM 2023, usando:
+- edu_jh: educaci\u00f3n jefe(a) de hogar (c\u00f3digos edu_jh: 1-5)
+- ocu_jh: ocupaci\u00f3n jefe(a) de hogar (c\u00f3digos ocu_jh: 1-6)
+- residentes: numero de personas residentes en el hogar (>=1)
+- tramo_ingreso: Tramos de ingreso aut\u00f3nomo per c\u00e1pita del hogar (1-7, 99 = NS/NR)
 
 Devuelve un vector de caracteres con el GSE: E, D, C3, C2, C1b, C1a, AB.
 
 Preguntas:
 
-Educación
+Educaci\u00f3n
 
-`edu_jh`: ¿Cuál es el nivel educacional alcanzado (último año aprobado) por el principal sostenedor del hogar?
+`edu_jh`: \u00bfCu\u00e1l es el nivel educaci\u00f3nal alcanzado (\u00faltimo a\u00f1o aprobado) por el principal sostenedor del hogar?
 1 a 1 Sin estudios formales
-2 a 1 Básica incompleta / primaria o preparatoria incompleta
-3 a 2 Básica completa / primaria o preparatoria completa
-4 a 3 Media científico humanista o media técnico profesional incompleta / humanidades incompleta
-5 a 3 Media científico humanista o media técnico profesional completa / humanidades completa
-6 a 4 Instituto técnico (CFT) o instituto profesional incompleto (carreras 1 a 3 años)
-7 a 4 Instituto técnico (CFT) o instituto profesional completo (carreras 1 a 3 años) / hasta suboficial de FF.AA./Carabineros
-8 a 4 Universitaria incompleta (carreras de 4 o más años)
-9 a 5 Universitaria completa (carreras de 4 o más años) / oficial de FF.AA./Carabineros
-10 a 5 Postgrado (Postítulo, Master, Magister, Doctor)
+2 a 1 B\u00e1sica incompleta / primaria o preparatoria incompleta
+3 a 2 B\u00e1sica completa / primaria o preparatoria completa
+4 a 3 Media cientifico humanista o media tecnico profesional incompleta / humanidades incompleta
+5 a 3 Media cientifico humanista o media tecnico profesional completa / humanidades completa
+6 a 4 Instituto tecnico (CFT) o instituto profesional incompleto (carreras 1 a 3 a\u00f1os)
+7 a 4 Instituto tecnico (CFT) o instituto profesional completo (carreras 1 a 3 a\u00f1os) / hasta suboficial de FF.AA./Carabineros
+8 a 4 Universitaria incompleta (carreras de 4 o mas a\u00f1os)
+9 a 5 Universitaria completa (carreras de 4 o mas a\u00f1os) / oficial de FF.AA./Carabineros
+10 a 5 Postgrado (Postitulo, Master, Magister, Doctor)
 
-`ocu_jh` ¿Cuál de las siguientes ocupaciones corresponde al trabajo del principal sostenedor del hogar?
-(SI EL PRINCIPAL SOSTENEDOR DEL HOGAR ESTÁ CESANTE O ES JUBILADO, PREGUNTAR POR LA ÚLTIMA OCUPACIÓN REMUNERADA QUE TUVO)
-(SI EL PRINCIPAL SOSTENEDOR TIENE MÁS DE 1 TRABAJO, DEBE REGISTRARSE EL DE MAYOR INGRESO)
-1 a 1 Trabajadores no calificados en ventas y servicios, peones agropecuarios, forestales, construcción, etc.
-2 a 2 Obreros, operarios y artesanos de artes mecánicas y de otros oficios
+`ocu_jh` \u00bfCu\u00e1l de las siguientes ocupaci\u00f3nes corresponde al trabajo del principal sostenedor del hogar?
+(SI EL PRINCIPAL SOSTENEDOR DEL HOGAR ESTA CESANTE O ES JUBILADO, PREGUNTAR POR LA ULTIMA OCUPACION REMUNERADA QUE TUVO)
+(SI EL PRINCIPAL SOSTENEDOR TIENE MAS DE 1 TRABAJO, DEBE REGISTRARSE EL DE MAYOR INGRESO)
+1 a 1 Trabajadores no calificados en ventas y servicios, peones agropecuarios, forestales, construccion, etc.
+2 a 2 Obreros, operarios y artesa\u00f1os de artes mec\u00e1nicas y de otros oficios
 3 a 3 Trabajadores de los servicios y vendedores de comercio y mercados
 4 a 3 Agricultores y trabajadores calificados agropecuarios y pesqueros
-5 a 3 Operadores de instalaciones y máquinas y montadores / conductores de vehículos
+5 a 3 Operadores de instalaciones y m\u00e1quinas y montadores / conductores de veh\u00edculos
 6 a 3 Otros grupos no identificados (incluye rentistas, incapacitados, etc.)
-7 a 4 Empleados de oficina públicos y privados
-8 a 5 Técnicos y profesionales de nivel medio (incluye hasta suboficiales FF.AA./Carabineros)
-   Alto ejecutivo (gerente general o gerente de área o sector) de empresa privadas o públicas. Director o dueño de
-   grandes empresas. Alto directivo del poder ejecutivo, de los cuerpos legislativos y de la administración pública
+7 a 4 Empleados de oficina p\u00fablicos y privados
+8 a 5 Tecnicos y profesionales de nivel medio (incluye hasta suboficiales FF.AA./Carabineros)
+   Alto ejecutivo (gerente general o gerente de area o sector) de empresa privadas o p\u00fablicas. Director o due\u00f1o de
+   grandes empresas. Alto directivo del poder ejecutivo, de los cuerpos legislativos y de la administracion publica
    (incluye oficiales de FF.AA./carabineros)
-9 a 6 Profesionales, científicos e intelectuales
+9 a 6 Profesionales, cient\u00edficos e intelectuales
 }
 \examples{
 # personas <- data.frame(

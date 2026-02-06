@@ -71,11 +71,11 @@ rec_labelled <- function(.vec, ls_niveles) {
   nivel_cod <- nivel_chr[, 3]
 
   fct_rec |>
-    forcats::fct_recode(!!!setNames(nivel_chr[, 1], nivel_num)) |>
+    forcats::fct_recode(!!!stats::setNames(nivel_chr[, 1], nivel_num)) |>
     as.character() |>
     as.numeric() |>
     labelled::labelled(
-      labels = setNames(as.numeric(nivel_num), nivel_cod),
+      labels = stats::setNames(as.numeric(nivel_num), nivel_cod),
       label = var_label(.vec)
     )
 }

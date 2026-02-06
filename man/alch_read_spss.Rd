@@ -14,7 +14,7 @@ tibble
 }
 \description{
 Lee el archivo .sav a partir del _distribution link_ de un reporte de
-exportación de una encuesta programada en Alchemer.
+exportacion de una encuesta programada en Alchemer.
 https://help.alchemer.com/help/spss
 
 Compatibility

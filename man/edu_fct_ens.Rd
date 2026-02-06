@@ -2,19 +2,19 @@
 % Please edit documentation in R/fct_educacion.R
 \name{edu_fct_ens}
 \alias{edu_fct_ens}
-\title{Factor de código de enseñanza en 13 niveles}
+\title{Factor de c\u00f3digo de ense\u00f1anza en 13 niveles}
 \usage{
 edu_fct_ens(x)
 }
 \arguments{
-\item{x}{Un vector de códigos, típicamente variable `COD_DEPE2`.}
+\item{x}{Un vector de c\u00f3digos, t\u00edpicamente variable `COD_DEPE2`.}
 }
 \value{
 A factor with 13 levels, with an attached `"label"` attribute.
 }
 \description{
-Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
-Recodificación del Código de Enseñanza en 13 niveles.
+Recodificaci\u00f3n para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
+Recodificaci\u00f3n del C\u00f3digo de Ense\u00f1anza en 13 niveles.
 }
 \seealso{
 [https://centroestudios.mineduc.cl/datos-abiertos/]

@@ -1,9 +1,9 @@
-#' Obtiene información para un RUT
+#' Obtiene informacion para un RUT
 #'
 #' @description
-#' Obtiene información personal a partir de un RUT de Chile.
+#' Obtiene informacion personal a partir de un RUT de Chile.
 #'
-#' @param .rut string. rut sin puntos, con guión y dígito verificador.
+#' @param .rut string. rut sin puntos, con guion y d\u00edgito verificador.
 #'
 #' @returns
 #' Una lista con datos asociados al RUT.
@@ -33,7 +33,7 @@ rut_informacion <- function(.rut) {
     httr2::req_body_json(list(rut = .rut)) |>
     httr2::req_error(is_error = \(resp) FALSE)
 
-  cat("Información sobre: ", .rut, '\n')
+  cat("Informacion sobre: ", .rut, '\n')
 
   resp_info_persona <- req_info_persona |>
     httr2::req_perform()

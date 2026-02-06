@@ -25,11 +25,11 @@ respuestas a formato ancho (una fila por respuesta) creando columnas
 con el texto de la pregunta (etiquetas HTML son limpiadas).
 }
 \details{
-- Si una pregunta no tiene \code{answer}, el valor resultante será \code{NA}.
-- Respuestas múltiples por misma pregunta se colapsan en una cadena
+- Si una pregunta no tiene \code{answer}, el valor resultante sera \code{NA}.
+- Respuestas multiples por misma pregunta se colapsan en una cadena
   separada por \code{"; "}.
-- La función asume que \code{ls_alchemer[["data"]]} es una lista con la
-  estructura estándar de la API (cada elemento contiene sublistas con
+- La funci\u00f3n asume que \code{ls_alchemer[["data"]]} es una lista con la
+  estructura estandar de la API (cada elemento contiene sublistas con
   elementos \code{id}, \code{question}, \code{answer} entre otros).
 }
 \examples{

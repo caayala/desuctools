@@ -12,7 +12,7 @@
   N <- as.numeric(N)
   n <- as.numeric(n)
 
-  # Reciclar longitudes al máximo
+  # Reciclar longitudes al maximo
   L <- max(length(N), length(n))
   N <- rep(N, length.out = L)
   n <- rep(n, length.out = L)
@@ -27,13 +27,13 @@
   smallN <- !na_inf & (N <= 1)
   out[smallN] <- 1
 
-  # Válidos para calcular
+  # Validos para calcular
   ok <- !na_inf & (N > 1)
 
-  # Pares inválidos N < n -> NA y warning
+  # Pares invalidos N < n -> NA y warning
   bad_pair <- ok & (N < n)
   if (any(bad_pair)) {
-    warning("Hay posiciones con N < n; se devuelve NA allí.")
+    warning("Hay posiciones con N < n; se devuelve NA all\u00ed.")
   }
 
   ok2 <- ok & !bad_pair
