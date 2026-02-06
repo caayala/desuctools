@@ -19,5 +19,5 @@ test_that("Label order factor", {
   x <- fct_case_when(vct == 1 ~ "a", vct == 2 ~ "b", label = "test")
 
   expect_equal(attr(x, "label"), "test")
-  expect_equal(sjlabelled::get_label(x), "test")
+  expect_equal(labelled::var_label(x), "test")
 })

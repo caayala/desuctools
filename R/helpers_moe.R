@@ -44,7 +44,7 @@
 
 # .moefpc(N = c(NA, NA, 1000, 500), n = c(400, 400, 400, 400))
 
-.zcrit <- function(conf = 0.95) qnorm(1 - (1 - conf) / 2)
+.zcrit <- function(conf = 0.95) stats::qnorm(1 - (1 - conf) / 2)
 
 # ---- MOE for a mean ----
 # Options:

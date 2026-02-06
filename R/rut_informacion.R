@@ -17,11 +17,11 @@
 #' "20283632-1"
 #' ) # example list of RUT values
 #'
-#' l_ruts_info <- lapply(rut_list, rut_información)
+#' l_ruts_info <- lapply(rut_list, rut_informacion)
 #'
 #' l_ruts_info |> str(2)
 
-rut_información <- function(.rut) {
+rut_informacion <- function(.rut) {
   req_info_persona <- httr2::request(
     'https://servicios-prd.mercadopublico.cl'
   ) |>
