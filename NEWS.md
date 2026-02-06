@@ -1,7 +1,16 @@
 # desuctools 0.2.0.9001
 
-* Implementación de tidyselect para la selección de variables y segmentos en tabla_vars_segmentos.
-* Creación de métodos en tabla_vars_segmentos para data.frames y tbl_svy.
+* `tabla_vars_segmentos()` queda como punto de entrada principal con despacho S3.
+* Nuevos métodos S3 para `tabla_vars_segmentos`: `data.frame`, `tbl_svy` y `survey.design2`.
+* `svy_tabla_vars_segmentos()` se mantiene por compatibilidad y ahora delega en `tabla_vars_segmentos()`.
+* Se corrige bug en `svy_tabla_vars_segmentos()` por validación de clase (`inherits(.df, "tbl_svy")`).
+* Selección de variables y segmentos con tidyselect en todos los métodos de `tabla_vars_segmentos` (`starts_with()`, `all_of()`, `c(...)`) y compatibilidad con estilo previo `vars(...)`.
+* Lógica explícita por tipo de variable en `.vars`:
+  * Categóricas (incluye `haven_labelled` con labels): cálculo de `prop` y `prop_val`.
+  * Numéricas: salida con `pregunta_cat == "mean"` y cálculo de `mean` (excluyendo `NA` y `miss`).
+* En métodos de encuesta, variables numéricas ahora soportan errores de estimación para media vía `vartype` (`ci`, `se`).
+* Ajustes de documentación (`roxygen`/`NAMESPACE`/`.Rd`) para nuevos métodos, argumentos y reglas de cálculo.
+* Actualización y ampliación de tests en tablas de output y survey (despacho S3, tidyselect, `prop`/`prop_val`, `mean`).
 * Nueva función para obtener información a partir de un rut: `rut_información`.
 
 # desuctools 0.1.5.9010
