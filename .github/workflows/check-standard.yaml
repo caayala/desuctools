@@ -11,6 +11,10 @@ name: R-CMD-check
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
+    env:
+      SG_REST_API: ${{ secrets.SG_REST_API || '' }}
+      SG_USER: ${{ secrets.SG_USER  || '' }}
+      SG_PASS: ${{ secrets.SG_PASS  || '' }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
@@ -26,9 +30,6 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      SG_REST_API: ${{ secrets.SG_REST_API }}
-      SG_USER: ${{ secrets.SG_USER }}
-      SG_PASS: ${{ secrets.SG_PASS }}
 
     steps:
       - uses: actions/checkout@v3
