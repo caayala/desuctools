@@ -18,7 +18,7 @@ test_that("rev_niveles haven_labelled", {
   )
   # Etiquetas sin rango
   expect_equal(
-    attr(result_sin_rango),
+    attr(result_sin_rango, "labels"),
     c("a" = 9, "b" = 8, "c" = 7, "nr" = 1)
   )
 
