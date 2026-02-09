@@ -33,7 +33,7 @@
   # Pares inválidos N < n -> NA y warning
   bad_pair <- ok & (N < n)
   if (any(bad_pair)) {
-    warning("Hay posiciones con N < n; se devuelve NA allí.")
+    warning("Hay posiciones con N < n; se devuelve NA all\u00ed.")
   }
 
   ok2 <- ok & !bad_pair

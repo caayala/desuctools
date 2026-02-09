@@ -1,3 +1,7 @@
+# desuctools 0.2.0.9002
+
+* Correcciones para pasar R CMD check.
+
 # desuctools 0.2.0.9001
 
 * `tabla_vars_segmentos()` queda como punto de entrada principal con despacho S3.

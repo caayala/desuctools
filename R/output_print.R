@@ -17,18 +17,18 @@
 #' @importFrom stringr str_trunc
 #'
 #' @export
-frq_trunc <- function(...,
-                      width = 50L,
-                      ellipsis = '...') {
-    # frecuencia de variable truncando las etiquetas para mejorar visualización.
+frq_trunc <- function(..., width = 50L, ellipsis = '...') {
+  # frecuencia de variable truncando las etiquetas para mejorar visualización.
 
-    tab <- sjmisc::frq(...)
+  tab <- sjmisc::frq(...)
 
-    tab[[1]]$label <- str_trunc(tab[[1]]$label,
-                                width = width,
-                                ellipsis = ellipsis)
+  tab[[1]]$label <- str_trunc(
+    tab[[1]]$label,
+    width = width,
+    ellipsis = ellipsis
+  )
 
-    return(tab)
+  return(tab)
 }
 
 
@@ -56,35 +56,41 @@ frq_trunc <- function(...,
 #' @importFrom knitr kable
 #'
 #' @export
-kable_desuc <- function(.data,
-                        digits = 1,
-                        row.names = NA,
-                        col.names = NA,
-                        align = NULL,
-                        caption = NULL,
-                        booktabs = TRUE,
-                        longtable = FALSE,
-                        escape = TRUE,
-                        font_size = 8,
-                        latex_options = c('hold_position'),
-                        ...){
-    # Ajustes de formatos para tablas según estilo DESUC.
-    .data %>%
-        knitr::kable(digits = digits,
-                     row.names = row.names,
-                     col.names = col.names,
-                     align = align,
-                     caption = caption,
-                     booktabs = booktabs,
-                     longtable = longtable,
-                     escape = escape,
-                     linesep = "",
-                     format.args = list(decimal.mark = ',', big.mark = ".")) %>%
-        kableExtra::kable_styling(latex_options = latex_options,
-                                  repeat_header_text = '(continuaci\u00f3n)',
-                                  position = "center",
-                                  font_size = font_size,
-                                  ...)
+kable_desuc <- function(
+  .data,
+  digits = 1,
+  row.names = NA,
+  col.names = NA,
+  align = NULL,
+  caption = NULL,
+  booktabs = TRUE,
+  longtable = FALSE,
+  escape = TRUE,
+  font_size = 8,
+  latex_options = c('hold_position'),
+  ...
+) {
+  # Ajustes de formatos para tablas seg\u00fan estilo DESUC.
+  .data |>
+    knitr::kable(
+      digits = digits,
+      row.names = row.names,
+      col.names = col.names,
+      align = align,
+      caption = caption,
+      booktabs = booktabs,
+      longtable = longtable,
+      escape = escape,
+      linesep = "",
+      format.args = list(decimal.mark = ',', big.mark = ".")
+    ) |>
+    kableExtra::kable_styling(
+      latex_options = latex_options,
+      repeat_header_text = '(continuaci\u00f3n)',
+      position = "center",
+      font_size = font_size,
+      ...
+    )
 }
 
 
@@ -105,18 +111,17 @@ kable_desuc <- function(.data,
 #' @return tibble
 #' @export
 #'
-tabla_columnas <- function(data, ncols = 2){
+tabla_columnas <- function(data, ncols = 2) {
+  tab <- data |>
+    janitor::adorn_totals('row') |>
+    mutate(col = ceiling((1:n()) / n() * ncols)) |>
+    group_nest(col)
 
-    tab <- data %>%
-        janitor::adorn_totals('row') %>%
-        mutate(col = ceiling((1:n())/n() * ncols)) %>%
-        group_nest(col)
+  tab <- purrr::reduce(tab$data, bind_cols)
 
-    tab <- purrr::reduce(tab$data, bind_cols)
+  colnames(tab) <- rep(names(data), ncols)
 
-    colnames(tab) <- rep(names(data), ncols)
-
-    return(tab)
+  return(tab)
 }
 
 
@@ -128,16 +133,19 @@ tabla_columnas <- function(data, ncols = 2){
 #'
 #' @export
 chunk_size <- function(...) {
-    # Cambio de tamaño del chunk.
-    # Obtenido desde
-    # https://stackoverflow.com/questions/25646333/code-chunk-font-size-in-rmarkdown-with-knitr-and-latex
+  # Cambio de tamaño del chunk.
+  # Obtenido desde
+  # https://stackoverflow.com/questions/25646333/code-chunk-font-size-in-rmarkdown-with-knitr-and-latex
 
-    fmt <- rmarkdown::pdf_document(...)
+  fmt <- rmarkdown::pdf_document(...)
 
-    fmt$knitr$knit_hooks$size = function(before, options, envir) {
-        if (before) return(paste0("\n \\", options$size, "\n\n"))
-        else return("\n\n \\normalsize \n")
+  fmt$knitr$knit_hooks$size = function(before, options, envir) {
+    if (before) {
+      return(paste0("\n \\", options$size, "\n\n"))
+    } else {
+      return("\n\n \\normalsize \n")
     }
+  }
 
-    return(fmt)
+  return(fmt)
 }

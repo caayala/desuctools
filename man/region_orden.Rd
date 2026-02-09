@@ -7,10 +7,10 @@
 region_orden(reg, as.factor = TRUE)
 }
 \arguments{
-\item{reg}{`num`. numérico con valores de 1 a 16}
+\item{reg}{\code{num}. numérico con valores de 1 a 16}
 
-\item{as.factor}{`logical`. Por defecto TRUE para crear factor ordenado geográficamente.
-FALSE crea variable de clase `labelled`.}
+\item{as.factor}{\code{logical}. Por defecto TRUE para crear factor ordenado geográficamente.
+FALSE crea variable de clase \code{labelled}.}
 }
 \value{
 ordered factor

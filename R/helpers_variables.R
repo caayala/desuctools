@@ -20,38 +20,38 @@
 #' @export
 #'
 shift_missing <- function(
-    .data,
-    .var1,
-    .var2 = NULL,
-    missing = c(77L, 88L, 99L)
+  .data,
+  .var1,
+  .var2 = NULL,
+  missing = c(77L, 88L, 99L)
 ) {
-    # Revisa preguntas de respuesta múltiple para corregir respuestas
-    # inválidas en variables posteriores.
-    missing <- c(missing, NA)
+  # Revisa preguntas de respuesta múltiple para corregir respuestas
+  # inválidas en variables posteriores.
+  missing <- c(missing, NA)
 
-    x <- pull(.data, {{ .var1 }})
+  x <- pull(.data, {{ .var1 }})
 
-    # Posición en donde el vector x es missing
-    x_index <- which(x %in% missing)
+  # Posición en donde el vector x es missing
+  x_index <- which(x %in% missing)
 
-    if (rlang::quo_is_null(enquo(.var2))) {
-        # Para esos casos, reemplazo el valor de y por NA ya que quedó en x
-        x[x_index] <- NA_integer_
+  if (rlang::quo_is_null(enquo(.var2))) {
+    # Para esos casos, reemplazo el valor de y por NA ya que quedó en x
+    x[x_index] <- NA_integer_
 
-        .data %>%
-            mutate({{ .var1 }} := x)
-    } else {
-        y <- pull(.data, {{ .var2 }})
+    .data %>%
+      mutate({{ .var1 }} := x)
+  } else {
+    y <- pull(.data, {{ .var2 }})
 
-        # En esos casos, reemplazo el valor de x por el valor de y
-        x[x_index] <- y[x_index]
+    # En esos casos, reemplazo el valor de x por el valor de y
+    x[x_index] <- y[x_index]
 
-        # Para esos casos, reemplazo el valor de y por NA ya que quedó en x
-        y[x_index] <- NA_integer_
+    # Para esos casos, reemplazo el valor de y por NA ya que quedó en x
+    y[x_index] <- NA_integer_
 
-        .data %>%
-            mutate({{ .var1 }} := x, {{ .var2 }} := y)
-    }
+    .data %>%
+      mutate({{ .var1 }} := x, {{ .var2 }} := y)
+  }
 }
 
 #' @title Colapso de strings
@@ -66,7 +66,7 @@ shift_missing <- function(
 #' @param collapse string, string con el que se unirán los textos. Por defecto
 #'        ", ".
 #'
-#' @importFrom dplyr %>% pull enquo
+#' @importFrom dplyr pull enquo
 #' @importFrom stringr str_c
 #'
 #' @examples
@@ -78,10 +78,10 @@ shift_missing <- function(
 #' @export
 #'
 str_collapse <- function(.data, .var, collapse = ", ") {
-    # Colapsar valores de una variable en un string.
+  # Colapsar valores de una variable en un string.
 
-    pull(.data, {{ .var }}) %>%
-        stringr::str_c(collapse = collapse)
+  pull(.data, {{ .var }}) |>
+    stringr::str_c(collapse = collapse)
 }
 
 
@@ -102,14 +102,14 @@ str_collapse <- function(.data, .var, collapse = ", ") {
 #' @export
 #'
 str_entre <- function(text, ini = "", fin = "") {
-    structure(
-        stringr::str_extract(
-            text,
-            stringr::str_glue("(?<={ini}).*(?={fin})")
-        ) %>%
-            stringr::str_squish(),
-        names = names(text)
-    )
+  structure(
+    stringr::str_extract(
+      text,
+      stringr::str_glue("(?<={ini}).*(?={fin})")
+    ) |>
+      stringr::str_squish(),
+    names = names(text)
+  )
 }
 
 
@@ -133,12 +133,12 @@ str_entre <- function(text, ini = "", fin = "") {
 #' @export
 #'
 str_entre_parentesis <- function(text) {
-    # Extrae texto entre paréntesis
-    text_extract <- str_entre(text, ini = "\\(", fin = "\\)")
+  # Extrae texto entre paréntesis
+  text_extract <- str_entre(text, ini = "\\(", fin = "\\)")
 
-    text_extract <- ifelse(is.na(nchar(text_extract)), text, text_extract)
+  text_extract <- ifelse(is.na(nchar(text_extract)), text, text_extract)
 
-    return(text_extract)
+  return(text_extract)
 }
 
 
@@ -146,7 +146,7 @@ str_entre_parentesis <- function(text) {
 #'
 #' @description
 #' Número de dígitos enteros para valores con decimales. Diseñada para casos en que
-#' longitud y latitud son capturados como digitos sin decimal y necesitan ser reescalados.
+#' longitud y latitud son capturados como dígitos sin decimal y necesitan ser reescalados.
 #'
 #' @name digitos_entero
 #'
@@ -163,9 +163,9 @@ str_entre_parentesis <- function(text) {
 #'                digits = 3)
 #'
 digitos_entero <- function(x, digits = 2) {
-    div <- floor(log10(abs(x))) - digits + 1
+  div <- floor(log10(abs(x))) - digits + 1
 
-    x / 10^div
+  x / 10^div
 }
 
 
@@ -173,7 +173,7 @@ digitos_entero <- function(x, digits = 2) {
 #'
 #' @description
 #' Validación de la sintaxis de correos electrónicos.
-#' La expresión regular utilizada para ello viene del siguiente post en [SO][https://stackoverflow.com/questions/201323/how-to-validate-an-email-address-using-a-regular-expression]
+#' La expresión regular utilizada para ello viene del siguiente post en [SO](https://stackoverflow.com/questions/201323/how-to-validate-an-email-address-using-a-regular-expression)
 #'
 #' @name is_email
 #'
@@ -189,9 +189,9 @@ digitos_entero <- function(x, digits = 2) {
 #' is_email(c("a@a.com", "a@a"))
 #'
 is_email <- function(email) {
-    regex_mail <- '(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])'
+  regex_mail <- '(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])'
 
-    stringr::str_detect(email, regex_mail)
+  stringr::str_detect(email, regex_mail)
 }
 
 
@@ -207,7 +207,7 @@ is_email <- function(email) {
 #' @return numeric vector
 #'
 pregunta_orden <- function(.x, .y, cat_orden) {
-    max(if_else(.x == cat_orden, .y, 0))
+  max(if_else(.x == cat_orden, .y, 0))
 }
 
 #' @title Orden de preguntas según valor de categoría
@@ -228,14 +228,14 @@ pregunta_orden <- function(.x, .y, cat_orden) {
 #' @export
 #'
 fct_reorder_cat <- function(.f, .cat, .val, cat_orden, .desc = FALSE) {
-    forcats::fct_reorder2(
-        .f,
-        .cat,
-        .val,
-        .fun = pregunta_orden,
-        cat_orden = cat_orden,
-        .desc = .desc
-    )
+  forcats::fct_reorder2(
+    .f,
+    .cat,
+    .val,
+    .fun = pregunta_orden,
+    cat_orden = cat_orden,
+    .desc = .desc
+  )
 }
 
 
@@ -257,32 +257,32 @@ fct_reorder_cat <- function(.f, .cat, .val, cat_orden, .desc = FALSE) {
 #' region_orden(c(1, 13, 5, 15))
 #'
 region_orden <- function(reg, as.factor = TRUE) {
-    # Ordena número de regiones en un factor de norte a sur.
-    reg_num <- c(15, 1:5, 13, 6, 7, 16, 8, 9, 14, 10:12)
-    reg_nom <- c(
-        "Arica y Parinacota",
-        "Tarapac\u00E1",
-        "Antofagasta",
-        "Atacama",
-        "Coquimbo",
-        "Valpara\u00EDso",
-        "Metropolitana",
-        "O'Higgins",
-        "Maule",
-        "\u00d1uble",
-        "Biob\u00EDo",
-        "La Araucan\u00EDa",
-        "Los R\u00EDos",
-        "Los Lagos",
-        "Ays\u00E9n",
-        "Magallanes"
-    )
+  # Ordena número de regiones en un factor de norte a sur.
+  reg_num <- c(15, 1:5, 13, 6, 7, 16, 8, 9, 14, 10:12)
+  reg_nom <- c(
+    "Arica y Parinacota",
+    "Tarapac\u00e1",
+    "Antofagasta",
+    "Atacama",
+    "Coquimbo",
+    "Valpara\u00edso",
+    "Metropolitana",
+    "O'Higgins",
+    "Maule",
+    "\u00d1uble",
+    "Biob\u00edo",
+    "La Araucan\u00eda",
+    "Los R\u00edos",
+    "Los Lagos",
+    "Ays\u00e9n",
+    "Magallanes"
+  )
 
-    names(reg_num) <- reg_nom
+  names(reg_num) <- reg_nom
 
-    if (as.factor) {
-        factor(reg, levels = reg_num, labels = names(reg_num))
-    } else {
-        haven::labelled(reg, labels = reg_num, label = "Reg\u00EDn")
-    }
+  if (as.factor) {
+    factor(reg, levels = reg_num, labels = names(reg_num))
+  } else {
+    haven::labelled(reg, labels = reg_num, label = "Regi\u00f3n")
+  }
 }

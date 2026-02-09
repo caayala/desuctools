@@ -14,15 +14,15 @@ svy_tabla_vars_segmentos(
 )
 }
 \arguments{
-\item{.df}{`tbl_svy` data.frame con diseño de encuesta.}
+\item{.df}{\code{tbl_svy} data.frame con diseño de encuesta.}
 
 \item{.vars}{c(). Variables de interés respecto.}
 
-\item{.segmentos}{c(). Lista de variables por las que se quiere segmentar `.vars`.}
+\item{.segmentos}{c(). Lista de variables por las que se quiere segmentar \code{.vars}.}
 
-\item{miss}{chr vector. Categorías a excluir en el denominador de `prop_val` y `mean`.}
+\item{miss}{chr vector. Categorías a excluir en el denominador de \code{prop_val} y \code{mean}.}
 
-\item{vartype}{chr vector. Tipo de error para estimaciones (`ci`, `se`, etc.).}
+\item{vartype}{chr vector. Tipo de error para estimaciones (\code{ci}, \code{se}, etc.).}
 
 \item{level}{double. Nivel de confianza para intervalos.}
 }
@@ -31,8 +31,8 @@ tibble
 }
 \description{
 Devuelve tabla de frecuencias con intervalos de confianza para un nivel
-`level`de significancia entre las categorías de respuesta de la
-variable `.vars`.
+\code{level}de significancia entre las categorías de respuesta de la
+variable \code{.vars}.
 
 A diferencia de svy_tabla_var_segmentos, esta funcion puede procesar varias variables
 y segmentos a la vez.

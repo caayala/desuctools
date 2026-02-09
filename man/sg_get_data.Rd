@@ -15,21 +15,21 @@ sg_get_data(
 )
 }
 \arguments{
-\item{api_operation}{`chr` Bajar datos según operaciones "SimpleExport"
+\item{api_operation}{\code{chr} Bajar datos según operaciones "SimpleExport"
 o "OperationData".}
 
-\item{interview_ids}{`int` Vector con códigos de interviews de los que
+\item{interview_ids}{\code{int} Vector con códigos de interviews de los que
 se quiera bajar información.}
 
-\item{...}{`list` pasa a query en sg_get}
+\item{...}{\code{list} pasa a query en sg_get}
 
-\item{api_key}{`chr` REST API Key entregada por dooblo.}
+\item{api_key}{\code{chr} REST API Key entregada por dooblo.}
 
-\item{user}{`chr` nombre de usuario.}
+\item{user}{\code{chr} nombre de usuario.}
 
-\item{pass}{`chr` password de usuario.}
+\item{pass}{\code{chr} password de usuario.}
 
-\item{type}{`chr` Formato en el que se obtendrán datos.
+\item{type}{\code{chr} Formato en el que se obtendrán datos.
 Por defecto 'application/json'. Puede ser 'text/xml' si se quiere xml o
 'text/csv' si se desea un csv.}
 }
@@ -38,7 +38,7 @@ data.frame
 }
 \description{
 Función para bajar datos y respuestas considerando el límite de
-      99 casos por envío. Es un envoltorio de la función `sg_get()`.
+99 casos por envío. Es un envoltorio de la función \code{sg_get()}.
 }
 \seealso{
 sg_get

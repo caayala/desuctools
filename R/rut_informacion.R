@@ -33,7 +33,7 @@ rut_informacion <- function(.rut) {
     httr2::req_body_json(list(rut = .rut)) |>
     httr2::req_error(is_error = \(resp) FALSE)
 
-  cat("Información sobre: ", .rut, '\n')
+  cat("Informacion sobre: ", .rut, '\n')
 
   resp_info_persona <- req_info_persona |>
     httr2::req_perform()

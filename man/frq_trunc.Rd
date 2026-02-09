@@ -7,7 +7,7 @@
 frq_trunc(..., width = 50L, ellipsis = "...")
 }
 \arguments{
-\item{...}{Una data frame o vector según lo requerido por `sjmisc::frq`.}
+\item{...}{Una data frame o vector según lo requerido por \code{sjmisc::frq}.}
 
 \item{width}{numeric. Por defecto = 50. Largo del texto de la etiqueta de la variable.}
 

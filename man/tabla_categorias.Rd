@@ -10,12 +10,12 @@ tabla_categorias(.df, ..., .wt = NULL, miss = NULL)
 \item{.df}{data.frame. Base de datos.}
 
 \item{...}{Preguntas de las que se quiere saber su proporcion. Se puede utilizar
-`tidyselect` para facilitar la selección de varias columnas.}
+\code{tidyselect} para facilitar la selección de varias columnas.}
 
 \item{.wt}{name. Nombre de columna con ponderador o expansor de los datos. Por defecto es NULL,
 sin expansor.}
 
-\item{miss}{chr vector. Categorías de respuesta que deben excluirse del cálculo de `prop_val`.}
+\item{miss}{chr vector. Categorías de respuesta que deben excluirse del cálculo de \code{prop_val}.}
 }
 \value{
 tibble

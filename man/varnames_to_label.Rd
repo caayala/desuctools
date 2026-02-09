@@ -12,17 +12,17 @@ varnames_to_label(
 )
 }
 \arguments{
-\item{.df}{`data.frame` Un data.frame}
+\item{.df}{\code{data.frame} Un data.frame}
 
-\item{pattern_detect}{`chr` patrón de regex con el que se extrae el nombre breve
+\item{pattern_detect}{\code{chr} patrón de regex con el que se extrae el nombre breve
 de la variable. Este es el que será utilizado posteriormente como
 nombre final de la variable en la base}
 
-\item{pattern_extract}{`chr` patrón de regex opcional.
+\item{pattern_extract}{\code{chr} patrón de regex opcional.
 Por defecto es NULL e implica que se usará el mismo patrón que el dispuesto
-en `pattern_detect`.}
+en \code{pattern_detect}.}
 
-\item{var_prefix}{`chr` opcional. Prefijo para el nombre de las nuevas variables
+\item{var_prefix}{\code{chr} opcional. Prefijo para el nombre de las nuevas variables
 que se extraigan.}
 }
 \value{
@@ -30,9 +30,9 @@ data.frame
 }
 \description{
 Toma nombre de variables y los separa en un nombre breve
-      y el resto de la etiqueta la integra en el atributo `label` de la
-      variable.
-      Además cambia la clase de las variables modificadas a `haven_labelled`
+y el resto de la etiqueta la integra en el atributo \code{label} de la
+variable.
+Además cambia la clase de las variables modificadas a \code{haven_labelled}
 }
 \examples{
 df <- data.frame(`first variable 1` = 1,

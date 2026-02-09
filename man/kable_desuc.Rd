@@ -22,29 +22,29 @@ kable_desuc(
 \arguments{
 \item{.data}{Una data frame}
 
-\item{digits}{`int` Número de decimales en la tabla (por defecto digits = 1)}
+\item{digits}{\code{int} Número de decimales en la tabla (por defecto digits = 1)}
 
-\item{row.names}{`Logical` Se incluye o no los nombres de las filas.}
+\item{row.names}{\code{Logical} Se incluye o no los nombres de las filas.}
 
-\item{col.names}{`strings` Vector de texto para los nombres de las columnas.
+\item{col.names}{\code{strings} Vector de texto para los nombres de las columnas.
 (por defecto igual al colname de la tabla)}
 
-\item{align}{`vector` Indicación para la alineación de las columnas. c('rll')}
+\item{align}{\code{vector} Indicación para la alineación de las columnas. c('rll')}
 
-\item{caption}{`string` Leyenda asociada a la tabla (por defecto sin leyenda)}
+\item{caption}{\code{string} Leyenda asociada a la tabla (por defecto sin leyenda)}
 
-\item{booktabs}{`bolean` si usa estilo booktabs para la tabla (por defecto TRUE)}
+\item{booktabs}{\code{bolean} si usa estilo booktabs para la tabla (por defecto TRUE)}
 
-\item{longtable}{`bolean` si usa estilo para tablas que cruzan dos páginas (por defecto FALSE)}
+\item{longtable}{\code{bolean} si usa estilo para tablas que cruzan dos páginas (por defecto FALSE)}
 
-\item{escape}{`bolean` Si se normalizan los caracterres especiales en html o latex.
+\item{escape}{\code{bolean} Si se normalizan los caracterres especiales en html o latex.
 (por defecto TRUE)}
 
-\item{font_size}{`ìnt` tamaño de letra en la tabla (por defecto 8)}
+\item{font_size}{\code{ìnt} tamaño de letra en la tabla (por defecto 8)}
 
-\item{latex_options}{`vector de caracteres` donde se controla aspectos de latex.}
+\item{latex_options}{\verb{vector de caracteres} donde se controla aspectos de latex.}
 
-\item{...}{Atributos pasados a la función `kable_styling`}
+\item{...}{Atributos pasados a la función \code{kable_styling}}
 }
 \value{
 Una kable con el formato DESUC

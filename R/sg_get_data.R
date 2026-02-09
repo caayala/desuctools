@@ -45,8 +45,8 @@ sg_get_data <- function(
   )
 
   # Colapsar el listado de ids a strings de un máximo de 99.
-  df_interviews <- df_interviews %>%
-    group_by(.data$group) %>%
+  df_interviews <- df_interviews |>
+    group_by(.data$group) |>
     summarize(
       string = stringr::str_c(.data$ids, collapse = ','),
       .groups = 'drop'
@@ -55,20 +55,22 @@ sg_get_data <- function(
   # Obtener la información de respuesta de cada grupo de interviews.
   df_data <- purrr::map(
     df_interviews$string,
-    ~ desuctools::sg_get(
-      api_operation = api_operation,
-      query = append(list(subjectIDs = .), query_additional),
-      user = user,
-      pass = pass,
-      api_key = api_key,
-      type = type
-    )
+    \(x) {
+      desuctools::sg_get(
+        api_operation = api_operation,
+        query = append(list(subjectIDs = x), query_additional),
+        user = user,
+        pass = pass,
+        api_key = api_key,
+        type = type
+      )
+    }
   )
 
   # Integrar todas las respuestas en una sola base
   if (api_operation == 'SimpleExport') {
-    df_data <- df_data %>%
-      purrr::modify_depth(.depth = 1, purrr::pluck, 'Subjects') %>%
+    df_data <- df_data |>
+      purrr::modify_depth(.depth = 1, purrr::pluck, 'Subjects') |>
       purrr::flatten()
   }
 

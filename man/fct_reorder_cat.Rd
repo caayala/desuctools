@@ -22,6 +22,6 @@ fct_reorder_cat(.f, .cat, .val, cat_orden, .desc = FALSE)
 factor
 }
 \description{
-Wrapper al rededor de `forcats::fct_reorder2` para ordenar factor `.f` según
-según una catogoría de respuesta de `.x` de interès `cat_orden` a partir del valor en `.y`.
+Wrapper al rededor de \code{forcats::fct_reorder2} para ordenar factor \code{.f} según
+según una catogoría de respuesta de \code{.x} de interès \code{cat_orden} a partir del valor en \code{.y}.
 }

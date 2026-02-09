@@ -44,7 +44,7 @@ tabla_vars_segmentos(.df, .vars, .segmentos = NULL, ...)
 
 \item{.vars}{tidyselect, lista de nombres de variables de las que se quiere saber su proporción de respuestas}
 
-\item{.segmentos}{tidyselect, lista de nombres de variables de segmentación de las preguntas de `.vars`}
+\item{.segmentos}{tidyselect, lista de nombres de variables de segmentación de las preguntas de \code{.vars}}
 
 \item{...}{Parámetros adicionales que serán pasados a los métodos específicos}
 

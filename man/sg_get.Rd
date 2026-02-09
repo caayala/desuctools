@@ -14,19 +14,19 @@ sg_get(
 )
 }
 \arguments{
-\item{api_operation}{`chr` Nombre de alguno de las operaciones GET disponibles
+\item{api_operation}{\code{chr} Nombre de alguno de las operaciones GET disponibles
 en la API de SurveyToGo. Ver link en referencias.}
 
-\item{query}{`list` listado de variables que serán pasadas a la api_operation
+\item{query}{\code{list} listado de variables que serán pasadas a la api_operation
 que se elija.}
 
-\item{api_key}{`chr` REST API Key entregada por dooblo.}
+\item{api_key}{\code{chr} REST API Key entregada por dooblo.}
 
-\item{user}{`chr` nombre de usuario.}
+\item{user}{\code{chr} nombre de usuario.}
 
-\item{pass}{`chr` password de usuario.}
+\item{pass}{\code{chr} password de usuario.}
 
-\item{type}{`chr` Formato en el que se obtendrán datos.
+\item{type}{\code{chr} Formato en el que se obtendrán datos.
 Por defecto 'application/json'. Puede ser 'text/xml' si se quiere xml o
 'text/csv' si se desea un csv.}
 }
@@ -35,7 +35,7 @@ json
 }
 \description{
 Función para acceder a datos del sistema SurveyToGo utilizando
-       su API REST.
+su API REST.
 }
 \references{
 https://support.dooblo.net/hc/en-us/articles/208294645-How-To-Use-The-SurveyToGo-REST-API

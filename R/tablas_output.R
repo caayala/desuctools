@@ -36,7 +36,7 @@ tabla_categoria <- function(.df, .var, .wt = NULL, miss = NULL) {
     df_agg$pregunta_cat <- forcats::fct_na_value_to_level(df_agg$pregunta_cat)
   }
 
-  tab <- aggregate(
+  tab <- stats::aggregate(
     casos ~ pregunta_cat,
     df_agg,
     FUN = \(x) sum(x, na.rm = FALSE),
@@ -129,15 +129,13 @@ tabla_categorias <- function(.df, ..., .wt = NULL, miss = NULL) {
 #' df <- tibble::tibble(var = c("a", "b"),
 #'             casos = c(30, 70))
 #'
-#' desuctools:::tabla_prop(df, .segmento = NULL)
-#'
 #' desuctools:::tabla_prop(df, .segmento = "var")
 #'
 tabla_prop <- function(.df, .segmento) {
   # Cálculo de porcentaje de respuestas en tabla con numero de casos.
   # Proporción de "casos" en cada grupo ".segmento" y luego reemplazar NaN por 0.
 
-  .df$prop <- ave(
+  .df$prop <- stats::ave(
     .df[["casos"]],
     .df[[.segmento]],
     FUN = \(x) x / sum(x, na.rm = TRUE)
@@ -255,11 +253,11 @@ desuc_weighted_mean <- function(x, w) {
 #' @return tibble
 #'
 tabla_total_prop <- function(.df) {
-  tab_tot <- aggregate(
+  tab_tot <- stats::aggregate(
     casos ~ pregunta_cat,
     data = .df,
     FUN = \(x) sum(x, na.rm = FALSE),
-    na.action = na.pass,
+    na.action = stats::na.pass,
     drop = FALSE
   )
 
@@ -339,11 +337,11 @@ tabla_var_segmento <- function(
       df_agg$pregunta_cat <- forcats::fct_na_value_to_level(df_agg$pregunta_cat)
     }
 
-    tab <- aggregate(
+    tab <- stats::aggregate(
       casos ~ segmento_cat + pregunta_cat,
       df_agg,
       FUN = \(x) sum(x, na.rm = FALSE),
-      na.action = na.pass,
+      na.action = stats::na.pass,
       drop = FALSE
     )
 
@@ -366,7 +364,7 @@ tabla_var_segmento <- function(
     # Caso en que pregunta sea numérica: se calcula promedio.
     df_agg$pregunta_cat <- v_pregunta
 
-    tab <- aggregate(
+    tab <- stats::aggregate(
       x = seq_len(nrow(df_agg)), # índices de fila
       by = list(segmento_cat = df_agg[["segmento_cat"]]),
       FUN = function(idx) {

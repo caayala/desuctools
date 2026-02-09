@@ -17,7 +17,7 @@ character
 }
 \description{
 Transforma número a texto con separación
-de miles con `.` y decimales con `,`.
+de miles con \code{.} y decimales con \verb{,}.
 }
 \examples{
 

@@ -1,7 +1,7 @@
 Type: Package
 Package: desuctools
 Title: Funciones para trabajo en DESUC
-Version: 0.2.0.9001
+Version: 0.2.0.9002
 Authors@R: c(
     person("Cristián", "Ayala", 
         email = 'caayala@uc.cl', 
@@ -20,6 +20,7 @@ Description: Funciones y datos útiles en el trabajo de limpieza,
     revisión, tabulación y graficación de datos de la Dirección de
     Estudios Sociales UC.
 URL: https://desuc.github.io/desuctools, https://github.com/desuc/desuctools
+BugReports: https://github.com/desuc/desuctools/issues
 License: MIT + file LICENSE
 Depends:
     R (>= 4.2)
@@ -53,3 +54,4 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.3
+Roxygen: list(markdown = TRUE)
