@@ -47,5 +47,9 @@ jobs:
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
+        env:
+          SG_REST_API: ${{ secrets.SG_REST_API || '' }}
+          SG_USER: ${{ secrets.SG_USER || '' }}
+          SG_PASS: ${{ secrets.SG_PASS || '' }}
         with:
           upload-snapshots: true
