@@ -13,7 +13,7 @@ tabla_categoria(.df, .var, .wt = NULL, miss = NULL)
 
 \item{.wt}{chr. Variable de ponderación. Solo una variable.}
 
-\item{miss}{chr vector. Nombre de niveles de categorías de `.var` que deben
+\item{miss}{chr vector. Nombre de niveles de categorías de \code{.var} que deben
 ser considerados missing.}
 }
 \description{
@@ -21,5 +21,5 @@ Produce una tabla de distribución por categorías para una variable.
 }
 \details{
 Generación de una data.frame con el número de casos y proporción de las distintas
-variables de segmentos que se agregen en `...`.
+variables de segmentos que se agregen en \code{...}.
 }

@@ -7,12 +7,12 @@
 svy_diff_sig(.df)
 }
 \arguments{
-\item{.df}{data.frame con variables `\\*_upp` y `\\*_low`}
+\item{.df}{data.frame con variables \verb{\\\\*_upp} y \verb{\\\\*_low}}
 }
 \value{
 data.frame
 }
 \description{
 Determina diferencias significativas según intervalos de confianza calculados desde
-`srvyr`.
+\code{srvyr}.
 }

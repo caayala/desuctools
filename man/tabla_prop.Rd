@@ -21,8 +21,6 @@ Cálculo de proporciones
 df <- tibble::tibble(var = c("a", "b"),
             casos = c(30, 70))
 
-desuctools:::tabla_prop(df, .segmento = NULL)
-
 desuctools:::tabla_prop(df, .segmento = "var")
 
 }

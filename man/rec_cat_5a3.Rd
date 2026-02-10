@@ -19,7 +19,7 @@ Por defecto NULL.}
 haven_labelled
 }
 \description{
-Por defecto recodifica variables _likert_ de 5 niveles a 3 niveles.
+Por defecto recodifica variables \emph{likert} de 5 niveles a 3 niveles.
 }
 \examples{
 

@@ -19,7 +19,7 @@ Por defecto NULL.}
 haven_labelled
 }
 \description{
-Por defecto recodifica variables de _notas_ de 7 niveles a 3 niveles.
+Por defecto recodifica variables de \emph{notas} de 7 niveles a 3 niveles.
 }
 \examples{
 

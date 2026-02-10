@@ -1,13 +1,13 @@
-# Funciones para el trabajo con Alchemer
-# Servicio de encuestas web
-# https://app.alchemer.com/
+#' Funciones para el trabajo con Alchemer
+#' Servicio de encuestas web
+#' <https://app.alchemer.com/>
 
 #' @title read Alchemer SPSS export
 #'
 #' @description
 #' Lee el archivo .sav a partir del _distribution link_ de un reporte de
 #' exportación de una encuesta programada en Alchemer.
-#' https://help.alchemer.com/help/spss
+#' <https://help.alchemer.com/help/spss>
 #'
 #' Compatibility
 #' - Comments are not available in SPSS exports.
@@ -31,7 +31,7 @@ alch_read_spss <- function(url) {
 
   temp_dir <- tempdir() # Descomprimo archivo descargado
 
-  unzip(temp_zip, exdir = temp_dir)
+  utils::unzip(temp_zip, exdir = temp_dir)
 
   haven::read_sav(file.path(temp_dir, "spss.sav"))
 }
@@ -93,13 +93,13 @@ alch_get_survey_responses <- function(
   # 1. Credenciales de API
   if (api_token == "" || api_token_secret == "") {
     stop(
-      "Error: Las credenciales 'api_token' y 'api_token_secret' no pueden estar vacías. Revisa tus variables de entorno."
+      "Error: Las credenciales 'api_token' y 'api_token_secret' no pueden estar vac\u00edas. Revisa tus variables de entorno."
     )
   }
 
   # 2. Parámetro 'survey_id'
   if (!is.numeric(survey_id) || length(survey_id) != 1) {
-    stop("Error: 'survey_id' debe ser un único valor numérico.")
+    stop("Error: 'survey_id' debe ser un \u00fanico valor num\u00e9rico.")
   }
 
   # 3. Parámetro 'results_per_page'
@@ -108,7 +108,9 @@ alch_get_survey_responses <- function(
       results_per_page <= 0 ||
       results_per_page > 500
   ) {
-    stop("Error: 'results_per_page' debe ser un número entero entre 1 y 500.")
+    stop(
+      "Error: 'results_per_page' debe ser un n\u00famero entero entre 1 y 500."
+    )
   }
 
   # 4. Parámetro 'page'
@@ -117,7 +119,7 @@ alch_get_survey_responses <- function(
       (!is.numeric(page) || length(page) != 1 || page <= 0)
   ) {
     stop(
-      "Error: 'page' debe ser la cadena \"all\" o un número entero positivo."
+      "Error: 'page' debe ser la cadena \"all\" o un n\u00famero entero positivo."
     )
   }
 
@@ -262,18 +264,18 @@ alch_get_survey_contacts <- function(
   # 1. Credenciales de API
   if (api_token == "" || api_token_secret == "") {
     stop(
-      "Error: Las credenciales 'api_token' y 'api_token_secret' no pueden estar vacías. Revisa tus variables de entorno."
+      "Error: Las credenciales 'api_token' y 'api_token_secret' no pueden estar vac\u00edas. Revisa tus variables de entorno."
     )
   }
 
   # 2. Parámetro 'survey_id'
   if (!is.numeric(survey_id) || length(survey_id) != 1) {
-    stop("Error: 'survey_id' debe ser un único valor numérico.")
+    stop("Error: 'survey_id' debe ser un \u00fanico valor num\u00e9rico.")
   }
 
   # 3. Parámetro 'campaign_id'
   if (!is.numeric(campaign_id) || length(campaign_id) != 1) {
-    stop("Error: 'campaign_id' debe ser un único valor numérico.")
+    stop("Error: 'campaign_id' debe ser un \u00fanico valor num\u00e9rico.")
   }
 
   # 4. Parámetro 'results_per_page'
@@ -282,7 +284,9 @@ alch_get_survey_contacts <- function(
       results_per_page <= 0 ||
       results_per_page > 500
   ) {
-    stop("Error: 'results_per_page' debe ser un número entero entre 1 y 500.")
+    stop(
+      "Error: 'results_per_page' debe ser un n\u00famero entero entre 1 y 500."
+    )
   }
 
   # 5. Parámetro 'page'
@@ -291,7 +295,7 @@ alch_get_survey_contacts <- function(
       (!is.numeric(page) || length(page) != 1 || page <= 0)
   ) {
     stop(
-      "Error: 'page' debe ser la cadena \"all\" o un número entero positivo."
+      "Error: 'page' debe ser la cadena \"all\" o un n\u00famero entero positivo."
     )
   }
 
@@ -361,7 +365,9 @@ alch_get_survey_contacts <- function(
 
 
 #' @title Construye tibble de respuestas desde la lista de Alchemer
+#'
 #' @description
+#'
 #' Construye una tabla (tibble) a partir de la salida de la API de Alchemer
 #' (objeto devuelto por \code{alch_get_survey_responses}). Extrae para cada
 #' pregunta los campos \code{id}, \code{question} y \code{answer}, pivotea las
@@ -382,7 +388,7 @@ alch_get_survey_contacts <- function(
 #' - Respuestas múltiples por misma pregunta se colapsan en una cadena
 #'   separada por \code{"; "}.
 #' - La función asume que \code{ls_alchemer[["data"]]} es una lista con la
-#'   estructura estándar de la API (cada elemento contiene sublistas con
+#'   estructura estándar de la API (cada elemento contiene sub-listas con
 #'   elementos \code{id}, \code{question}, \code{answer} entre otros).
 #'
 #' @examples
@@ -401,7 +407,7 @@ alch_get_survey_contacts <- function(
 #' @importFrom dplyr bind_rows bind_cols select distinct mutate across starts_with
 #' @export
 alch_create_df <- function(ls_alchemer) {
-  # Funcion interna para extraer y construir la base de datos de
+  # Función interna para extraer y construir la base de datos de
   # respuestas de Alchemer
   .procesar_encuestas <- function(lista_encuestas) {
     # Itera sobre cada respuesta de encuesta y combina los resultados en un tibble
@@ -458,7 +464,7 @@ alch_create_df <- function(ls_alchemer) {
       )
 
     # Creo un vector nombrado para renombrar las columnas
-    labels_vec <- setNames(
+    labels_vec <- stats::setNames(
       as.character(labels[["data_question"]]),
       as.character(labels[["data_id"]])
     )

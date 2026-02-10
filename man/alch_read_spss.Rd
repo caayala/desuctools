@@ -7,19 +7,26 @@
 alch_read_spss(url)
 }
 \arguments{
-\item{url}{`chr` Distribution link del reporte de base de datos en SPSS.}
+\item{url}{\code{chr} Distribution link del reporte de base de datos en SPSS.}
 }
 \value{
 tibble
 }
 \description{
-Lee el archivo .sav a partir del _distribution link_ de un reporte de
+Lee el archivo .sav a partir del \emph{distribution link} de un reporte de
 exportación de una encuesta programada en Alchemer.
-https://help.alchemer.com/help/spss
+\url{https://help.alchemer.com/help/spss}
 
 Compatibility
-- Comments are not available in SPSS exports.
-- The Conjoint question is not available in SPSS exports.
-- "Other, Write-In" rows in grid questions as not available in SPSS exports.
-- The Time Started field is not includes as part of the SPSS export.
+\itemize{
+\item Comments are not available in SPSS exports.
+\item The Conjoint question is not available in SPSS exports.
+\item "Other, Write-In" rows in grid questions as not available in SPSS exports.
+\item The Time Started field is not includes as part of the SPSS export.
+}
+}
+\details{
+Funciones para el trabajo con Alchemer
+Servicio de encuestas web
+\url{https://app.alchemer.com/}
 }

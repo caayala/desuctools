@@ -23,15 +23,20 @@
 #'
 #' # Convertir una fecha en formato POSIXct manteniendo la hora
 #' sg_date(as.POSIXct("2024-08-26 14:35:00"))
-sg_date <- function(date, hora = "mañana") {
+sg_date <- function(date, hora = "ma\u00f1ana") {
   # Verificar que date sea de tipo Date o POSIXct
   if (!lubridate::is.Date(date) && !lubridate::is.POSIXct(date)) {
     stop("Error: 'date' debe ser un objeto de tipo Date o POSIXct.")
   }
 
-  # Verificar que hora sea 'mañana' o 'tarde'
-  if (!hora %in% c("mañana", "tarde")) {
-    stop("Error: 'hora' debe ser 'mañana' o 'tarde'.")
+  # Compatibilidad: acepta "mañana" o "tarde".
+  if (identical(hora, "ma\u00f1ana")) {
+    hora <- "ma\u00f1ana"
+  }
+
+  # Verificar que hora sea "mañana" o "tarde"
+  if (!hora %in% c("ma\u00f1ana", "tarde")) {
+    stop("Error: 'hora' debe ser 'ma\u00f1ana' o 'tarde'.")
   }
 
   timezone_format <- function(date) {
@@ -51,7 +56,7 @@ sg_date <- function(date, hora = "mañana") {
 
     hora_format <- switch(
       hora,
-      "mañana" = "00:00:00.0000000",
+      "ma\u00f1ana" = "00:00:00.0000000",
       "tarde" = "23:59:59.9990000"
     )
 

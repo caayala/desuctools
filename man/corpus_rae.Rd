@@ -11,9 +11,9 @@ Un data.frame con 3 variables
 \url{https://www.rae.es/recursos/banco-de-datos/crea-escrito}
 
 \describe{
-  \item{Orden}{formas ortográficas registradas en el CREA}
-  \item{Frec.absoluta}{frecuencia absoluta de la palabra}
-  \item{Frec.normalizada}{frecuencia normalizada de la palabra}
+\item{Orden}{formas ortográficas registradas en el CREA}
+\item{Frec.absoluta}{frecuencia absoluta de la palabra}
+\item{Frec.normalizada}{frecuencia normalizada de la palabra}
 }
 }
 \usage{

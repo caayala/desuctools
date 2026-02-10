@@ -7,15 +7,15 @@
 edu_fct_cod_ense2(x)
 }
 \arguments{
-\item{x}{Un vector de códigos, típicamente variable `COD_ENSE2`.}
+\item{x}{Un vector de códigos, típicamente variable \code{COD_ENSE2}.}
 }
 \value{
-A factor with 8 levels, with an attached `"label"` attribute.
+A factor with 8 levels, with an attached \code{"label"} attribute.
 }
 \description{
 Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 Niveles de enseñanza agrupados
 }
 \seealso{
-[https://centroestudios.mineduc.cl/datos-abiertos/]
+\url{https://centroestudios.mineduc.cl/datos-abiertos/}
 }

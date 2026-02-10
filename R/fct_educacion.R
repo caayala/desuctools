@@ -4,7 +4,7 @@
 #' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 #' Niveles de enseñanza
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x Un vector de códigos, típicamente variable `COD_ENSE` o `COD_ENS_X`.
 #'
@@ -15,49 +15,49 @@
 edu_fct_cod_ense <- function(x) {
   cod_ense <- c(
     "No Aplica" = 0,
-    "Educación Parvularia" = 10,
-    "Enseñanza Básica" = 110,
-    "Educación Básica Común Adultos (Decreto 584/2007)" = 160,
-    "Educación Básica Especial Adultos" = 161,
-    "Escuelas Cárceles (Básica Adultos)" = 163,
-    "Educación Básica Adultos Sin Oficios (Decreto 584/2007)" = 165,
-    "Educación Básica Adultos Con Oficios (Decreto 584/2007 y 999/2009)" = 167,
-    "Educación Especial Discapacidad Auditiva" = 211,
-    "Educación Especial Discapacidad Intelectual" = 212,
-    "Educación Especial Discapacidad Visual" = 213,
-    "Educación Especial Trastornos Específicos del Lenguaje" = 214,
-    "Educación Especial Trastornos Motores" = 215,
-    "Educación Especial Autismo" = 216,
-    "Educación Especial Discapacidad Graves Alteraciones en la Capacidad de Relación y Comunicación" = 217,
-    "Educación Especial Discapacidad Múltiple" = 218,
-    "Educación Especial Sordoceguera" = 219,
-    "Opción 4 Programa Integración Escolar" = 299,
-    "Enseñanza Media H-C niños y jóvenes" = 310,
-    "Educación Media H-C adultos vespertino y nocturno (Decreto N° 190/1975)" = 360,
-    "Educación Media H-C adultos (Decreto N° 12/1987)" = 361,
-    "Escuelas Cárceles (Media Adultos)" = 362,
-    "Educación Media H-C Adultos (Decreto N°1000/2009)" = 363,
-    "Enseñanza Media T-P Comercial Niños y Jóvenes" = 410,
-    "Educación Media T-P Comercial Adultos (Decreto N° 152/1989)" = 460,
-    "Educación Media T-P Comercial Adultos (Decreto N° 152/1989)" = 461,
-    "Educación Media T-P Comercial Adultos (Decreto N° 1000/2009)" = 463,
-    "Enseñanza Media T-P Industrial Niños y Jóvenes" = 510,
-    "Educación Media T-P Industrial Adultos (Decreto N° 152/1989)" = 560,
-    "Educación Media T-P Industrial Adultos (Decreto N° 152/1989)" = 561,
-    "Educación Media T-P Industrial Adultos (Decreto N° 1000/2009)" = 563,
-    "Enseñanza Media T-P Técnica Niños y Jóvenes" = 610,
-    "Educación Media T-P Técnica Adultos (Decreto N° 152/1989)" = 660,
-    "Educación Media T-P Técnica Adultos (Decreto N° 152/1989)" = 661,
-    "Educación Media T-P Técnica Adultos (Decreto N° 1000/2009)" = 663,
-    "Enseñanza Media T-P Agrícola Niños y Jóvenes" = 710,
-    "Educación Media T-P Agrícola Adultos (Decreto N° 152/1989)" = 760,
-    "Educación Media T-P Agrícola Adultos (Decreto N° 152/1989)" = 761,
-    "Educación Media T-P Agrícola Adultos (Decreto N° 1000/2009)" = 763,
-    "Enseñanza Media T-P Marítima Niños y Jóvenes" = 810,
-    "Enseñanza Media T-P Marítima Adultos (Decreto N° 152/1989)" = 860,
-    "Enseñanza Media T-P Marítima Adultos (Decreto N° 1000/2009)" = 863,
-    "Enseñanza Media Artística Niños y Jóvenes" = 910,
-    "Enseñanza Media Artística Adultos" = 963
+    "Educaci\u00f3n Parvularia" = 10,
+    "Ense\u00f1anza B\u00e1sica" = 110,
+    "Educaci\u00f3n B\u00e1sica Com\u00fan Adultos (Decreto 584/2007)" = 160,
+    "Educaci\u00f3n B\u00e1sica Especial Adultos" = 161,
+    "Escuelas C\u00e1rceles (B\u00e1sica Adultos)" = 163,
+    "Educaci\u00f3n B\u00e1sica Adultos Sin Oficios (Decreto 584/2007)" = 165,
+    "Educaci\u00f3n B\u00e1sica Adultos Con Oficios (Decreto 584/2007 y 999/2009)" = 167,
+    "Educaci\u00f3n Especial Discapacidad Auditiva" = 211,
+    "Educaci\u00f3n Especial Discapacidad Intelectual" = 212,
+    "Educaci\u00f3n Especial Discapacidad Visual" = 213,
+    "Educaci\u00f3n Especial Trastornos Espec\u00edficos del Lenguaje" = 214,
+    "Educaci\u00f3n Especial Trastornos Motores" = 215,
+    "Educaci\u00f3n Especial Autismo" = 216,
+    "Educaci\u00f3n Especial Discapacidad Graves Alteraciones en la Capacidad de Relaci\u00f3n y Comunicaci\u00f3n" = 217,
+    "Educaci\u00f3n Especial Discapacidad M\u00faltiple" = 218,
+    "Educaci\u00f3n Especial Sordoceguera" = 219,
+    "Opci\u00f3n 4 Programa Integraci\u00f3n Escolar" = 299,
+    "Ense\u00f1anza Media H-C ni\u00f1os y j\u00f3venes" = 310,
+    "Educaci\u00f3n Media H-C adultos vespertino y nocturno (Decreto N\u00b0 190/1975)" = 360,
+    "Educaci\u00f3n Media H-C adultos (Decreto N\u00b0 12/1987)" = 361,
+    "Escuelas C\u00e1rceles (Media Adultos)" = 362,
+    "Educaci\u00f3n Media H-C Adultos (Decreto N\u00b01000/2009)" = 363,
+    "Ense\u00f1anza Media T-P Comercial Ni\u00f1os y J\u00f3venes" = 410,
+    "Educaci\u00f3n Media T-P Comercial Adultos (Decreto N\u00b0 152/1989)" = 460,
+    "Educaci\u00f3n Media T-P Comercial Adultos (Decreto N\u00b0 152/1989)" = 461,
+    "Educaci\u00f3n Media T-P Comercial Adultos (Decreto N\u00b0 1000/2009)" = 463,
+    "Ense\u00f1anza Media T-P Industrial Ni\u00f1os y J\u00f3venes" = 510,
+    "Educaci\u00f3n Media T-P Industrial Adultos (Decreto N\u00b0 152/1989)" = 560,
+    "Educaci\u00f3n Media T-P Industrial Adultos (Decreto N\u00b0 152/1989)" = 561,
+    "Educaci\u00f3n Media T-P Industrial Adultos (Decreto N\u00b0 1000/2009)" = 563,
+    "Ense\u00f1anza Media T-P T\u00e9cnica Ni\u00f1os y J\u00f3venes" = 610,
+    "Educaci\u00f3n Media T-P T\u00e9cnica Adultos (Decreto N\u00b0 152/1989)" = 660,
+    "Educaci\u00f3n Media T-P T\u00e9cnica Adultos (Decreto N\u00b0 152/1989)" = 661,
+    "Educaci\u00f3n Media T-P T\u00e9cnica Adultos (Decreto N\u00b0 1000/2009)" = 663,
+    "Ense\u00f1anza Media T-P Agr\u00edcola Ni\u00f1os y J\u00f3venes" = 710,
+    "Educaci\u00f3n Media T-P Agr\u00edcola Adultos (Decreto N\u00b0 152/1989)" = 760,
+    "Educaci\u00f3n Media T-P Agr\u00edcola Adultos (Decreto N\u00b0 152/1989)" = 761,
+    "Educaci\u00f3n Media T-P Agr\u00edcola Adultos (Decreto N\u00b0 1000/2009)" = 763,
+    "Ense\u00f1anza Media T-P Mar\u00edtima Ni\u00f1os y J\u00f3venes" = 810,
+    "Ense\u00f1anza Media T-P Mar\u00edtima Adultos (Decreto N\u00b0 152/1989)" = 860,
+    "Ense\u00f1anza Media T-P Mar\u00edtima Adultos (Decreto N\u00b0 1000/2009)" = 863,
+    "Ense\u00f1anza Media Art\u00edstica Ni\u00f1os y J\u00f3venes" = 910,
+    "Ense\u00f1anza Media Art\u00edstica Adultos" = 963
   )
 
   factor(
@@ -66,7 +66,7 @@ edu_fct_cod_ense <- function(x) {
     labels = names(cod_ense)
   ) |>
     structure(
-      label = "Niveles de enseñanza"
+      label = "Niveles de ense\u00f1anza"
     )
 }
 
@@ -79,18 +79,18 @@ edu_fct_cod_ense <- function(x) {
 #'
 #' Los cod_educ relacioandos son:
 #'
-#' - 211 Educación Especial Discapacidad Auditiva
-#' - 212 Educación Especial Discapacidad Intelectual
-#' - 213 Educación Especial Discapacidad Visual
-#' - 214 Educación Especial Trastornos Específicos del Lenguaje
-#' - 215 Educación Especial Trastornos Motores
-#' - 216 Educación Especial Autismo
-#' - 217 Educación Especial Discapacidad Graves Alteraciones en la Capacidad de Relación y Comunicación
-#' - 218 Educación Especial Discapacidad Múltiple
-#' - 219 Educación Especial Sordoceguera
-#' - 299 Opción 4 Programa Integración Escolar
+#' - `211`: Educación Especial Discapacidad Auditiva
+#' - `212`: Educación Especial Discapacidad Intelectual
+#' - `213`: Educación Especial Discapacidad Visual
+#' - `214`: Educación Especial Trastornos Específicos del Lenguaje
+#' - `215`: Educación Especial Trastornos Motores
+#' - `216`: Educación Especial Autismo
+#' - `217`: Educación Especial Discapacidad Graves Alteraciones en la Capacidad de Relación y Comunicación
+#' - `218`: Educación Especial Discapacidad Múltiple
+#' - `219`: Educación Especial Sordoceguera
+#' - `299`: Opción 4 Programa Integración Escolar
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x A numeric vector.
 #'
@@ -112,13 +112,13 @@ edu_fct_educacion_especial <- function(x) {
     factor(
       levels = 1:3,
       labels = c(
-        'Educación especial',
-        'Educación especial Trastornos del Lenguaje',
+        'Educaci\u00f3n especial',
+        'Educaci\u00f3n especial Trastornos del Lenguaje',
         'No'
       )
     ) |>
     structure(
-      label = "Tipo de Educación Especial"
+      label = "Tipo de Educaci\u00f3n Especial"
     )
 }
 
@@ -129,7 +129,7 @@ edu_fct_educacion_especial <- function(x) {
 #' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 #' Niveles de enseñanza agrupados
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x Un vector de códigos, típicamente variable `COD_ENSE2`.
 #'
@@ -142,18 +142,18 @@ edu_fct_cod_ense2 <- function(x) {
     x,
     levels = 1:8,
     labels = c(
-      'Educación Parvularia',
-      'Enseñanza Básica Niños',
-      'Educación Básica Adultos',
-      'Educación Especial',
-      'Enseñanza Media Humanístico-Científica Jóvenes',
-      'Educación Media Humanístico-Científica Adultos',
-      'Enseñanza Media Técnico Profesional y Artística, Jóvenes',
-      'Educación Media Técnico Profesional y Artística, Adultos'
+      'Educaci\u00f3n Parvularia',
+      'Ense\u00f1anza B\u00e1sica Ni\u00f1os',
+      'Educaci\u00f3n B\u00e1sica Adultos',
+      'Educaci\u00f3n Especial',
+      'Ense\u00f1anza Media Human\u00edstico-Cient\u00edfica J\u00f3venes',
+      'Educaci\u00f3n Media Human\u00edstico-Cient\u00edfica Adultos',
+      'Ense\u00f1anza Media T\u00e9cnico Profesional y Art\u00edstica, J\u00f3venes',
+      'Educaci\u00f3n Media T\u00e9cnico Profesional y Art\u00edstica, Adultos'
     )
   ) |>
     structure(
-      label = "Niveles de enseñanza agrupados"
+      label = "Niveles de ense\u00f1anza agrupados"
     )
 }
 
@@ -164,7 +164,7 @@ edu_fct_cod_ense2 <- function(x) {
 #' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 #' Niveles de enseñanza con educación especial reasignado.
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x Un vector de códigos, típicamente variable `COD_ENSE3`.
 #'
@@ -177,17 +177,17 @@ edu_fct_cod_ense3 <- function(x) {
     x,
     levels = 1:7,
     labels = c(
-      "Educación Parvularia",
-      "Enseñanza Básica Niños",
-      "Educación Básica Adultos",
-      "Enseñanza Media Humanístico-Científica Jóvenes",
-      "Educación Media Humanístico-Científica Adultos",
-      "Enseñanza Media Técnico Profesional y Artística, Jóvenes",
-      "Educación Media Técnico Profesional y Artística, Adultos"
+      "Educaci\u00f3n Parvularia",
+      "Ense\u00f1anza B\u00e1sica Ni\u00f1os",
+      "Educaci\u00f3n B\u00e1sica Adultos",
+      "Ense\u00f1anza Media Human\u00edstico-Cient\u00edfica J\u00f3venes",
+      "Educaci\u00f3n Media Human\u00edstico-Cient\u00edfica Adultos",
+      "Ense\u00f1anza Media T\u00e9cnico Profesional y Art\u00edstica, J\u00f3venes",
+      "Educaci\u00f3n Media T\u00e9cnico Profesional y Art\u00edstica, Adultos"
     )
   ) |>
     structure(
-      label = "Niveles de enseñanza con educación especial reasignado"
+      label = "Niveles de ense\u00f1anza con educaci\u00f3n especial reasignado"
     )
 }
 
@@ -197,7 +197,7 @@ edu_fct_cod_ense3 <- function(x) {
 #' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 #' Código de Dependencia del Establecimiento (agrupado).
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x Un vector de códigos, típicamente variable `COD_DEPE2`.
 #'
@@ -218,7 +218,7 @@ edu_fct_cod_depe2 <- function(x) {
     )
   ) |>
     structure(
-      label = "Código de Dependencia del Establecimiento"
+      label = "C\u00f3digo de Dependencia del Establecimiento"
     )
 }
 
@@ -229,7 +229,7 @@ edu_fct_cod_depe2 <- function(x) {
 #' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 #' Recodificación del Código de Enseñanza en 13 niveles.
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x Un vector de códigos, típicamente variable `COD_DEPE2`.
 #'
@@ -242,23 +242,23 @@ edu_fct_ens <- function(x) {
     x,
     levels = 1:13,
     labels = c(
-      "Educación Parvularia Regular",
-      "Educación Parvularia Especial",
-      "Enseñanza Básica Niños Regular",
-      "Enseñanza Básica Niños Especial",
-      "Enseñanza Media HC Jóvenes ciclo general",
-      "Enseñanza Media TP Jóvenes ciclo general",
-      "Enseñanza Media HC Jóvenes ciclo diferenciado",
-      "Enseñanza Media TP Jóvenes ciclo diferenciado",
-      "Educación Básica Adultos",
-      "Educación Media HC Adultos ciclo general",
-      "Educación Media TP Adultos ciclo general",
-      "Educación Media HC Adultos ciclo diferenciado",
-      "Educación Media TP Adultos ciclo diferenciado"
+      "Educaci\u00f3n Parvularia Regular",
+      "Educaci\u00f3n Parvularia Especial",
+      "Ense\u00f1anza B\u00e1sica Ni\u00f1os Regular",
+      "Ense\u00f1anza B\u00e1sica Ni\u00f1os Especial",
+      "Ense\u00f1anza Media HC J\u00f3venes ciclo general",
+      "Ense\u00f1anza Media TP J\u00f3venes ciclo general",
+      "Ense\u00f1anza Media HC J\u00f3venes ciclo diferenciado",
+      "Ense\u00f1anza Media TP J\u00f3venes ciclo diferenciado",
+      "Educaci\u00f3n B\u00e1sica Adultos",
+      "Educaci\u00f3n Media HC Adultos ciclo general",
+      "Educaci\u00f3n Media TP Adultos ciclo general",
+      "Educaci\u00f3n Media HC Adultos ciclo diferenciado",
+      "Educaci\u00f3n Media TP Adultos ciclo diferenciado"
     )
   ) |>
     structure(
-      label = "Recodificación del Código de Enseñanza en 13 niveles"
+      label = "Recodificaci\u00f3n del C\u00f3digo de Ense\u00f1anza en 13 niveles"
     )
 }
 
@@ -269,7 +269,7 @@ edu_fct_ens <- function(x) {
 #' Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 #' Índice de ruralidad del establecimiento.
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x Un vector de códigos, típicamente variable `RURAL_RBD`.
 #'
@@ -287,7 +287,7 @@ edu_fct_rural_rbd <- function(x) {
     )
   ) |>
     structure(
-      label = "Índice de ruralidad del establecimiento"
+      label = "\u00cdndice de ruralidad del establecimiento"
     )
 }
 
@@ -298,7 +298,7 @@ edu_fct_rural_rbd <- function(x) {
 #' Detecta niveles de enseñanza para adultos ya que su segunda cifra significativa
 #' es igual al dígito `6`.
 #'
-#' @seealso [https://centroestudios.mineduc.cl/datos-abiertos/]
+#' @seealso <https://centroestudios.mineduc.cl/datos-abiertos/>
 #'
 #' @param x Un vector numérico o de cadenas.
 #'
@@ -310,8 +310,8 @@ edu_es_educacion_adulto <- function(x) {
   x <- unlist(x)
 
   # Convertimos a caracteres de un largo determinado.
-  x_str <- sprintf("%04d", x) # Asegura tener al menos 4 dígitos para todos
+  x_str <- sprintf("%04d", x) # Asegura tener al menos 4 d\u00edgitos para todos
 
-  # Vector lógico detectando los codigos de enseñanza para adultos.
+  # Vector l\u00f3gico detectando los codigos de ense\u00f1anza para adultos.
   grepl(".*6.$", x_str)
 }

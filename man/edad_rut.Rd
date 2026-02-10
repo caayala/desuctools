@@ -10,9 +10,9 @@ https://rutificador-chile.com/wp-content/uploads/2022/06/rut-a-edad.html
 edad_rut(.rut, fecha_referencia)
 }
 \arguments{
-\item{.rut}{`ìnt`: Vector numérico con el rut (sin dígito verificador).}
+\item{.rut}{\code{ìnt}: Vector numérico con el rut (sin dígito verificador).}
 
-\item{fecha_referencia}{`date`: Vector que contiene la fecha de referencia que determina la edad.
+\item{fecha_referencia}{\code{date}: Vector que contiene la fecha de referencia que determina la edad.
 Pueden ser una fecha pasada, actual o futura.}
 }
 \value{

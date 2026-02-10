@@ -1,3 +1,5 @@
+testthat::skip_if_offline()
+
 sg_var <- Sys.getenv(c("SG_REST_API", "SG_USER", "SG_PASS"))
 
 sg_get_data_test <- function(...) {

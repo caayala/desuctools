@@ -7,15 +7,15 @@
 edu_fct_ens(x)
 }
 \arguments{
-\item{x}{Un vector de códigos, típicamente variable `COD_DEPE2`.}
+\item{x}{Un vector de códigos, típicamente variable \code{COD_DEPE2}.}
 }
 \value{
-A factor with 13 levels, with an attached `"label"` attribute.
+A factor with 13 levels, with an attached \code{"label"} attribute.
 }
 \description{
 Recodificación para bases de datos disponibles en el Centro de Estudios MINEDUC, Chile
 Recodificación del Código de Enseñanza en 13 niveles.
 }
 \seealso{
-[https://centroestudios.mineduc.cl/datos-abiertos/]
+\url{https://centroestudios.mineduc.cl/datos-abiertos/}
 }
