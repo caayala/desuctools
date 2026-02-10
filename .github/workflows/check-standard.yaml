@@ -26,9 +26,6 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      SG_REST_API: ${{ secrets.SG_REST_API || '' }}
-      SG_USER: ${{ secrets.SG_USER  || '' }}
-      SG_PASS: ${{ secrets.SG_PASS  || '' }}
 
     steps:
       - uses: actions/checkout@v3
@@ -51,5 +48,7 @@ jobs:
           SG_REST_API: ${{ secrets.SG_REST_API || '' }}
           SG_USER: ${{ secrets.SG_USER || '' }}
           SG_PASS: ${{ secrets.SG_PASS || '' }}
+          ALCHEMER_API_SECRET: ${{ secrets.ALCHEMER_API_SECRET || '' }}
+          ALCHEMER_API_KEY: ${{ secrets.ALCHEMER_API_KEY || '' }}
         with:
           upload-snapshots: true
