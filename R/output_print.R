@@ -6,24 +6,44 @@
 #'
 #' @name frq_trunc
 #'
-#' @param ... Una data frame o vector según lo requerido por `sjmisc::frq`.
+#' @param x Un vector, posiblemente etiquetado (`haven_labelled`).
 #' @param width numeric. Por defecto = 50. Largo del texto de la etiqueta de la variable.
 #' @param ellipsis string. Por defecto = '...'.
 #'
-#' @return Una kable con el formato DESUC
+#' @return Una data.frame con columnas val, label, frq, raw.prc y cum.prc.
 #'
 #' @import dplyr
-#' @importFrom sjmisc frq
 #' @importFrom stringr str_trunc
 #'
 #' @export
-frq_trunc <- function(..., width = 50L, ellipsis = '...') {
+frq_trunc <- function(x, width = 50L, ellipsis = '...') {
   # frecuencia de variable truncando las etiquetas para mejorar visualización.
 
-  tab <- sjmisc::frq(...)
+  labels <- attr(x, 'labels', exact = TRUE)
+  x_val <- unclass(x)
+  attributes(x_val) <- NULL
 
-  tab[[1]]$label <- str_trunc(
-    tab[[1]]$label,
+  vals <- sort(unique(c(unname(labels), x_val[!is.na(x_val)])))
+
+  lab <- if (is.null(labels)) {
+    rep(NA_character_, length(vals))
+  } else {
+    names(labels)[match(vals, labels)]
+  }
+
+  frq <- vapply(vals, \(v) sum(x_val == v, na.rm = TRUE), integer(1))
+
+  tab <- data.frame(
+    val = c(vals, NA),
+    label = c(lab, NA_character_),
+    frq = c(frq, sum(is.na(x_val)))
+  )
+
+  tab$raw.prc <- round(100 * tab$frq / length(x_val), 2)
+  tab$cum.prc <- c(round(cumsum(100 * frq / length(x_val)), 2), NA)
+
+  tab$label <- str_trunc(
+    tab$label,
     width = width,
     ellipsis = ellipsis
   )

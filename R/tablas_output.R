@@ -358,7 +358,12 @@ tabla_var_segmento <- function(
 
     # Agrega el porcentaje válido si es que se señalan categorias perdidas.
     if (!is.null(miss)) {
-      tab <- tabla_prop_val(tab, miss = miss, by = "segmento_cat")
+      # Para variables labelled, los códigos de `miss` (p.ej. 9) deben
+      # reconocerse también por su etiqueta una vez convertidos a factor.
+      labels <- attr(v_pregunta, "labels", exact = TRUE)
+      miss_lab <- if (is.null(labels)) NULL else names(labels)[labels %in% miss]
+
+      tab <- tabla_prop_val(tab, miss = c(miss, miss_lab), by = "segmento_cat")
     }
   } else {
     # Caso en que pregunta sea numérica: se calcula promedio.

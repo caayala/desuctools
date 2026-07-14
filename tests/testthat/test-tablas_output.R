@@ -238,6 +238,19 @@ test_that("tabla_vars_segmentos.data.frame handles missings with prop_val", {
   expect_true(all(is.na(result$prop_val[missing_rows])))
 })
 
+test_that("tabla_vars_segmentos.data.frame reconoce códigos miss en labelled", {
+  # miss = 1 es el código de la etiqueta "M" en la variable labelled `sexo`.
+  result <- tabla_vars_segmentos(
+    df_test,
+    .vars = sexo,
+    .segmentos = cat,
+    miss = 1
+  )
+
+  expect_true(all(is.na(result$prop_val[result$pregunta_cat == "M"])))
+  expect_equal(result$prop_val[result$pregunta_cat == "W"], c(1, 1))
+})
+
 test_that("tabla_vars_segmentos.data.frame numerica retorna mean y casos_val", {
   result <- tabla_vars_segmentos(
     df_test,
