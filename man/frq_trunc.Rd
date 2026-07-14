@@ -4,17 +4,17 @@
 \alias{frq_trunc}
 \title{Frecuencia de variable con etiqueta truncada}
 \usage{
-frq_trunc(..., width = 50L, ellipsis = "...")
+frq_trunc(x, width = 50L, ellipsis = "...")
 }
 \arguments{
-\item{...}{Una data frame o vector según lo requerido por \code{sjmisc::frq}.}
+\item{x}{Un vector, posiblemente etiquetado (\code{haven_labelled}).}
 
 \item{width}{numeric. Por defecto = 50. Largo del texto de la etiqueta de la variable.}
 
 \item{ellipsis}{string. Por defecto = '...'.}
 }
 \value{
-Una kable con el formato DESUC
+Una data.frame con columnas val, label, frq, raw.prc y cum.prc.
 }
 \description{
 Se trunca el texto de la etiqueta de la variable a un largo preestablecido para

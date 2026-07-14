@@ -67,8 +67,10 @@ test_that("svy_tabla_var_segmento proporcion de categoría labelled", {
   expect_s3_class(result, "tbl_df")
   expect_equal(result$prop, c(0.525, 0.4, 0, 0.075))
 
+  # NS/NR (código 9) queda excluido de prop_val por miss = 9, aunque el
+  # factor muestre su etiqueta y no el código.
   result <- svy_tabla_var_segmento(s, .var = "lab_na", miss = c(9, NA))
-  expect_equal(result$prop_val, c(10.5 / 18.5, 8 / 18.5, 0, NA))
+  expect_equal(result$prop_val, c(10.5 / 18.5, 8 / 18.5, NA, NA))
 })
 
 # Resultados con segmentos
@@ -263,4 +265,106 @@ test_that("tabla_vars_segmentos.tbl_svy soporta tidyselect en vars y segmentos",
 
   expect_equal(unique(result$pregunta_var), "fct")
   expect_equal(unique(result$segmento_var), "x")
+})
+
+# Robustez y regresiones -----------------------------------------------------
+
+test_that("svy_tabla_var_segmento entrega error claro si variable no existe", {
+  expect_error(
+    svy_tabla_var_segmento(s, .var = "no_existe"),
+    "no existe en los datos"
+  )
+  expect_error(
+    svy_tabla_var_segmento(s, .var = "fct", .segmento = "no_existe"),
+    "no existe en los datos"
+  )
+})
+
+test_that("svy_tabla_vars_segmentos permite que .vars y .segmentos coincidan", {
+  # Con prop = 1 el método xlogit para el CI genera warnings esperables.
+  result <- suppressWarnings(
+    svy_tabla_vars_segmentos(s, .vars = x, .segmentos = x)
+  )
+
+  expect_s3_class(result, "tbl_df")
+  expect_true(all(c("segmento_cat", "pregunta_cat") %in% names(result)))
+  # La diagonal concentra toda la proporción del segmento.
+  diag_prop <- result$prop[
+    as.character(result$segmento_cat) == as.character(result$pregunta_cat) &
+      result$casos > 0
+  ]
+  expect_equal(diag_prop, rep(1, length(diag_prop)))
+})
+
+test_that("una columna llamada 'total' no interfiere con el total interno", {
+  d_tot <- d
+  d_tot$total <- d_tot$esc
+  s_tot <- srvyr::as_survey_design(d_tot, weights = wgt)
+
+  result <- svy_tabla_var_segmento(s_tot, .var = "total")
+
+  expect_identical(unique(as.character(result$segmento_cat)), "Total")
+  expect_equal(result$mean, weighted.mean(d_tot$total, d_tot$wgt))
+})
+
+test_that("svy_tabla_vars_segmentos acepta survey.design2", {
+  s_design <- survey::svydesign(ids = ~1, weights = ~wgt, data = d)
+
+  result <- svy_tabla_vars_segmentos(s_design, .vars = fct)
+
+  expect_s3_class(result, "tbl_df")
+  expect_true("prop" %in% names(result))
+})
+
+test_that("svy_tabla_vars_segmentos rechaza data.frame sin diseño", {
+  expect_error(
+    svy_tabla_vars_segmentos(d, .vars = fct),
+    "diseno complejo"
+  )
+})
+
+test_that("prop coincide con survey::svymean", {
+  result <- svy_tabla_var_segmento(s, .var = "fct")
+
+  esperado <- unname(coef(survey::svymean(~fct, s)))
+
+  expect_equal(result$prop, esperado)
+})
+
+test_that("casos_val con miss es la suma de pesos de casos válidos", {
+  result <- svy_tabla_var_segmento(s, .var = "lab_na", miss = c(9, NA))
+
+  # 19 casos válidos: 10 con peso 0.5 y 9 con peso 1.5 menos el NA (peso 1.5)
+  expect_equal(unique(result$casos_val), sum(d$wgt[!is.na(d$lab_na)]))
+})
+
+test_that("prop_val es NA si el segmento no tiene casos válidos", {
+  d_na <- d
+  d_na$lab_na_x <- haven::labelled(
+    ifelse(d_na$x == "a", 9, unclass(d_na$lab_na)),
+    labels = c("Sí" = 1, "No" = 0, "NS/NR" = 9)
+  )
+  s_na <- srvyr::as_survey_design(d_na, weights = wgt)
+
+  # Con prop = 1 el método xlogit para el CI genera warnings esperables.
+  result <- suppressWarnings(
+    svy_tabla_var_segmento(
+      s_na,
+      .var = "lab_na_x",
+      .segmento = "x",
+      miss = c(9, NA)
+    )
+  )
+
+  seg_a <- result[as.character(result$segmento_cat) == "a", ]
+  expect_true(all(is.na(seg_a$prop_val)))
+})
+
+test_that("diff_sig se calcula cuando vartype incluye ci", {
+  result <- svy_tabla_var_segmento(s, .var = "fct", .segmento = "x")
+
+  expect_true("diff_sig" %in% names(result))
+
+  result_se <- svy_tabla_var_segmento(s, .var = "fct", vartype = "se")
+  expect_false("diff_sig" %in% names(result_se))
 })

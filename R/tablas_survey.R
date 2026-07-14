@@ -29,13 +29,23 @@ svy_tabla_var_segmento <- function(.df,
                                    vartype = c('ci', 'se'),
                                    level = 0.95){
 
+  if (!.var %in% names(.df[["variables"]])) {
+    stop("La variable '", .var, "' no existe en los datos.")
+  }
+  if (!is.null(.segmento) && !.segmento %in% names(.df[["variables"]])) {
+    stop("El segmento '", .segmento, "' no existe en los datos.")
+  }
+
+  # Columna interna de segmento: evita colisiones con columnas del usuario
+  # y permite que .var y .segmento sean la misma variable.
+  seg_col <- ".desuc_segmento"
+
   if (is.null(.segmento)) {
-    .df[["variables"]][["total"]] <- forcats::as_factor("Total")
-    .segmento <- "total"
+    .df[["variables"]][[seg_col]] <- forcats::as_factor("Total")
     segmento_var <- "Total"
     segmento_lab <- "Total"
   } else {
-    .df[["variables"]][[.segmento]] <- forcats::as_factor(.df[["variables"]][[.segmento]])
+    .df[["variables"]][[seg_col]] <- forcats::as_factor(.df[["variables"]][[.segmento]])
     segmento_var <- .segmento
     segmento_lab <- attr(.df[["variables"]][[.segmento]], "label", exact = TRUE) %||% "-"
   }
@@ -43,16 +53,16 @@ svy_tabla_var_segmento <- function(.df,
   v_pregunta <- .df[["variables"]][[.var]]
 
   if (desuc_is_categorical_var(v_pregunta)) {
-    .df[["variables"]][[.var]] <- forcats::as_factor(v_pregunta)
+    v_fct <- forcats::as_factor(v_pregunta)
 
-    if (any(is.na(.df[["variables"]][[.var]]))) {
-      .df[["variables"]][[.var]] <- forcats::fct_na_value_to_level(.df[["variables"]][[.var]])
+    if (anyNA(v_fct)) {
+      v_fct <- forcats::fct_na_value_to_level(v_fct)
     }
 
-    df_group <- .df |>
-      dplyr::group_by(pick(any_of(c(.segmento, .var))), .drop = FALSE)
+    .df[["variables"]][[.var]] <- v_fct
 
-    tab <- df_group |>
+    tab <- .df |>
+      dplyr::group_by(pick(all_of(c(seg_col, .var))), .drop = FALSE) |>
       dplyr::summarise(
         casos_unwt = srvyr::unweighted(n()),
         casos = srvyr::survey_total(),
@@ -66,35 +76,34 @@ svy_tabla_var_segmento <- function(.df,
       )
 
     if (!is.null(miss)) {
-      .df[["variables"]][[".desuc_is_valid"]] <-
-        !desuc_is_missing_category(.df[["variables"]][[.var]], miss = miss)
+      # Para variables labelled, los códigos de `miss` (p.ej. 9) deben
+      # reconocerse también por su etiqueta una vez convertidos a factor.
+      labels <- attr(v_pregunta, "labels", exact = TRUE)
+      miss_lab <- if (is.null(labels)) NULL else names(labels)[labels %in% miss]
 
-      tab_denom <- .df |>
-        dplyr::group_by(pick(any_of(.segmento)), .drop = FALSE) |>
-        dplyr::summarise(
-          casos_val = srvyr::survey_total(.data[[".desuc_is_valid"]]),
-          .groups = "drop"
-        )
+      # El denominador de casos válidos se obtiene de los totales ya
+      # calculados, sin una segunda agregación sobre el diseño.
+      es_miss <- desuc_is_missing_category(tab[[.var]], miss = c(miss, miss_lab))
 
-      tab <- dplyr::left_join(tab, tab_denom, by = .segmento)
-      tab$prop_val <- tab$casos / tab$casos_val
+      tab$casos_val <- stats::ave(
+        replace(tab$casos, es_miss, 0),
+        tab[[seg_col]],
+        FUN = sum
+      )
       tab$prop_val <- ifelse(
-        desuc_is_missing_category(tab[[.var]], miss = miss),
+        es_miss | tab$casos_val == 0,
         NA_real_,
-        tab$prop_val
+        tab$casos / tab$casos_val
       )
     }
   } else {
-    .df[["variables"]][[".desuc_is_valid"]] <-
-      !is.na(v_pregunta) & !(v_pregunta %in% miss)
-    .df[["variables"]][[".desuc_val"]] <- ifelse(
-      .df[["variables"]][[".desuc_is_valid"]],
-      v_pregunta,
-      NA_real_
-    )
+    es_valido <- !is.na(v_pregunta) & !(v_pregunta %in% miss)
+
+    .df[["variables"]][[".desuc_is_valid"]] <- es_valido
+    .df[["variables"]][[".desuc_val"]] <- ifelse(es_valido, v_pregunta, NA_real_)
 
     tab <- .df |>
-      dplyr::group_by(pick(any_of(.segmento)), .drop = FALSE) |>
+      dplyr::group_by(pick(all_of(seg_col)), .drop = FALSE) |>
       dplyr::summarise(
         casos_unwt = srvyr::unweighted(n()),
         casos = srvyr::survey_total(),
@@ -112,7 +121,7 @@ svy_tabla_var_segmento <- function(.df,
   }
 
   tab$pregunta_var <- .var
-  tab$pregunta_lab <- attr(.df[["variables"]][[.var]], "label", exact = TRUE) %||% "-"
+  tab$pregunta_lab <- attr(v_pregunta, "label", exact = TRUE) %||% "-"
 
   if (desuc_is_categorical_var(v_pregunta)) {
     names(tab)[names(tab) == .var] <- "pregunta_cat"
@@ -120,7 +129,7 @@ svy_tabla_var_segmento <- function(.df,
 
   tab$segmento_var <- segmento_var
   tab$segmento_lab <- segmento_lab
-  names(tab)[names(tab) == .segmento] <- "segmento_cat"
+  names(tab)[names(tab) == seg_col] <- "segmento_cat"
 
   if (sum(stringr::str_detect(names(tab), "_upp$|_low$")) == 2) {
     tab <- tab |>
@@ -154,17 +163,15 @@ svy_tabla_var_segmento <- function(.df,
 #'
 #' @name svy_tabla_vars_segmentos
 #'
-#' @param .df `tbl_svy` data.frame con diseño de encuesta.
+#' @param .df `tbl_svy` o `survey.design2`, data.frame con diseño de encuesta.
 #' @param .vars c(). Variables de interés respecto.
 #' @param .segmentos c(). Lista de variables por las que se quiere segmentar `.vars`.
 #' @param miss chr vector. Categorías a excluir en el denominador de `prop_val` y `mean`.
 #' @param vartype chr vector. Tipo de error para estimaciones (`ci`, `se`, etc.).
 #' @param level double. Nivel de confianza para intervalos.
 #'
-#' @importFrom rlang !! enquo sym
-#' @importFrom tidyr unnest expand_grid
+#' @importFrom rlang enquo
 #' @importFrom tidyselect eval_select
-#' @importFrom purrr map2
 #'
 #' @return tibble
 #'
@@ -176,8 +183,8 @@ svy_tabla_vars_segmentos <- function(.df,
                                      vartype = c('ci', 'se'),
                                      level = 0.95) {
 
-  if(!inherits(.df, 'tbl_svy')) {
-    stop("Se necesita un data.frame con diseno complejo")
+  if (!inherits(.df, c('tbl_svy', 'survey.design2'))) {
+    stop("Se necesita un data.frame con diseno complejo (`tbl_svy` o `survey.design2`).")
   }
 
   tabla_vars_segmentos(

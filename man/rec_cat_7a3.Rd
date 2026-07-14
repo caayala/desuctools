@@ -10,7 +10,9 @@ rec_cat_7a3(variable, rec = "1:4 = 1; 5 = 2; 6:7 = 3; else = 9", labels = NULL)
 \item{variable}{numeric, Valores de variable a recodificar.}
 
 \item{rec}{string, por defecto recodifica 1:4 en 1, 5 en 2 y 6:7 en 3.
-Todo lo demás lo deja como 9}
+Todo lo demás lo deja como 9.
+Acepta rangos (\code{a:b}), valores separados por coma y \verb{else}
+(los \code{NA} se mantienen como \code{NA}).}
 
 \item{labels}{vector string, etiquetas para las variables recodificadas.
 Por defecto NULL.}

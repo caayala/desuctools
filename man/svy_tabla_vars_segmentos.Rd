@@ -14,7 +14,7 @@ svy_tabla_vars_segmentos(
 )
 }
 \arguments{
-\item{.df}{\code{tbl_svy} data.frame con diseño de encuesta.}
+\item{.df}{\code{tbl_svy} o \code{survey.design2}, data.frame con diseño de encuesta.}
 
 \item{.vars}{c(). Variables de interés respecto.}
 
