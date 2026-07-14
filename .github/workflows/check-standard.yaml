@@ -11,7 +11,13 @@ on:
     branches:
       - main
       - master
+    branches:
+      - main
+      - master
   pull_request:
+    branches:
+      - main
+      - master
     branches:
       - main
       - master
@@ -28,10 +34,17 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macos-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'release'}
-          - {os: ubuntu-latest,   r: 'oldrel-1'}
+          - os: macos-latest
+            r: release
+
+          - os: windows-latest
+            r: release
+
+          - os: ubuntu-latest
+            r: release
+
+          - os: ubuntu-latest
+            r: oldrel-1
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -39,31 +52,30 @@ jobs:
 
     steps:
       - name: Check out repository
-      - uses: actions/checkout@v6
+        uses: actions/checkout@v6
 
       - name: Set up Pandoc
-      - uses: r-lib/actions/setup-pandoc@v2
+        uses: r-lib/actions/setup-pandoc@v2
 
       - name: Set up R
-      - uses: r-lib/actions/setup-r@v2
+        uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-          use-public-rspm: true
 
       - name: Install dependencies
-      - uses: r-lib/actions/setup-r-dependencies@v2
+        uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
           needs: check
 
-      - uses: r-lib/actions/check-r-package@v2
+      - name: Check package
+        uses: r-lib/actions/check-r-package@v2
         env:
-          SG_REST_API: ${{ secrets.SG_REST_API || '' }}
-          SG_USER: ${{ secrets.SG_USER || '' }}
-          SG_PASS: ${{ secrets.SG_PASS || '' }}
-          ALCHEMER_API_SECRET: ${{ secrets.ALCHEMER_API_SECRET || '' }}
-          ALCHEMER_API_KEY: ${{ secrets.ALCHEMER_API_KEY || '' }}
+          SG_REST_API: ${{ secrets.SG_REST_API }}
+          SG_USER: ${{ secrets.SG_USER }}
+          SG_PASS: ${{ secrets.SG_PASS }}
+          ALCHEMER_API_SECRET: ${{ secrets.ALCHEMER_API_SECRET }}
+          ALCHEMER_API_KEY: ${{ secrets.ALCHEMER_API_KEY }}
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual", "--compact-vignettes=gs+qpdf")'
