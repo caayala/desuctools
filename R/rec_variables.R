@@ -13,7 +13,7 @@ rec_num <- function(x, rec) {
                 partes <- trimws(strsplit(regla, "=", fixed = TRUE)[[1]])
 
                 if (length(partes) != 2 || any(partes == "") || is.na(partes[2])) {
-                        stop("Regla de recodificación inválida: '", regla, "'")
+                        stop("Regla de recodificaci\u00f3n inv\u00e1lida: '", regla, "'")
                 }
 
                 lhs <- partes[1]
