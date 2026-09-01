@@ -35,19 +35,19 @@ l_ruts_info <- lapply(rut_list, rut_informacion)
 l_ruts_info |> str(2)
 #> List of 3
 #>  $ :List of 5
-#>   ..$ timestamp: chr "2026-07-14T21:25:37.957+0000"
+#>   ..$ timestamp: chr "2026-09-01T00:21:21.170+0000"
 #>   ..$ status   : int 401
 #>   ..$ error    : chr "Unauthorized"
 #>   ..$ message  : chr "No message available"
 #>   ..$ path     : chr "/v1/registro-civil/informacionPersona"
 #>  $ :List of 5
-#>   ..$ timestamp: chr "2026-07-14T21:25:38.119+0000"
+#>   ..$ timestamp: chr "2026-09-01T00:21:21.850+0000"
 #>   ..$ status   : int 401
 #>   ..$ error    : chr "Unauthorized"
 #>   ..$ message  : chr "No message available"
 #>   ..$ path     : chr "/v1/registro-civil/informacionPersona"
 #>  $ :List of 5
-#>   ..$ timestamp: chr "2026-07-14T21:25:38.666+0000"
+#>   ..$ timestamp: chr "2026-09-01T00:21:22.074+0000"
 #>   ..$ status   : int 401
 #>   ..$ error    : chr "Unauthorized"
 #>   ..$ message  : chr "No message available"
